@@ -70,5 +70,34 @@ namespace UnitTests
 
             Assert.AreEqual(1, i);
         }
+
+        [TestMethod]
+        public void TestBranch()
+        {
+            int i = 0;
+
+            CilTK.Cil.Br("branch");
+
+            i = 1;
+
+            CilTK.Cil.Label("branch");
+
+            Assert.AreEqual(0, i);
+        }
+
+        [TestMethod]
+        public void TestBranchEqual()
+        {
+            int i = 0;
+            int j = 1;
+
+            CilTK.Cil.Ldloc(0);
+            CilTK.Cil.Ldloc(1);
+            CilTK.Cil.Beq("equal");
+            i = j;
+            CilTK.Cil.Label("equal");
+
+            Assert.AreEqual(i, j);
+        }
     }
 }
