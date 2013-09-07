@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Cil.cs" />
     <Compile Include="InlineAttribute.cs" />
+    <Compile Include="InfoOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
