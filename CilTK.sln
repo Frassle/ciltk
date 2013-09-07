@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CilTK", "CilTK\CilTK.csproj", "{2BB73334-5E30-4A65-A8FB-6E07E2663870}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silk", "CilTK\Silk.csproj", "{2BB73334-5E30-4A65-A8FB-6E07E2663870}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rewriter", "Rewriter\Rewriter.csproj", "{60430B2C-945C-453A-8181-FE6BCC530AE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave", "Rewriter\Weave.csproj", "{60430B2C-945C-453A-8181-FE6BCC530AE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{EB959322-F332-4F61-994A-4FCC9C39EC9D}"
 EndProject

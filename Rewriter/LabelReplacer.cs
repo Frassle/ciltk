@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rewriter
+namespace Weave
 {
     class LabelReplacer : InstructionVisitor
     {
@@ -33,7 +33,7 @@ namespace Rewriter
             {
                 var method = instruction.Operand as MethodReference;
 
-                if (method != null && method.DeclaringType.FullName == "CilTK.Cil" && method.Name == "Label")
+                if (method != null && method.DeclaringType.FullName == "Silk.Cil" && method.Name == "Label")
                 {
                     return ReplaceLabel(ilProcessor, instruction);
                 }

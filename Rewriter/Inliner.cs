@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rewriter
+namespace Weave
 {
     class Inliner : InstructionVisitor
     {
@@ -16,7 +16,7 @@ namespace Rewriter
                 var method = instruction.Operand as MethodReference;
                 var definition = method.Resolve();
 
-                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName == "CilTK.InlineAttribute"))
+                if (definition.CustomAttributes.Any(attr => attr.AttributeType.FullName == "Silk.InlineAttribute"))
                 {
                     var insertAfter = instruction.Previous;
                     ilProcessor.Remove(instruction);

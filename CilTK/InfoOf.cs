@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CilTK
+namespace Silk
 {
     public static class InfoOf
     {

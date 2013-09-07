@@ -61,9 +61,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CilTK\CilTK.csproj">
+    <ProjectReference Include="..\CilTK\Silk.csproj">
       <Project>{2bb73334-5e30-4a65-a8fb-6e07e2663870}</Project>
-      <Name>CilTK</Name>
+      <Name>Silk</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

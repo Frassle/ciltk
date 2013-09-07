@@ -7,8 +7,8 @@
     <ProjectGuid>{60430B2C-945C-453A-8181-FE6BCC530AE2}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rewriter</RootNamespace>
-    <AssemblyName>Rewriter</AssemblyName>
+    <RootNamespace>Weave</RootNamespace>
+    <AssemblyName>Weave</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -65,9 +65,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CilTK\CilTK.csproj">
+    <ProjectReference Include="..\CilTK\Silk.csproj">
       <Project>{2bb73334-5e30-4a65-a8fb-6e07e2663870}</Project>
-      <Name>CilTK</Name>
+      <Name>Silk</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

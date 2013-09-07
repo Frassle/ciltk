@@ -7,8 +7,8 @@
     <ProjectGuid>{2BB73334-5E30-4A65-A8FB-6E07E2663870}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CilTK</RootNamespace>
-    <AssemblyName>CilTK</AssemblyName>
+    <RootNamespace>Silk</RootNamespace>
+    <AssemblyName>Silk</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

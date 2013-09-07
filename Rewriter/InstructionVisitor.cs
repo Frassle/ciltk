@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rewriter
+namespace Weave
 {
     abstract class InstructionVisitor
     {

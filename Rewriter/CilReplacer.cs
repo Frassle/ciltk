@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rewriter
+namespace Weave
 {
     class CilReplacer : InstructionVisitor
     {
@@ -22,7 +22,7 @@ namespace Rewriter
             {
                 var method = instruction.Operand as MethodReference;
 
-                if (method != null && method.DeclaringType.FullName == "CilTK.Cil")
+                if (method != null && method.DeclaringType.FullName == "Silk.Cil")
                 {
                     return ReplaceInstruction(ilProcessor, instruction, method);
                 }
