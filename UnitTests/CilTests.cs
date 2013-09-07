@@ -8,7 +8,7 @@ namespace UnitTests
     {
         public void JustReturn()
         {
-            CilTK.Cil.Ret();
+            Silk.Cil.Ret();
         }
 
         [TestMethod]
@@ -19,8 +19,8 @@ namespace UnitTests
 
         public int ReturnOne()
         {
-            CilTK.Cil.Ldc_I4(1);
-            CilTK.Cil.Ret();
+            Silk.Cil.Ldc_I4(1);
+            Silk.Cil.Ret();
 
             return 0;
         }
@@ -38,10 +38,10 @@ namespace UnitTests
             int i = 1;
             int j = 2;
 
-            CilTK.Cil.Ldloc(0);
-            CilTK.Cil.Ldloc(1);
-            CilTK.Cil.Add();
-            CilTK.Cil.Stloc(0);
+            Silk.Cil.Ldloc(0);
+            Silk.Cil.Ldloc(1);
+            Silk.Cil.Add();
+            Silk.Cil.Stloc(0);
 
             Assert.AreEqual(3, i);
         }
@@ -51,8 +51,8 @@ namespace UnitTests
         {
             int i = 0;
 
-            CilTK.Cil.Ldc_I4(1);
-            CilTK.Cil.Stloc(0);
+            Silk.Cil.Ldc_I4(1);
+            Silk.Cil.Stloc(0);
 
             Assert.AreEqual(1, i);
         }
@@ -62,11 +62,11 @@ namespace UnitTests
         {
             int i = 0;
 
-            CilTK.Cil.Label("a");
+            Silk.Cil.Label("a");
 
             i = 1;
 
-            CilTK.Cil.Label("b");
+            Silk.Cil.Label("b");
 
             Assert.AreEqual(1, i);
         }
@@ -76,11 +76,11 @@ namespace UnitTests
         {
             int i = 0;
 
-            CilTK.Cil.Br("branch");
+            Silk.Cil.Br("branch");
 
             i = 1;
 
-            CilTK.Cil.Label("branch");
+            Silk.Cil.Label("branch");
 
             Assert.AreEqual(0, i);
         }
@@ -91,11 +91,27 @@ namespace UnitTests
             int i = 0;
             int j = 1;
 
-            CilTK.Cil.Ldloc(0);
-            CilTK.Cil.Ldloc(1);
-            CilTK.Cil.Beq("equal");
+            Silk.Cil.Ldloc(0);
+            Silk.Cil.Ldloc(1);
+            Silk.Cil.Beq("equal");
             i = j;
-            CilTK.Cil.Label("equal");
+            Silk.Cil.Label("equal");
+
+            Assert.AreEqual(i, j);
+        }
+
+
+        [TestMethod]
+        public void TestBranch()
+        {
+            int i = 0;
+            int j = 1;
+
+            Silk.Cil.Ldloc(0);
+            Silk.Cil.Ldloc(1);
+            Silk.Cil.Beq("equal");
+            i = j;
+            Silk.Cil.Label("equal");
 
             Assert.AreEqual(i, j);
         }

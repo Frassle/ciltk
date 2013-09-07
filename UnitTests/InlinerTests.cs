@@ -9,7 +9,7 @@ namespace UnitTests
     [TestClass]
     public class InlinerTests
     {
-        [CilTK.Inline]
+        [Silk.Inline]
         public static int ReturnOne()
         {
             return 1;
