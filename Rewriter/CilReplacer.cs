@@ -9,11 +9,11 @@ namespace Rewriter
 {
     class CilReplacer : InstructionVisitor
     {
-        Dictionary<Tuple<MethodDefinition, string>, Instruction> Labels;
+        LabelReplacer Labels;
 
-        public CilReplacer()
+        public CilReplacer(LabelReplacer labels)
         {
-            Labels = new Dictionary<Tuple<MethodDefinition, string>, Instruction>();
+            Labels = labels;
         }
 
         protected override int Visit(ILProcessor ilProcessor, Instruction instruction)
@@ -24,45 +24,11 @@ namespace Rewriter
 
                 if (method != null && method.DeclaringType.FullName == "CilTK.Cil")
                 {
-                    if (method.Name == "Label")
-                    {
-                        return ReplaceLabel(ilProcessor, instruction);
-                    }
-                    else
-                    {
-                        return ReplaceInstruction(ilProcessor, instruction, method);
-                    }
+                    return ReplaceInstruction(ilProcessor, instruction, method);
                 }
             }
 
             return 0;
-        }
-
-        int ReplaceLabel(ILProcessor ilProcessor, Instruction instruction)
-        {
-            var label = GetOperand(instruction) as string;
-            if (label == null)
-            {
-                Console.WriteLine("Label call must be used with a string literal.");
-                Environment.Exit(1);
-            }
-
-            var nop = Instruction.Create(OpCodes.Nop);
-
-            ilProcessor.Remove(instruction.Previous);
-            ilProcessor.Replace(instruction, nop);
-            Labels.Add(Tuple.Create(CurrentMethod, label), nop);
-            return -1;
-        }
-
-        void ReplaceLoad(ILProcessor ilProcessor, Instruction instruction)
-        {
-        
-        }
-
-        void ReplaceStore(ILProcessor ilProcessor, Instruction instruction)
-        {
-
         }
 
         int ReplaceInstruction(ILProcessor ilProcessor, Instruction instruction, MethodReference method)
@@ -71,40 +37,44 @@ namespace Rewriter
             int instructionChanges = 0;
             
             var opcodeField = typeof(OpCodes).GetFields().First(info => info.Name == method.Name);
-            var opcode = opcodeField == null ? null : (OpCode?)opcodeField.GetValue(null);
+            var maybeOpcode = opcodeField == null ? null : (OpCode?)opcodeField.GetValue(null);
 
-            if (method.Parameters.Count == 0)
+            if (maybeOpcode.HasValue)
             {
-                newInstruction = Instruction.Create(opcode.Value);
-            }
-            else
-            {
-                object operand = GetOperand(instruction);
-                ilProcessor.Remove(instruction.Previous);
-                instructionChanges = -1;
+                var opcode = maybeOpcode.Value;
 
-                if (instruction.OpCode.OperandType == OperandType.InlineVar
-                    || instruction.OpCode.OperandType == OperandType.ShortInlineVar)
+                if (method.Parameters.Count == 0)
                 {
-                    var variable = ilProcessor.Body.Variables[(int)operand];
+                    newInstruction = Instruction.Create(opcode);
+                }
+                else
+                {
+                    object operand = GetOperand(instruction);
+                    ilProcessor.Remove(instruction.Previous);
+                    instructionChanges = -1;
 
-                    newInstruction = Instruction.Create(opcode.Value, variable);
-                }
-                else if(instruction.OpCode.OperandType == OperandType.InlineArg ||
-                    instruction.OpCode.OperandType == OperandType.ShortInlineArg)
-                {
-                    var variable = ilProcessor.Body.Method.Parameters[(int)operand];
+                    if (opcode.OperandType == OperandType.InlineVar)
+                    {
+                        var variable = ilProcessor.Body.Variables[(int)operand];
 
-                    newInstruction = Instruction.Create(opcode.Value, variable);
-                }
-                else if (method.Name == "Ldc_I4")
-                {
-                    newInstruction = ShortenLdc_I4((int)operand);              
-                }
-                else if (method.Name == "Call")
-                {
-                    var calleeMethod = operand as MethodReference;
-                    newInstruction = Instruction.Create(opcode.Value, calleeMethod);
+                        newInstruction = Instruction.Create(opcode, variable);
+                    }
+                    else if (opcode.OperandType == OperandType.InlineArg)
+                    {
+                        var variable = ilProcessor.Body.Method.Parameters[(int)operand];
+
+                        newInstruction = Instruction.Create(opcode, variable);
+                    }
+                    else if (opcode.OperandType == OperandType.InlineBrTarget)
+                    {
+                        var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
+
+                        newInstruction = Instruction.Create(opcode, jump);
+                    }
+                    else if (method.Name == "Ldc_I4")
+                    {
+                        newInstruction = ShortenLdc_I4((int)operand);
+                    }
                 }
             }
 

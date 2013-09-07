@@ -50,7 +50,10 @@ namespace Rewriter
 
                 var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
 
-                var cilReplacer = new CilReplacer();
+                var labelReplace = new LabelReplacer();
+                labelReplace.Visit(assembly);
+
+                var cilReplacer = new CilReplacer(labelReplace);
                 cilReplacer.Visit(assembly);
 
                 assembly.Write(output, writeParameters);
