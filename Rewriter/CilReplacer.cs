@@ -24,7 +24,16 @@ namespace Weave
 
                 if (method != null && method.DeclaringType.FullName == "Silk.Cil")
                 {
-                    return ReplaceInstruction(ilProcessor, instruction, method);
+                    if (method.Name == "KeepAlive")
+                    {
+                        ilProcessor.Remove(instruction.Previous);
+                        ilProcessor.Remove(instruction);
+                        return -2;
+                    }
+                    else
+                    {
+                        return ReplaceInstruction(ilProcessor, instruction, method);
+                    }
                 }
             }
 
@@ -43,39 +52,53 @@ namespace Weave
             {
                 var opcode = maybeOpcode.Value;
 
-                if (method.Parameters.Count == 0)
+                if (method is GenericInstanceMethod)
                 {
-                    newInstruction = Instruction.Create(opcode);
+                    var generic_method = method as GenericInstanceMethod;
+                    var typetok = generic_method.GenericArguments[0];
+                    newInstruction = Instruction.Create(opcode, typetok);
                 }
                 else
                 {
-                    object operand = GetOperand(instruction);
-                    ilProcessor.Remove(instruction.Previous);
-                    instructionChanges = -1;
-
-                    if (opcode.OperandType == OperandType.InlineVar)
+                    if (method.Parameters.Count == 0)
                     {
-                        var variable = ilProcessor.Body.Variables[(int)operand];
-
-                        newInstruction = Instruction.Create(opcode, variable);
+                        newInstruction = Instruction.Create(opcode);
                     }
-                    else if (opcode.OperandType == OperandType.InlineArg)
+                    else
                     {
-                        var variable = ilProcessor.Body.Method.Parameters[(int)operand];
+                        object operand = GetOperand(instruction);
+                        ilProcessor.Remove(instruction.Previous);
+                        instructionChanges = -1;
 
-                        newInstruction = Instruction.Create(opcode, variable);
-                    }
-                    else if (opcode.OperandType == OperandType.InlineBrTarget)
-                    {
-                        var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
+                        if (opcode.OperandType == OperandType.InlineVar)
+                        {
+                            var variable = ilProcessor.Body.Variables[(int)operand];
 
-                        newInstruction = Instruction.Create(opcode, jump);
-                    }
-                    else if (method.Name == "Ldc_I4")
-                    {
-                        newInstruction = ShortenLdc_I4((int)operand);
+                            newInstruction = Instruction.Create(opcode, variable);
+                        }
+                        else if (opcode.OperandType == OperandType.InlineArg)
+                        {
+                            var variable = ilProcessor.Body.Method.Parameters[(int)operand];
+
+                            newInstruction = Instruction.Create(opcode, variable);
+                        }
+                        else if (opcode.OperandType == OperandType.InlineBrTarget)
+                        {
+                            var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
+
+                            newInstruction = Instruction.Create(opcode, jump);
+                        }
+                        else if (method.Name == "Ldc_I4")
+                        {
+                            newInstruction = ShortenLdc_I4((int)operand);
+                        }
                     }
                 }
+            }
+            else
+            {
+                Console.WriteLine("Unknown opcode {0}, replacing with NOP.", method.Name);
+                newInstruction = Instruction.Create(OpCodes.Nop);
             }
 
             ilProcessor.Replace(instruction, newInstruction);

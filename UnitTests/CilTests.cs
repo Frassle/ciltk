@@ -43,6 +43,8 @@ namespace UnitTests
             Silk.Cil.Add();
             Silk.Cil.Stloc(0);
 
+            Silk.Cil.KeepAlive(j);
+
             Assert.AreEqual(3, i);
         }
 
@@ -100,20 +102,15 @@ namespace UnitTests
             Assert.AreEqual(i, j);
         }
 
-
         [TestMethod]
-        public void TestBranch()
+        public void TestSizeof()
         {
-            int i = 0;
-            int j = 1;
+            int size = 0;
 
-            Silk.Cil.Ldloc(0);
-            Silk.Cil.Ldloc(1);
-            Silk.Cil.Beq("equal");
-            i = j;
-            Silk.Cil.Label("equal");
+            Silk.Cil.Sizeof<Int32>();
+            Silk.Cil.Stloc(0);
 
-            Assert.AreEqual(i, j);
+            Assert.AreEqual(4, size);
         }
     }
 }

@@ -11,7 +11,14 @@ namespace Silk
         /// </summary>
         /// <param name="label">The label name.</param>
         public static void Label(string label) { throw new Exception("CilTK Rewriter not run."); }
-        
+
+        /// <summary>
+        /// Keeps a value alive to this point.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="value">The value to keep alive.</param>
+        public static void KeepAlive<T>(T value) { }
+
         /// <summary>
         /// Add two values, returning a new value.
         /// 
@@ -555,8 +562,26 @@ namespace Silk
         public static void Conv_U4() { throw new Exception("CilTK Rewriter not run."); }
         public static void Conv_U8() { throw new Exception("CilTK Rewriter not run."); }
 
-
+        /// <summary>
+        /// Copy data from memory to memory.
+        /// 
+        /// Stack Transition:
+        /// ..., destaddr, srcaddr, size -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The cpblk instruction copies size (of type unsigned int32) bytes from address srcaddr (of type
+        /// native int, or &) to address destaddr (of type native int, or &). The behavior of cpblk is
+        /// unspecified if the source and destination areas overlap.
+        /// cpblk assumes that both destaddr and srcaddr are aligned to the natural size of the machine (but
+        /// see the unaligned. prefix instruction). The operation of the cpblk instruction can be altered by
+        /// an immediately preceding volatile. or unaligned. prefix instruction.
+        /// [Rationale: cpblk is intended for copying structures (rather than arbitrary byte-runs). All such
+        /// structures, allocated by the CLI, are naturally aligned for the current platform. Therefore, there is
+        /// no need for the compiler that generates cpblk instructions to be aware of whether the code will
+        /// eventually execute on a 32-bit or 64-bit platform. end rationale]
+        /// </remarks>
         public static void Cpblk() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Cpobj() { throw new Exception("CilTK Rewriter not run."); }
 
 
@@ -564,11 +589,29 @@ namespace Silk
 
         public static void Div_Un() { throw new Exception("CilTK Rewriter not run."); }
 
-
         public static void Dup() { throw new Exception("CilTK Rewriter not run."); }
         public static void Endfilter() { throw new Exception("CilTK Rewriter not run."); }
         public static void Endfinally() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Set all bytes in a block of memory to a given byte value.
+        /// 
+        /// Stack Transition:
+        /// ..., addr, value, size -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The initblk instruction sets size (of type unsigned int32) bytes starting at addr (of type native
+        /// int, or &) to value (of type unsigned int8). initblk assumes that addr is aligned to the natural
+        /// size of the machine (but see the unaligned. prefix instruction).
+        /// [Rationale: initblk is intended for initializing structures (rather than arbitrary byte-runs). All such
+        /// structures, allocated by the CLI, are naturally aligned for the current platform. Therefore, there is
+        /// no need for the compiler that generates initblk instructions to be aware of whether the code will
+        /// eventually execute on a 32-bit or 64-bit platform. end rationale]
+        /// The operation of the initblk instructions can be altered by an immediately preceding volatile. or
+        /// unaligned. prefix instruction.
+        /// </remarks>
         public static void Initblk() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Initobj() { throw new Exception("CilTK Rewriter not run."); }
         public static void Isinst() { throw new Exception("CilTK Rewriter not run."); }
 
@@ -916,7 +959,28 @@ namespace Silk
         public static void Shl() { throw new Exception("CilTK Rewriter not run."); }
         public static void Shr() { throw new Exception("CilTK Rewriter not run."); }
         public static void Shr_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Sizeof() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Push the size, in bytes, of a type as an unsigned int32.
+        /// 
+        /// Stack Transition:
+        /// ..., -> ..., size (4 bytes, unsigned)
+        /// </summary>
+        /// <remarks>
+        /// Returns the size, in bytes, of a type. typeTok can be a generic parameter, a reference type or a
+        /// value type.
+        /// For a reference type, the size returned is the size of a reference value of the corresponding type,
+        /// not the size of the data stored in objects referred to by a reference value.
+        /// [Rationale: The definition of a value type can change between the time the CIL is generated and
+        /// the time that it is loaded for execution. Thus, the size of the type is not always known when the
+        /// CIL is generated. The sizeof instruction allows CIL code to determine the size at runtime
+        /// without the need to call into the Framework class library. The computation can occur entirely at
+        /// runtime or at CIL-to-native-code compilation time. sizeof returns the total size that would be
+        /// occupied by each element in an array of this type – including any padding the implementation
+        /// chooses to add. Specifically, array elements lie sizeof bytes apart. end rationale]
+        /// </remarks>
+        public static void Sizeof<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Starg(int num) { throw new Exception("CilTK Rewriter not run."); }
         public static void Stelem_Any() { throw new Exception("CilTK Rewriter not run."); }
         public static void Stelem_I() { throw new Exception("CilTK Rewriter not run."); }
