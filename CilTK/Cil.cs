@@ -6,6 +6,10 @@ namespace Silk
 {
     public static unsafe class Cil
     {
+        /// <summary>
+        /// Defines a new label in the instruction stream.
+        /// </summary>
+        /// <param name="label">The label name.</param>
         public static void Label(string label) { throw new Exception("CilTK Rewriter not run."); }
         
         /// <summary>
@@ -102,19 +106,241 @@ namespace Silk
         /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see 
         /// Partition I for details). 
         /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Beq(string label) { throw new Exception("CilTK Rewriter not run."); }
 
+        /// <summary>
+        /// Branch to target if greater than or equal to.
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The bge instruction transfers control to target if value1 is greater than or equal to value2. The
+        /// effect is identical to performing a clt.un instruction followed by a brfalse target. target is
+        /// represented as a signed offset (4 bytes for bge, 1 byte for bge.s) from the beginning of the
+        /// instruction following the current instruction.
+        /// The effect of a “bge target” instruction is identical to:
+        /// - If stack operands are integers, then clt followed by a brfalse target
+        /// - If stack operands are floating-point, then clt.un followed by a brfalse target
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Bge(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if greater than or equal to (unsigned or unordered).
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The bge.un instruction transfers control to target if value1 is greater than or equal to value2,
+        /// when compared unsigned (for integer values) or unordered (for floating-point values).
+        /// target is represented as a signed offset (4 bytes for bge.un, 1 byte for bge.un.s) from the
+        /// beginning of the instruction following the current instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Bge_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if greater than.
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The bgt instruction transfers control to target if value1 is greater than value2. The effect is
+        /// identical to performing a cgt instruction followed by a brtrue target. target is represented as a
+        /// signed offset (4 bytes for bgt, 1 byte for bgt.s) from the beginning of the instruction following
+        /// the current instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Bgt(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if greater than (unsigned or unordered).
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ... 
+        /// </summary>
+        /// <remarks>
+        /// The bgt.un instruction transfers control to target if value1 is greater than value2, when compared
+        /// unsigned (for integer values) or unordered (for floating-point values). The effect is identical to
+        /// performing a cgt.un instruction followed by a brtrue target. target is represented as a signed
+        /// offset (4 bytes for bgt.un, 1 byte for bgt.un.s) from the beginning of the instruction following
+        /// the current instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Bgt_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if less than or equal to.
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ... 
+        /// </summary>
+        /// <remarks>
+        /// The ble instruction transfers control to target if value1 is less than or equal to value2. target is
+        /// represented as a signed offset (4 bytes for ble, 1 byte for ble.s) from the beginning of the
+        /// instruction following the current instruction.
+        /// The effect of a “ble target” instruction is identical to:
+        /// - If stack operands are integers, then : cgt followed by a brfalse target
+        /// - If stack operands are floating-point, then : cgt.un followed by a brfalse target
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Ble(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if less than or equal to (unsigned or unordered).
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The ble.un instruction transfers control to target if value1 is less than or equal to value2, when
+        /// compared unsigned (for integer values) or unordered (for floating-point values). target is
+        /// represented as a signed offset (4 bytes for ble.un, 1 byte for ble.un.s) from the beginning of the
+        /// instruction following the current instruction.
+        /// The effect of a “ble.un target” instruction is identical to:
+        /// - If stack operands are integers, then cgt.un followed by a brfalse target
+        /// - If stack operands are floating-point, then cgt followed by a brfalse target
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Ble_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if less than.
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The blt instruction transfers control to target if value1 is less than value2. The effect is identical
+        /// to performing a clt instruction followed by a brtrue target. target is represented as a signed
+        /// offset (4 bytes for blt, 1 byte for blt.s) from the beginning of the instruction following the current
+        /// instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Blt(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if less than (unsigned or unordered).
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The blt.un instruction transfers control to target if value1 is less than value2, when compared
+        /// unsigned (for integer values) or unordered (for floating-point values). The effect is identical to
+        /// performing a clt.un instruction followed by a brtrue target. target is represented as a signed
+        /// offset (4 bytes for blt.un, 1 byte for blt.un.s) from the beginning of the instruction following the
+        /// current instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Blt_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if unequal or unordered, short form.
+        /// 
+        /// Stack Transition:
+        /// ..., value1, value2 -> ...
+        /// </summary>
+        /// <remarks>
+        /// The bne.un instruction transfers control to target if value1 is not equal to value2, when
+        /// compared unsigned (for integer values) or unordered (for floating-point values). The effect is
+        /// identical to performing a ceq instruction followed by a brfalse target. target is represented as a
+        /// signed offset (4 bytes for bne.un, 1 byte for bne.un.s) from the beginning of the instruction
+        /// following the current instruction.
+        /// The acceptable operand types are encapsulated in
+        /// Table 4: Binary Comparison or Branch Operations.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Bne_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Box() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target.
+        /// 
+        /// Stack Transition:
+        /// ..., -> ... 
+        /// </summary>
+        /// <remarks>
+        /// The br instruction unconditionally transfers control to target. target is represented as a signed
+        /// offset (4 bytes for br, 1 byte for br.s) from the beginning of the instruction following the current
+        /// instruction.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// [Rationale: While a leave instruction can be used instead of a br instruction when the evaluation
+        /// stack is empty, doing so might increase the resources required to compile from CIL to native
+        /// code and/or lead to inferior native code. Therefore CIL generators should use a br instruction in
+        /// preference to a leave instruction when both are valid. end rationale]
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Br(string label) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
@@ -133,10 +359,50 @@ namespace Silk
         /// </remarks>
         public static void Break() { throw new Exception("CilTK Rewriter not run."); }
 
+        /// <summary>
+        /// Branch to target if value is zero (false).
+        /// 
+        /// Stack Transition:
+        /// ..., value -> ...
+        /// </summary>
+        /// <remarks>
+        /// The brfalse instruction transfers control to target if value (of type int32, int64, object
+        /// reference, managed pointer, unmanaged pointer or native int) is zero (false). If value is nonzero
+        /// (true), execution continues at the next instruction.
+        /// Target is represented as a signed offset (4 bytes for brfalse, 1 byte for brfalse.s) from the
+        /// beginning of the instruction following the current instruction.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Brfalse(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Branch to target if value is non-zero (true).
+        /// 
+        /// Stack Transition:
+        /// ..., value -> ...
+        /// </summary>
+        /// <remarks>
+        /// The brtrue instruction transfers control to target if value (of type native int) is nonzero (true).
+        /// If value is zero (false) execution continues at the next instruction.
+        /// If the value is an object reference (type O) then brinst (an alias for brtrue) transfers control if it
+        /// represents an instance of an object (i.e., isn’t the null object reference, see ldnull).
+        /// Target is represented as a signed offset (4 bytes for brtrue, 1 byte for brtrue.s) from the
+        /// beginning of the instruction following the current instruction.
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by this
+        /// instruction. (Such transfers are severely restricted and shall use the leave instruction instead; see
+        /// Partition I for details).
+        /// </remarks>
+        /// <param name="label">The label to branch to.</param>
         public static void Brtrue(string label) { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Call<T>(T method) { throw new Exception("CilTK Rewriter not run."); }
+        public static void Call(object method) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Call method indicated on the stack with arguments described by 
@@ -531,15 +797,71 @@ namespace Silk
         public static void Ldloc(int indx) { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Ldloca(int indx) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Push a null reference on the stack.
+        /// 
+        /// Stack Transition:
+        /// ... -> ..., null value
+        /// </summary>
+        /// <remarks>
+        /// The ldnull pushes a null reference (type O) on the stack. This is used to initialize locations before
+        /// they become live or when they become dead.
+        /// [Rationale: It might be thought that ldnull is redundant: why not use ldc.i4.0 or ldc.i8.0 instead?
+        /// The answer is that ldnull provides a size-agnostic null – analogous to an ldc.i instruction, which
+        /// does not exist. However, even if CIL were to include an ldc.i instruction it would still benefit
+        /// verification algorithms to retain the ldnull instruction because it makes type tracking easier. end
+        /// rationale]
+        /// </remarks>
         public static void Ldnull() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldobj() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldsfld() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldsflda() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Ldstr() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Push a string object for the literal str.
+        /// 
+        /// Stack Transition:
+        /// ... -> ..., str
+        /// </summary>
+        /// <remarks>
+        /// The ldstr instruction pushes a new string object representing the literal stored in the metadata as
+        /// string (which is a string literal).
+        /// By default, the CLI guarantees that the result of two ldstr instructions referring to two metadata
+        /// tokens that have the same sequence of characters, return precisely the same string object (a
+        /// process known as “string interning”). This behavior can be controlled using the
+        /// System.Runtime.CompilerServices. CompilationRelaxationsAttribute and the
+        /// System.Runtime.CompilerServices. CompilationRelaxations.NoStringInterning (see
+        /// Partition IV).
+        /// </remarks>
+        /// <param name="str">The literal string to load.</param>
+        public static void Ldstr(string str) { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldtoken() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldvirtftn() { throw new Exception("CilTK Rewriter not run."); }
         public static void Leave(string label) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Allocate space from the local memory pool.
+        /// 
+        /// Stack Transition:
+        /// ..., size -> ..., address
+        /// </summary>
+        /// <remarks>
+        /// The localloc instruction allocates size (type native unsigned int or U4) bytes from the local
+        /// dynamic memory pool and returns the address (an unmanaged pointer, type native int) of the first
+        /// allocated byte. If the localsinit flag on the method is true, the block of memory returned is
+        /// initialized to 0; otherwise, the initial value of that block of memory is unspecified. The area of
+        /// memory is newly allocated. When the current method returns, the local memory pool is available
+        /// for reuse.
+        /// address is aligned so that any built-in data type can be stored there using the stind instructions
+        /// and loaded using the ldind instructions.
+        /// The localloc instruction cannot occur within an exception block: filter, catch, finally, or
+        /// fault.
+        /// [Rationale: localloc is used to create local aggregates whose size shall be computed at runtime.
+        /// It can be used for C’s intrinsic alloca method. end rationale]
+        /// </remarks>
         public static void Localloc() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Mkrefany() { throw new Exception("CilTK Rewriter not run."); }
         public static void Mul() { throw new Exception("CilTK Rewriter not run."); }
         public static void Mul_Ovf() { throw new Exception("CilTK Rewriter not run."); }
@@ -548,7 +870,18 @@ namespace Silk
         public static void Newarr() { throw new Exception("CilTK Rewriter not run."); }
         public static void Newobj() { throw new Exception("CilTK Rewriter not run."); }
         public static void No() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Do nothing.
+        /// 
+        /// Stack Transition:
+        /// ..., -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The nop instruction does nothing. It is intended to fill in space if bytecodes are patched.
+        /// </remarks>
         public static void Nop() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Not() { throw new Exception("CilTK Rewriter not run."); }
         public static void Or() { throw new Exception("CilTK Rewriter not run."); }
         public static void Pop() { throw new Exception("CilTK Rewriter not run."); }
