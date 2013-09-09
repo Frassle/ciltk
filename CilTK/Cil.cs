@@ -570,7 +570,7 @@ namespace Silk
         /// </summary>
         /// <remarks>
         /// The cpblk instruction copies size (of type unsigned int32) bytes from address srcaddr (of type
-        /// native int, or &) to address destaddr (of type native int, or &). The behavior of cpblk is
+        /// native int, or &amp;) to address destaddr (of type native int, or &amp;). The behavior of cpblk is
         /// unspecified if the source and destination areas overlap.
         /// cpblk assumes that both destaddr and srcaddr are aligned to the natural size of the machine (but
         /// see the unaligned. prefix instruction). The operation of the cpblk instruction can be altered by
