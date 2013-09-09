@@ -79,9 +79,7 @@ namespace UnitTests
             int i = 0;
 
             Silk.Cil.Br("branch");
-
             i = 1;
-
             Silk.Cil.Label("branch");
 
             Assert.AreEqual(0, i);
@@ -111,6 +109,53 @@ namespace UnitTests
             Silk.Cil.Stloc(0);
 
             Assert.AreEqual(4, size);
+        }
+
+        struct TestStruct
+        {
+            public int A;
+            public int B;
+        }
+
+        public int GenericSizeof<T>()
+        {
+            Silk.Cil.Sizeof<T>();
+            Silk.Cil.Ret();
+
+            return 0;
+        }
+
+        [TestMethod]
+        public void TestGenericSizeof()
+        {
+            Assert.AreEqual(8, GenericSizeof<TestStruct>());
+        }
+
+        public T ReadWrite<T>(T value)
+        {
+            T result = default(T);
+
+            Silk.Cil.Ldloca(0);
+            Silk.Cil.Ldarga(0);
+            Silk.Cil.Sizeof<T>();
+            Silk.Cil.Cpblk();
+
+            return result;
+        }
+
+        [TestMethod]
+        public void TestReadWriteGenerics()
+        {
+            TestStruct test = new TestStruct()
+            {
+                A = 1,
+                B = 2
+            };
+
+            TestStruct result = ReadWrite<TestStruct>(test);
+
+            Assert.AreEqual(test.A, result.A);
+            Assert.AreEqual(test.B, result.B);
         }
     }
 }
