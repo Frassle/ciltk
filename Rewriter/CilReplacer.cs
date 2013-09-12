@@ -85,6 +85,11 @@ namespace Weave
                             var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
                             newInstruction = Instruction.Create(opcode, jump);
                         }
+                        else if (opcode.OperandType == OperandType.ShortInlineI)
+                        {
+                            var integer = (byte)operand;
+                            newInstruction = Instruction.Create(opcode, integer);
+                        }
                         else if (opcode.OperandType == OperandType.InlineI)
                         {
                             var integer = (int)operand;
@@ -94,6 +99,20 @@ namespace Weave
                         {
                             var integer = (long)operand;
                             newInstruction = Instruction.Create(opcode, integer);
+                        }
+                        else if (opcode.OperandType == OperandType.ShortInlineR)
+                        {
+                            var real = (float)operand;
+                            newInstruction = Instruction.Create(opcode, real);
+                        }
+                        else if (opcode.OperandType == OperandType.InlineR)
+                        {
+                            var real = (double)operand;
+                            newInstruction = Instruction.Create(opcode, real);
+                        }
+                        else if (opcode.OperandType == OperandType.InlineType)
+                        {
+                            Console.WriteLine("Inline type opcode ({0}) without generic argument.", opcode);   
                         }
                     }
                 }
