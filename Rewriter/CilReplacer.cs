@@ -73,24 +73,27 @@ namespace Weave
                         if (opcode.OperandType == OperandType.InlineVar)
                         {
                             var variable = ilProcessor.Body.Variables[(int)operand];
-
                             newInstruction = Instruction.Create(opcode, variable);
                         }
                         else if (opcode.OperandType == OperandType.InlineArg)
                         {
                             var variable = ilProcessor.Body.Method.Parameters[(int)operand];
-
                             newInstruction = Instruction.Create(opcode, variable);
                         }
                         else if (opcode.OperandType == OperandType.InlineBrTarget)
                         {
                             var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
-
                             newInstruction = Instruction.Create(opcode, jump);
                         }
-                        else if (method.Name == "Ldc_I4")
+                        else if (opcode.OperandType == OperandType.InlineI)
                         {
-                            newInstruction = ShortenLdc_I4((int)operand);
+                            var integer = (int)operand;
+                            newInstruction = Instruction.Create(opcode, integer);
+                        }
+                        else if (opcode.OperandType == OperandType.InlineI8)
+                        {
+                            var integer = (long)operand;
+                            newInstruction = Instruction.Create(opcode, integer);
                         }
                     }
                 }
@@ -175,42 +178,6 @@ namespace Weave
             }
 
             return null;
-        }
-
-        private Instruction ShortenLdc_I4(int value)
-        {
-            switch (value)
-            {
-                case -1:
-                    return Instruction.Create(OpCodes.Ldc_I4_M1);
-                case 0:
-                    return Instruction.Create(OpCodes.Ldc_I4_0);
-                case 1:
-                    return Instruction.Create(OpCodes.Ldc_I4_1);
-                case 2:
-                    return Instruction.Create(OpCodes.Ldc_I4_2);
-                case 3:
-                    return Instruction.Create(OpCodes.Ldc_I4_3);
-                case 4:
-                    return Instruction.Create(OpCodes.Ldc_I4_4);
-                case 5:
-                    return Instruction.Create(OpCodes.Ldc_I4_5);
-                case 6:
-                    return Instruction.Create(OpCodes.Ldc_I4_6);
-                case 7:
-                    return Instruction.Create(OpCodes.Ldc_I4_7);
-                case 8:
-                    return Instruction.Create(OpCodes.Ldc_I4_8);
-            }
-
-            if (value >= sbyte.MinValue && value <= sbyte.MaxValue)
-            {
-                return Instruction.Create(OpCodes.Ldc_I4_S, (sbyte)value);
-            }
-            else
-            {
-                return Instruction.Create(OpCodes.Ldc_I4, value);
-            }      
         }
     }
 }
