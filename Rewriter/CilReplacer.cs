@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mono.Cecil.Rocks;
 
 namespace Weave
 {
@@ -138,50 +139,6 @@ namespace Weave
             else if (ld.OpCode == OpCodes.Ldc_I4)
             {
                 return (int)ld.Operand;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_S)
-            {
-                return (int)(sbyte)ld.Operand;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_M1)
-            {
-                return -1;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_0)
-            {
-                return 0;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_1)
-            {
-                return 1;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_2)
-            {
-                return 2;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_3)
-            {
-                return 3;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_4)
-            {
-                return 4;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_5)
-            {
-                return 5;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_6)
-            {
-                return 6;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_7)
-            {
-                return 7;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4_8)
-            {
-                return 8;
             }
             else if (ld.OpCode == OpCodes.Ldc_I8)
             {

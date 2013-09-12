@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,11 +40,14 @@ namespace Weave
                 CurrentMethod = method;
                 var body = method.Body;
                 var il = body.GetILProcessor();
+                il.Body.SimplifyMacros();
 
                 for (int i = 0; i < body.Instructions.Count; ++i)
                 {
                     i += Visit(il, body.Instructions[i]);
                 }
+
+                il.Body.OptimizeMacros();
             }
         }
 
