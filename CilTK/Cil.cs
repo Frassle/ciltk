@@ -325,7 +325,28 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static void Bne_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Box() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Convert a boxable value to its boxed form.
+        /// 
+        /// Stack Transition:
+        /// ..., val -> ..., obj
+        /// </summary>
+        /// <remarks>
+        /// If typeTok is a value type, the box instruction converts val to its boxed form. When typeTok is a
+        /// non-nullable type (§I.8.2.4), this is done by creating a new object and copying the data from val
+        /// into the newly allocated object. If it is a nullable type, this is done by inspecting val’s HasValue
+        /// property; if it is false, a null reference is pushed onto the stack; otherwise, the result of boxing
+        /// val’s Value property is pushed onto the stack.
+        /// If typeTok is a reference type, the box instruction does returns val unchanged as obj.
+        /// If typeTok is a generic parameter, the behavior of box instruction depends on the actual type at
+        /// runtime. If this type is a value type it is boxed as above, if it is a reference type then val is not
+        /// changed. However the type tracked by verification is always “boxed” typeTok for generic
+        /// parameters, regardless of whether the actual type at runtime is a value or reference type.
+        /// typeTok is a metadata token (a typedef, typeref, or typespec) indicating the type of val.
+        /// typeTok can represent a value type, a reference type, or a generic parameter.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Box<T>() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Branch to target.
