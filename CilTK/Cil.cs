@@ -1000,6 +1000,7 @@ namespace Silk
         /// occupied by each element in an array of this type – including any padding the implementation
         /// chooses to add. Specifically, array elements lie sizeof bytes apart. end rationale]
         /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
         public static void Sizeof<T>() { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Starg(int num) { throw new Exception("CilTK Rewriter not run."); }
