@@ -157,5 +157,60 @@ namespace UnitTests
             Assert.AreEqual(test.A, result.A);
             Assert.AreEqual(test.B, result.B);
         }
+
+        [TestMethod]
+        public void TestLdStobj()
+        {
+            TestStruct test1 = new TestStruct()
+            {
+                A = 1,
+                B = 2,
+            };
+
+            TestStruct test2 = new TestStruct();
+
+            Silk.Cil.Ldloca(1);
+            Silk.Cil.Ldloca(0);
+            Silk.Cil.Ldobj<TestStruct>();
+            Silk.Cil.Stobj<TestStruct>();
+
+            Assert.AreEqual(test1.A, test2.A);
+            Assert.AreEqual(test1.B, test2.B);
+        }
+
+        [TestMethod]
+        public void TestCpobj()
+        {
+            TestStruct test1 = new TestStruct()
+            {
+                A = 1,
+                B = 2,
+            };
+
+            TestStruct test2 = new TestStruct();
+
+            Silk.Cil.Ldloca(1);
+            Silk.Cil.Ldloca(0);
+            Silk.Cil.Cpobj<TestStruct>();
+
+            Assert.AreEqual(test1.A, test2.A);
+            Assert.AreEqual(test1.B, test2.B);
+        }
+
+        [TestMethod]
+        public void TestInitobj()
+        {
+            TestStruct test = new TestStruct()
+            {
+                A = 1,
+                B = 2,
+            };
+
+            Silk.Cil.Ldloca(0);
+            Silk.Cil.Initobj<TestStruct>();
+
+            Assert.AreEqual(test.A, 0);
+            Assert.AreEqual(test.B, 0);
+        }
     }
 }
