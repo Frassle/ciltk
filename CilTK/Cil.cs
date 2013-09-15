@@ -485,7 +485,7 @@ namespace Silk
         /// <remarks>
         /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
         /// class. If typeTok is a non-nullable value type or a generic parameter type it is interpreted
-        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable<T>, it is interpreted as
+        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable&lt;T&gt;, it is interpreted as
         /// “boxed” T.
         /// The castclass instruction determines if obj (of type O) is an instance of the type typeTok, termed
         /// “casting”.
@@ -757,7 +757,7 @@ namespace Silk
         /// <remarks>
         /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
         /// class. If typeTok is a non-nullable value type or a generic parameter type it is interpreted
-        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable<T>, it is interpreted as
+        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable&lt;T&gt;, it is interpreted as
         /// “boxed” T.
         /// The isinst instruction tests whether obj (type O) is an instance of the type typeTok.
         /// If the actual type (not the verifier tracked type) of obj is verifier-assignable-to the type
