@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CilReplacer.cs" />
-    <Compile Include="Inliner.cs" />
     <Compile Include="InstructionVisitor.cs" />
     <Compile Include="LabelReplacer.cs" />
     <Compile Include="Mono.Options\Options.cs" />
