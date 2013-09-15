@@ -27,7 +27,7 @@ namespace Weave
             return instruction;
         }
 
-        protected override int Visit(ILProcessor ilProcessor, Instruction instruction)
+        protected override void Visit(ILProcessor ilProcessor, Instruction instruction)
         {
             if (instruction.OpCode == OpCodes.Call)
             {
@@ -35,14 +35,12 @@ namespace Weave
 
                 if (method != null && method.DeclaringType.FullName == "Silk.Cil" && method.Name == "Label")
                 {
-                    return ReplaceLabel(ilProcessor, instruction);
+                    ReplaceLabel(ilProcessor, instruction);
                 }
             }
-
-            return 0;
         }
 
-        int ReplaceLabel(ILProcessor ilProcessor, Instruction instruction)
+        void ReplaceLabel(ILProcessor ilProcessor, Instruction instruction)
         {
             var ld = instruction.Previous;
 
@@ -59,12 +57,11 @@ namespace Weave
                 Environment.Exit(1);
             }
 
-            var nop = Instruction.Create(OpCodes.Nop);
+            ilProcessor.Replace(instruction.Previous, Nop());
 
-            ilProcessor.Remove(instruction.Previous);
+            var nop = Nop();
             ilProcessor.Replace(instruction, nop);
             Labels.Add(Tuple.Create(CurrentMethod, label), nop);
-            return -1;
         }
     }
 }

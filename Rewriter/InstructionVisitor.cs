@@ -15,6 +15,11 @@ namespace Weave
             private set;
         }
 
+        protected Mono.Cecil.Cil.Instruction Nop()
+        {
+            return Mono.Cecil.Cil.Instruction.Create(Mono.Cecil.Cil.OpCodes.Nop);
+        }
+
         public void Visit(Mono.Cecil.AssemblyDefinition assembly)
         {
             foreach (var module in assembly.Modules)
@@ -44,7 +49,7 @@ namespace Weave
 
                 for (int i = 0; i < body.Instructions.Count; ++i)
                 {
-                    i += Visit(il, body.Instructions[i]);
+                    Visit(il, body.Instructions[i]);
                 }
 
                 il.Body.OptimizeMacros();
@@ -63,6 +68,6 @@ namespace Weave
             }
         }
 
-        protected abstract int Visit(Mono.Cecil.Cil.ILProcessor ilProcessor, Mono.Cecil.Cil.Instruction instruction);
+        protected abstract void Visit(Mono.Cecil.Cil.ILProcessor ilProcessor, Mono.Cecil.Cil.Instruction instruction);
     }
 }

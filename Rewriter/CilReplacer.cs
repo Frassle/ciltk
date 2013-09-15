@@ -17,7 +17,7 @@ namespace Weave
             Labels = labels;
         }
 
-        protected override int Visit(ILProcessor ilProcessor, Instruction instruction)
+        protected override void Visit(ILProcessor ilProcessor, Instruction instruction)
         {
             if (instruction.OpCode == OpCodes.Call)
             {
@@ -27,24 +27,20 @@ namespace Weave
                 {
                     if (method.Name == "KeepAlive")
                     {
-                        ilProcessor.Remove(instruction.Previous);
-                        ilProcessor.Remove(instruction);
-                        return -2;
+                        ilProcessor.Replace(instruction.Previous, Nop());
+                        ilProcessor.Replace(instruction, Nop());
                     }
                     else
                     {
-                        return ReplaceInstruction(ilProcessor, instruction, method);
+                        ReplaceInstruction(ilProcessor, instruction, method);
                     }
                 }
             }
-
-            return 0;
         }
 
-        int ReplaceInstruction(ILProcessor ilProcessor, Instruction instruction, MethodReference method)
+        void ReplaceInstruction(ILProcessor ilProcessor, Instruction instruction, MethodReference method)
         {
             Instruction newInstruction = null;
-            int instructionChanges = 0;
             
             var opcodeField = typeof(OpCodes).GetFields().First(info => info.Name == method.Name);
             var maybeOpcode = opcodeField == null ? null : (OpCode?)opcodeField.GetValue(null);
@@ -68,8 +64,7 @@ namespace Weave
                     else
                     {
                         object operand = GetOperand(instruction);
-                        ilProcessor.Remove(instruction.Previous);
-                        instructionChanges = -1;
+                        ilProcessor.Replace(instruction.Previous, Nop());
 
                         if (opcode.OperandType == OperandType.InlineVar)
                         {
@@ -121,11 +116,10 @@ namespace Weave
             else
             {
                 Console.WriteLine("Unknown opcode {0}, replacing with NOP.", method.Name);
-                newInstruction = Instruction.Create(OpCodes.Nop);
+                newInstruction = Nop();
             }
 
             ilProcessor.Replace(instruction, newInstruction);
-            return instructionChanges;
         }
 
         private object GetOperand(Instruction instruction)
