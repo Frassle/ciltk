@@ -1029,7 +1029,30 @@ namespace Silk
         /// rationale]
         /// </remarks>
         public static void Ldnull() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Ldobj() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Copy the value stored at address src to the stack.
+        /// 
+        /// Stack Transition:
+        /// ..., src -> ..., val
+        /// </summary>
+        /// <remarks>
+        /// The ldobj instruction copies a value to the evaluation stack. typeTok is a metadata token (a
+        /// typedef, typeref, or typespec). src is an unmanaged pointer (native int), or a managed
+        /// pointer (&). If typeTok is not a generic parameter and either a reference type or a built-in value
+        /// class, then the ldind instruction provides a shorthand for the ldobj instruction..
+        /// [Rationale: The ldobj instruction can be used to pass a value type as an argument. end rationale]
+        /// If required values are converted to the representation of the intermediate type (§I.8.7) of typeTok
+        /// when loaded onto the stack (§III.1.1.1).
+        /// [Note: That is integer values of less than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to F type. end
+        /// note]
+        /// The operation of the ldobj instruction can be altered by an immediately preceding volatile. or
+        /// unaligned. prefix instruction.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Ldobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Ldsfld() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldsflda() { throw new Exception("CilTK Rewriter not run."); }
 
