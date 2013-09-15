@@ -476,7 +476,30 @@ namespace Silk
 
         public static void Callvirt() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Castclass() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Cast obj to typeTok.
+        /// 
+        /// Stack Transition:
+        /// ..., obj -> ..., obj2
+        /// </summary>
+        /// <remarks>
+        /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
+        /// class. If typeTok is a non-nullable value type or a generic parameter type it is interpreted
+        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable<T>, it is interpreted as
+        /// “boxed” T.
+        /// The castclass instruction determines if obj (of type O) is an instance of the type typeTok, termed
+        /// “casting”.
+        /// If the actual type (not the verifier tracked type) of obj is verifier-assignable-to the type typeTok
+        /// the cast succeeds and obj (as obj2) is returned unchanged while verification tracks its type as
+        /// typeTok.
+        /// Unlike coercions (§III.1.6) and conversions (§III.3.27), a cast never changes the actual
+        /// type of an object and preserves object identity (see Partition I).
+        /// If the cast fails then an InvalidCastException is thrown.
+        /// If obj is null, castclass succeeds and returns null. This behavior differs semantically from isinst
+        /// where if obj is null, isinst fails and returns null.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Castclass<T>() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Push 1 (of type int32) if value1 equals value2, else push 0
