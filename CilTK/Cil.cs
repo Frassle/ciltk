@@ -627,7 +627,64 @@ namespace Silk
         public static void Div_Un() { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Dup() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// End an exception handling filter clause.
+        /// 
+        /// Stack Transition:
+        /// ..., value -> ...
+        /// </summary>
+        /// <remarks>
+        /// Used to return from the filter clause of an exception (see the Exception Handling subclause of
+        /// Partition I for a discussion of exceptions). value (which shall be of type int32 and one of a
+        /// specific set of values) is returned from the filter clause. It should be one of:
+        /// - exception_continue_search (0) to continue searching for an exception handler
+        /// - exception_execute_handler (1) to start the second phase of exception handling
+        /// where finally blocks are run until the handler associated with this filter clause is
+        /// located. Then the handler is executed.
+        /// The result of using any other integer value is unspecified.
+        /// The entry point of a filter, as shown in the method’s exception table, shall be the (lexically) first
+        /// instruction in the filter’s code block. The endfilter shall be the (lexically) last instruction in the
+        /// filter’s code block (hence there can only be one endfilter for any single filter block). After
+        /// executing the endfilter instruction, control logically flows back to the CLI exception handling
+        /// mechanism.
+        /// Control cannot be transferred into a filter block except through the exception mechanism.
+        /// Control cannot be transferred out of a filter block except through the use of a throw instruction or
+        /// executing the final endfilter instruction. In particular, it is not valid to execute a ret or leave
+        /// instruction within a filter block. It is not valid to embed a try block within a filter block. If
+        /// an exception is thrown inside the filter block, it is intercepted and a value of
+        /// exception_continue_search is returned.
+        /// </remarks>
         public static void Endfilter() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// End finally clause of an exception block.
+        /// 
+        /// Stack Transition:
+        /// ... -> ...
+        /// </summary>
+        /// <remarks>
+        /// Return from the finally or fault clause of an exception block (see the Exception Handling
+        /// subclause of Partition I for details).
+        /// Signals the end of the finally or fault clause so that stack unwinding can continue until the
+        /// exception handler is invoked. The endfinally or endfault instruction transfers control back to the
+        /// CLI exception mechanism. This then searches for the next finally clause in the chain, if the
+        /// protected block was exited with a leave instruction. If the protected block was exited with an
+        /// exception, the CLI will search for the next finally or fault, or enter the exception handler
+        /// chosen during the first pass of exception handling.
+        /// An endfinally instruction can only appear lexically within a finally block. Unlike the endfilter
+        /// instruction, there is no requirement that the block end with an endfinally instruction, and there
+        /// can be as many endfinally instructions within the block as required. These same restrictions
+        /// apply to the endfault instruction and the fault block, mutatis mutandis.
+        /// Control cannot be transferred into a finally (or fault block) except through the exception
+        /// mechanism. Control cannot be transferred out of a finally (or fault) block except through the
+        /// use of a throw instruction or executing the endfinally (or endfault) instruction. In particular, it is
+        /// not valid to “fall out” of a finally (or fault) block or to execute a ret or leave instruction
+        /// within a finally (or fault) block.
+        /// Note that the endfault and endfinally instructions are aliases—they correspond to the same
+        /// opcode.
+        /// endfinally empties the evaluation stack as a side-effect.
+        /// </remarks>
         public static void Endfinally() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
