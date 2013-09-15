@@ -603,7 +603,23 @@ namespace Silk
         /// </remarks>
         public static void Cpblk() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Cpobj() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Copy a value type from src to dest.
+        /// 
+        /// Stack Transition:
+        /// ..., dest, src -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The cpobj instruction copies the value at the address specified by src (an unmanaged pointer,
+        /// native int, or a managed pointer, &) to the address specified by dest (also a pointer). typeTok
+        /// can be a typedef, typeref, or typespec. The behavior is unspecified if
+        /// the type of the location referenced by src is not assignable-to (§I.8.7.3)
+        /// the type of the location referenced by dest.
+        /// If typeTok is a reference type, the cpobj instruction has the same effect as ldind.ref followed by
+        /// stind.ref.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Cpobj<T>() { throw new Exception("CilTK Rewriter not run."); }
 
 
         public static void Div() { throw new Exception("CilTK Rewriter not run."); }
@@ -633,7 +649,24 @@ namespace Silk
         /// </remarks>
         public static void Initblk() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Initobj() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Initialize the value at address dest.
+        /// 
+        /// Stack Transition:
+        /// ..., dest -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The initobj instruction initializes an address with a default value. typeTok is a metadata token (a
+        /// typedef, typeref, or typespec). dest is an unmanaged pointer (native int), or a managed
+        /// pointer (&). If typeTok is a value type, the initobj instruction initializes each field of dest to null
+        /// or a zero of the appropriate built-in type. If typeTok is a value type, then after this instruction is
+        /// executed, the instance is ready for a constructor method to be called. If typeTok is a reference
+        /// type, the initobj instruction has the same effect as ldnull followed by stind.ref.
+        /// Unlike newobj, the initobj instruction does not call any constructor method.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Initobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Isinst() { throw new Exception("CilTK Rewriter not run."); }
 
 
