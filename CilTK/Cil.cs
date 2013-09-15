@@ -634,7 +634,7 @@ namespace Silk
         /// </summary>
         /// <remarks>
         /// The cpobj instruction copies the value at the address specified by src (an unmanaged pointer,
-        /// native int, or a managed pointer, &) to the address specified by dest (also a pointer). typeTok
+        /// native int, or a managed pointer, &amp;) to the address specified by dest (also a pointer). typeTok
         /// can be a typedef, typeref, or typespec. The behavior is unspecified if
         /// the type of the location referenced by src is not assignable-to (§I.8.7.3)
         /// the type of the location referenced by dest.
@@ -718,7 +718,7 @@ namespace Silk
         /// </summary>
         /// <remarks>
         /// The initblk instruction sets size (of type unsigned int32) bytes starting at addr (of type native
-        /// int, or &) to value (of type unsigned int8). initblk assumes that addr is aligned to the natural
+        /// int, or &amp;) to value (of type unsigned int8). initblk assumes that addr is aligned to the natural
         /// size of the machine (but see the unaligned. prefix instruction).
         /// [Rationale: initblk is intended for initializing structures (rather than arbitrary byte-runs). All such
         /// structures, allocated by the CLI, are naturally aligned for the current platform. Therefore, there is
@@ -738,7 +738,7 @@ namespace Silk
         /// <remarks>
         /// The initobj instruction initializes an address with a default value. typeTok is a metadata token (a
         /// typedef, typeref, or typespec). dest is an unmanaged pointer (native int), or a managed
-        /// pointer (&). If typeTok is a value type, the initobj instruction initializes each field of dest to null
+        /// pointer (&amp;). If typeTok is a value type, the initobj instruction initializes each field of dest to null
         /// or a zero of the appropriate built-in type. If typeTok is a value type, then after this instruction is
         /// executed, the instance is ready for a constructor method to be called. If typeTok is a reference
         /// type, the initobj instruction has the same effect as ldnull followed by stind.ref.
@@ -1039,7 +1039,7 @@ namespace Silk
         /// <remarks>
         /// The ldobj instruction copies a value to the evaluation stack. typeTok is a metadata token (a
         /// typedef, typeref, or typespec). src is an unmanaged pointer (native int), or a managed
-        /// pointer (&). If typeTok is not a generic parameter and either a reference type or a built-in value
+        /// pointer (&amp;). If typeTok is not a generic parameter and either a reference type or a built-in value
         /// class, then the ldind instruction provides a shorthand for the ldobj instruction..
         /// [Rationale: The ldobj instruction can be used to pass a value type as an argument. end rationale]
         /// If required values are converted to the representation of the intermediate type (§I.8.7) of typeTok
