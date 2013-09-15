@@ -1239,7 +1239,25 @@ namespace Silk
         /// </remarks>
         public static void Stloc(int indx) { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Stobj() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store a value of type typeTok at an address.
+        /// 
+        /// Stack Transition:
+        /// ..., dest, src -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stobj instruction copies the value src to the address dest. If typeTok is not a generic
+        /// parameter and either a reference type or a built-in value class, then the stind instruction provides
+        /// a shorthand for the stobj instruction.
+        /// Storing values smaller than 4 bytes truncates the value as it moves from the stack to memory.
+        /// Floating-point values are rounded from their native size (type F) to the size associated with
+        /// typeTok. (See §III.1.1.1, Numeric data types.)
+        /// The operation of the stobj instruction can be altered by an immediately preceding volatile. or
+        /// unaligned. prefix instruction.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Stobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Stsfld() { throw new Exception("CilTK Rewriter not run."); }
         public static void Sub() { throw new Exception("CilTK Rewriter not run."); }
         public static void Sub_Ovf() { throw new Exception("CilTK Rewriter not run."); }
