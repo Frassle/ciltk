@@ -747,7 +747,27 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static void Initobj<T>() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Isinst() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Test if obj is an instance of typeTok, returning null or an instance of
+        /// that class or interface.
+        /// 
+        /// Stack Transition:
+        /// ..., obj -> ..., result
+        /// </summary>
+        /// <remarks>
+        /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
+        /// class. If typeTok is a non-nullable value type or a generic parameter type it is interpreted
+        /// as “boxed” typeTok. If typeTok is a nullable type, Nullable<T>, it is interpreted as
+        /// “boxed” T.
+        /// The isinst instruction tests whether obj (type O) is an instance of the type typeTok.
+        /// If the actual type (not the verifier tracked type) of obj is verifier-assignable-to the type
+        /// typeTok then isinst succeeds and obj (as result) is returned unchanged while verification
+        /// tracks its type as typeTok. Unlike coercions (§III.1.6) and conversions (§III.3.27), isinst
+        /// never changes the actual type of an object and preserves object identity (see Partition I).
+        /// If obj is null, or obj is not verifier-assignable-to the type typeTok, isinst fails and returns null.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Isinst<T>() { throw new Exception("CilTK Rewriter not run."); }
 
 
         public static void Jmp() { throw new Exception("CilTK Rewriter not run."); }
@@ -891,7 +911,25 @@ namespace Silk
         /// </remarks>
         public static void Ldc_R8(double num) { throw new Exception("CilTK Rewriter not run."); }
 
-        public static void Ldelem_Any() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Load the element at index onto the top of the stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index -> ..., value
+        /// </summary>
+        /// <remarks>
+        /// The ldelem instruction loads the value of the element with index index (of type native int or
+        /// int32) in the zero-based one-dimensional array array, and places it on the top of the stack. The
+        /// type of the return value is indicated by the type token typeTok in the instruction.
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Ldelem<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Ldelem_I() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldelem_I1() { throw new Exception("CilTK Rewriter not run."); }
         public static void Ldelem_I2() { throw new Exception("CilTK Rewriter not run."); }
