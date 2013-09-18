@@ -20,6 +20,13 @@ namespace Silk
         public static void KeepAlive<T>(T value) { }
 
         /// <summary>
+        /// Loads a value.
+        /// </summary>
+        /// <typeparam name="T">The type to load.</typeparam>
+        /// <param name="value">The value to load.</param>
+        public static void Load<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
         /// Add two values, returning a new value.
         /// 
         /// Stack Transition:

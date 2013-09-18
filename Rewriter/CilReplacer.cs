@@ -30,6 +30,15 @@ namespace Weave
                         ilProcessor.Replace(instruction.Previous, Nop());
                         ilProcessor.Replace(instruction, Nop());
                     }
+                    else if (method.Name == "Load")
+                    {
+                        /*
+                         * The compiler will have inserted the appropriate load instructions to put the value on the 
+                         * operand stack in preperation to call Load<T>. Thus all we have to do is remove the call instruction,
+                         * that keeps the value on the stack instead of popping it for the call.
+                         */
+                        ilProcessor.Replace(instruction, Nop());
+                    }
                     else
                     {
                         ReplaceInstruction(ilProcessor, instruction, method);
