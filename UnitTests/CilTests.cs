@@ -212,5 +212,20 @@ namespace UnitTests
             Assert.AreEqual(test.A, 0);
             Assert.AreEqual(test.B, 0);
         }
+
+        [TestMethod]
+        public void TestLoad()
+        {
+            int a = 4;
+            int b = 4;
+            int c = 8;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(b);
+            Silk.Cil.Add();
+            Silk.Cil.Stloc(0);
+
+            Assert.AreEqual(a, c);
+        }
     }
 }
