@@ -20,11 +20,18 @@ namespace Silk
         public static void KeepAlive<T>(T value) { }
 
         /// <summary>
-        /// Loads a value.
+        /// Loads a variable onto the top of the execution stack.
         /// </summary>
         /// <typeparam name="T">The type to load.</typeparam>
-        /// <param name="value">The value to load.</param>
+        /// <param name="value">The variable to load.</param>
         public static void Load<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Stores the value at the top of the execution stack to a variable.
+        /// </summary>
+        /// <typeparam name="T">The type to store.</typeparam>
+        /// <param name="value">The variable to store to.</param>
+        public static void Store<T>(out T value) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Add two values, returning a new value.
