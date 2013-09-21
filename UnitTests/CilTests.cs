@@ -113,6 +113,16 @@ namespace UnitTests
 
         struct TestStruct
         {
+            public static int Static;
+            
+            public int A;
+            public int B;
+        }
+
+        class TestClass
+        {
+            public static int Static;
+
             public int A;
             public int B;
         }
@@ -214,7 +224,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestLoad()
+        public void TestLoadLocal()
         {
             int a = 4;
             int b = 4;
@@ -229,6 +239,34 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void TestLoadStructField()
+        {
+            var a = new TestStruct() { A = 1, B = 2 };
+            int b = 1;
+
+            Silk.Cil.Load(a.A);
+            Silk.Cil.Load(a.B);
+            Silk.Cil.Add();
+            Silk.Cil.Stloc(1);
+
+            Assert.AreEqual(b, 3);
+        }
+
+        [TestMethod]
+        public void TestLoadClassField()
+        {
+            var a = new TestClass() { A = 1, B = 2 };
+            int b = 1;
+
+            Silk.Cil.Load(a.A);
+            Silk.Cil.Load(a.B);
+            Silk.Cil.Add();
+            Silk.Cil.Stloc(1);
+
+            Assert.AreEqual(b, 3);
+        }
+
+        [TestMethod]
         public void TestStoreInt()
         {
             int a = 4;
@@ -238,6 +276,76 @@ namespace UnitTests
             Silk.Cil.Store(out b);
 
             Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestStoreStruct()
+        {
+            TestStruct a = new TestStruct() { A = 1, B = 2 };
+            TestStruct b;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Store(out b);
+
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestStoreClass()
+        {
+            TestClass a = new TestClass() { A = 1, B = 2 };
+            TestClass b;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Store(out b);
+
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestStoreStructField()
+        {
+            TestStruct a = new TestStruct() { A = 1, B = 2 };
+            TestStruct b = new TestStruct() { A = 1, B = 3 };
+
+            Silk.Cil.Load(a.B);
+            Silk.Cil.Store(out b.B);
+
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestStoreClassField()
+        {
+            TestClass a = new TestClass() { A = 1, B = 2 };
+            TestClass b = new TestClass() { A = 1, B = 3 };
+
+            Silk.Cil.Load(a.B);
+            Silk.Cil.Store(out b.B);
+
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestStoreStaticStructField()
+        {
+            int a = 1;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Store(out TestStruct.Static);
+
+            Assert.AreEqual(a, TestStruct.Static);
+        }
+
+        [TestMethod]
+        public void TestStoreStaticClassField()
+        {
+            int a = 1;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Store(out TestClass.Static);
+
+            Assert.AreEqual(a, TestClass.Static);
         }
     }
 }
