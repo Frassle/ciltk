@@ -227,5 +227,17 @@ namespace UnitTests
 
             Assert.AreEqual(a, c);
         }
+
+        [TestMethod]
+        public void TestStoreInt()
+        {
+            int a = 4;
+            int b;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Store(out b);
+
+            Assert.AreEqual(a, b);
+        }
     }
 }
