@@ -9,7 +9,19 @@ namespace Weave
 {
     abstract class InstructionVisitor
     {
+        protected ModuleDefinition CurrentModule
+        {
+            get;
+            private set;
+        }
+
         protected MethodDefinition CurrentMethod
+        {
+            get;
+            private set;
+        }
+
+        protected TypeDefinition CurrentType
         {
             get;
             private set;
@@ -24,8 +36,10 @@ namespace Weave
         {
             foreach (var module in assembly.Modules)
             {
+                CurrentModule = module;
                 foreach (var type in module.Types)
                 {
+                    CurrentType = type;
                     foreach (var method in type.Methods)
                     {
                         Visit(method);
@@ -34,7 +48,9 @@ namespace Weave
                     {
                         Visit(property);
                     }
+                    CurrentType = null;
                 }
+                CurrentModule = null;
             }
         }
 
@@ -53,6 +69,7 @@ namespace Weave
                 }
 
                 il.Body.OptimizeMacros();
+                CurrentMethod = null;
             }
         }
 
