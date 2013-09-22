@@ -429,35 +429,35 @@ namespace UnitTests
             Silk.Cil.Load(0xFF);
             Silk.Cil.Conv_I2();
             Silk.Cil.Stelem_I2();
-            Assert.AreEqual(a[0], 0xFF, "Stelem_I2 failed");
+            Assert.AreEqual(b[0], 0xFF, "Stelem_I2 failed");
 
             Silk.Cil.Load(c);
             Silk.Cil.Load(0);
             Silk.Cil.Load(0xFF);
             Silk.Cil.Conv_I4();
             Silk.Cil.Stelem_I4();
-            Assert.AreEqual(a[0], 0xFF, "Stelem_I4 failed");
+            Assert.AreEqual(c[0], 0xFF, "Stelem_I4 failed");
 
             Silk.Cil.Load(d);
             Silk.Cil.Load(0);
             Silk.Cil.Load(0xFF);
             Silk.Cil.Conv_I8();
             Silk.Cil.Stelem_I8();
-            Assert.AreEqual(a[0], 0xFF, "Stelem_I8 failed");
+            Assert.AreEqual(d[0], 0xFF, "Stelem_I8 failed");
 
             Silk.Cil.Load(e);
             Silk.Cil.Load(0);
             Silk.Cil.Load(0xFF);
             Silk.Cil.Conv_R4();
             Silk.Cil.Stelem_R4();
-            Assert.AreEqual(a[0], 0xFF, "Stelem_R4 failed");
+            Assert.AreEqual(e[0], 0xFF, "Stelem_R4 failed");
 
             Silk.Cil.Load(f);
             Silk.Cil.Load(0);
             Silk.Cil.Load(0xFF);
             Silk.Cil.Conv_R8();
             Silk.Cil.Stelem_R8();
-            Assert.AreEqual(a[0], 0xFF, "Stelem_R8 failed");
+            Assert.AreEqual(f[0], 0xFF, "Stelem_R8 failed");
         }
 
         [TestMethod]
