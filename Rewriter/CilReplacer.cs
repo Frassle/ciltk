@@ -69,27 +69,22 @@ namespace Weave
             var typetok = generic_method.GenericArguments[0];
 
             var addr_instruction = instruction.Previous;
+            var next = instruction.Next;
 
             if (addr_instruction.OpCode == OpCodes.Ldloca)
             {
                 var local = (VariableDefinition)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Stloc, local));
-                ilProcessor.Remove(instruction);
-                return addr_instruction.Next;
+                ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Stloc, local));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldarga)
             {
                 var argument = (ParameterDefinition)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Starg, argument));
-                ilProcessor.Remove(instruction);
-                return addr_instruction.Next;
+                ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Starg, argument));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldsflda)
             {
                 var field = (FieldReference)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Stsfld, field));
-                ilProcessor.Remove(instruction);
-                return addr_instruction.Next;
+                ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Stsfld, field));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldflda)
             {
@@ -114,16 +109,16 @@ namespace Weave
                 ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Ldloc, addr_temp));
                 ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Ldloc, value_temp));
                 ilProcessor.InsertBefore(addr_instruction, Instruction.Create(OpCodes.Stfld, field));
-
-                var next = instruction.Next;
-                ilProcessor.Remove(addr_instruction);
-                ilProcessor.Remove(instruction);
-                return next;
             }
             else
             {
                 throw new Exception("ReplaceStore: How did we get here?!");
             }
+
+            ilProcessor.Remove(addr_instruction);
+            ilProcessor.Remove(instruction);
+
+            return next;
         }
 
         Instruction ReplaceInstruction(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
