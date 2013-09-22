@@ -488,5 +488,64 @@ namespace UnitTests
             Assert.AreEqual(a[0].A, 1);
             Assert.AreEqual(a[0].B, 2);
         }
+
+        [TestMethod]
+        public void TestBox()
+        {
+            TestStruct a = new TestStruct() { A = 1, B = 2 };
+            object b;
+            TestStruct c;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Box<TestStruct>();
+            Silk.Cil.Store(out b);
+
+            c = (TestStruct)b;
+
+            Assert.AreEqual(a, c);
+        }
+
+        [TestMethod]
+        public void TestUnbox()
+        {
+            TestStruct a = new TestStruct() { A = 1, B = 2 };
+            object b = a;
+            TestStruct c;
+
+            Silk.Cil.Load(b);
+            Silk.Cil.Unbox<TestStruct>();
+            Silk.Cil.Ldobj<TestStruct>();
+            Silk.Cil.Store(out c);
+
+            Assert.AreEqual(a, c);
+        }
+
+        [TestMethod]
+        public void TestUnboxAnyStruct()
+        {
+            TestStruct a = new TestStruct() { A = 1, B = 2 };
+            object b = a;
+            TestStruct c;
+
+            Silk.Cil.Load(b);
+            Silk.Cil.Unbox_Any<TestStruct>();
+            Silk.Cil.Store(out c);
+
+            Assert.AreEqual(a, c);
+        }
+
+        [TestMethod]
+        public void TestUnboxAnyClass()
+        {
+            TestClass a = new TestClass(1, 2);
+            object b = a;
+            TestClass c;
+
+            Silk.Cil.Load(b);
+            Silk.Cil.Unbox_Any<TestClass>();
+            Silk.Cil.Store(out c);
+
+            Assert.AreSame(a, c);
+        }
     }
 }
