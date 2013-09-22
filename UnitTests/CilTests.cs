@@ -125,6 +125,17 @@ namespace UnitTests
 
             public int A;
             public int B;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as TestClass;
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return A == other.A && B == other.B;
+            }
         }
 
         public int GenericSizeof<T>()
