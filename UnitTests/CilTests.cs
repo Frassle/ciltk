@@ -493,6 +493,21 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void TestLdelema()
+        {
+            TestStruct[] a = new TestStruct[1];
+            TestStruct b = new TestStruct() { A = 1, B = 2 };
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelema<TestStruct>();
+            Silk.Cil.Load(b);
+            Silk.Cil.Stobj<TestStruct>();
+
+            Assert.AreEqual(a[0], b);
+        }
+
+        [TestMethod]
         public void TestStelem()
         {
             byte[] a = new byte[1];
