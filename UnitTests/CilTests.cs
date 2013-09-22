@@ -6,6 +6,49 @@ namespace UnitTests
     [TestClass]
     public class CilTests
     {
+        struct TestStruct
+        {
+            public static int Static;
+
+            public int A;
+            public int B;
+        }
+
+        class TestClass
+        {
+            public static int Static;
+
+            public int A;
+            public int B;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as TestClass;
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return A == other.A && B == other.B;
+            }
+        }
+
+        class TestDerivedClass : TestClass
+        {
+            public int C;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as TestDerivedClass;
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return base.Equals(other) && C == other.C;
+            }
+        }
+
         public void JustReturn()
         {
             Silk.Cil.Ret();
@@ -109,33 +152,6 @@ namespace UnitTests
             Silk.Cil.Stloc(0);
 
             Assert.AreEqual(4, size);
-        }
-
-        struct TestStruct
-        {
-            public static int Static;
-            
-            public int A;
-            public int B;
-        }
-
-        class TestClass
-        {
-            public static int Static;
-
-            public int A;
-            public int B;
-
-            public override bool Equals(object obj)
-            {
-                var other = obj as TestClass;
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return A == other.A && B == other.B;
-            }
         }
 
         public int GenericSizeof<T>()
