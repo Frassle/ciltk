@@ -126,102 +126,100 @@ namespace Weave
             var nextInstruction = instruction.Next;
 
             var opcodeField = typeof(OpCodes).GetFields().FirstOrDefault(info => info.Name == calledMethod.Name);
-            var maybeOpcode = opcodeField == null ? null : (OpCode?)opcodeField.GetValue(null);
+            OpCode opcode;
 
-            if (!maybeOpcode.HasValue)
+            if (opcodeField == null)
             {
                 // Special case stelem because we don't want to call it Stelem_Any
                 if (calledMethod.Name == "Stelem")
                 {
-                    maybeOpcode = OpCodes.Stelem_Any;
+                    opcode = OpCodes.Stelem_Any;
                 }
                 // Special case ldelem because we don't want to call it Stelem_Any
-                if (calledMethod.Name == "Ldelem")
+                else if (calledMethod.Name == "Ldelem")
                 {
-                    maybeOpcode = OpCodes.Ldelem_Any;
-                }
-            }
-            
-            if(maybeOpcode.HasValue)
-            {
-                var opcode = maybeOpcode.Value;
-
-                if (calledMethod is GenericInstanceMethod)
-                {
-                    var generic_method = calledMethod as GenericInstanceMethod;
-                    var typetok = generic_method.GenericArguments[0];
-                    ilProcessor.Replace(instruction, Instruction.Create(opcode, typetok));
+                    opcode = OpCodes.Ldelem_Any;
                 }
                 else
                 {
-                    if (calledMethod.Parameters.Count == 0)
-                    {
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode));
-                    }
-                    else
-                    {
-                        object operand = GetOperand(instruction);
-                        ilProcessor.Remove(instruction.Previous);
-
-                        if (opcode.OperandType == OperandType.InlineVar)
-                        {
-                            var variable = ilProcessor.Body.Variables[(int)operand];
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineArg)
-                        {
-                            var variable = ilProcessor.Body.Method.Parameters[(int)operand];
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineBrTarget)
-                        {
-                            var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, jump));
-                        }
-                        else if (opcode.OperandType == OperandType.ShortInlineI)
-                        {
-                            var integer = (byte)operand;
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineI)
-                        {
-                            var integer = (int)operand;
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineI8)
-                        {
-                            var integer = (long)operand;
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
-                        }
-                        else if (opcode.OperandType == OperandType.ShortInlineR)
-                        {
-                            var real = (float)operand;
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineR)
-                        {
-                            var real = (double)operand;
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineSwitch)
-                        {
-                            var target_string = (string)operand;
-                            var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body.Method, label)).ToArray();
-
-                            ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
-                        }
-                        else if (opcode.OperandType == OperandType.InlineType)
-                        {
-                            Console.WriteLine("Inline type opcode ({0}) without generic argument, ignoring.", opcode);
-                            ilProcessor.Remove(instruction);
-                        }
-                    }
+                    throw new Exception(string.Format("Unknown opcode {0}, ignoring", calledMethod.Name));
                 }
             }
             else
             {
-                Console.WriteLine("Unknown opcode {0}, ignoring", calledMethod.Name);
-                ilProcessor.Remove(instruction);
+                opcode = (OpCode)opcodeField.GetValue(null);
+            }
+
+            if (calledMethod is GenericInstanceMethod)
+            {
+                var generic_method = calledMethod as GenericInstanceMethod;
+                var typetok = generic_method.GenericArguments[0];
+                ilProcessor.Replace(instruction, Instruction.Create(opcode, typetok));
+            }
+            else
+            {
+                if (calledMethod.Parameters.Count == 0)
+                {
+                    ilProcessor.Replace(instruction, Instruction.Create(opcode));
+                }
+                else
+                {
+                    object operand = GetOperand(instruction);
+                    ilProcessor.Remove(instruction.Previous);
+
+                    if (opcode.OperandType == OperandType.InlineVar)
+                    {
+                        var variable = ilProcessor.Body.Variables[(int)operand];
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineArg)
+                    {
+                        var variable = ilProcessor.Body.Method.Parameters[(int)operand];
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineBrTarget)
+                    {
+                        var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, jump));
+                    }
+                    else if (opcode.OperandType == OperandType.ShortInlineI)
+                    {
+                        var integer = (byte)operand;
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineI)
+                    {
+                        var integer = (int)operand;
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineI8)
+                    {
+                        var integer = (long)operand;
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                    }
+                    else if (opcode.OperandType == OperandType.ShortInlineR)
+                    {
+                        var real = (float)operand;
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineR)
+                    {
+                        var real = (double)operand;
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineSwitch)
+                    {
+                        var target_string = (string)operand;
+                        var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body.Method, label)).ToArray();
+
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineType)
+                    {
+                        Console.WriteLine("Inline type opcode ({0}) without generic argument, ignoring.", opcode);
+                        ilProcessor.Remove(instruction);
+                    }
+                }
             }
 
             return nextInstruction;
