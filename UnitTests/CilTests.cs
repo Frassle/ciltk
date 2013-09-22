@@ -371,5 +371,73 @@ namespace UnitTests
             Assert.IsNotNull(a);
             Assert.AreEqual(a.Length, 5);
         }
+
+        [TestMethod]
+        public void TestStelem()
+        {
+            byte[] a = new byte[1];
+            short[] b = new short[1];
+            int[] c = new int[1];
+            long[] d = new long[1];
+            float[] e = new float[1];
+            double[] f = new double[1];
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_I1();
+            Silk.Cil.Stelem_I1();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_I1 failed");
+
+            Silk.Cil.Load(b);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_I2();
+            Silk.Cil.Stelem_I2();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_I2 failed");
+
+            Silk.Cil.Load(c);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_I4();
+            Silk.Cil.Stelem_I4();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_I4 failed");
+
+            Silk.Cil.Load(d);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_I8();
+            Silk.Cil.Stelem_I8();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_I8 failed");
+
+            Silk.Cil.Load(e);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_R4();
+            Silk.Cil.Stelem_R4();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_R4 failed");
+
+            Silk.Cil.Load(f);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(0xFF);
+            Silk.Cil.Conv_R8();
+            Silk.Cil.Stelem_R8();
+            Assert.AreEqual(a[0], 0xFF, "Stelem_R8 failed");
+        }
+
+        [TestMethod]
+        public void TestStelemT()
+        {
+            TestStruct[] a = new TestStruct[1];
+            TestStruct b = new TestStruct() { A = 1, B = 2 };
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(b);
+            Silk.Cil.Stelem<TestStruct>();
+
+            Assert.AreEqual(a[0], b);
+        }
+
     }
 }

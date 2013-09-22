@@ -130,10 +130,19 @@ namespace Weave
         {
             var nextInstruction = instruction.Next;
 
-            var opcodeField = typeof(OpCodes).GetFields().First(info => info.Name == calledMethod.Name);
+            var opcodeField = typeof(OpCodes).GetFields().FirstOrDefault(info => info.Name == calledMethod.Name);
             var maybeOpcode = opcodeField == null ? null : (OpCode?)opcodeField.GetValue(null);
 
-            if (maybeOpcode.HasValue)
+            if (!maybeOpcode.HasValue)
+            {
+                // Special case stelem because we don't want to call it Stelem_Any
+                if (calledMethod.Name == "Stelem")
+                {
+                    maybeOpcode = OpCodes.Stelem_Any;
+                }
+            }
+            
+            if(maybeOpcode.HasValue)
             {
                 var opcode = maybeOpcode.Value;
 
