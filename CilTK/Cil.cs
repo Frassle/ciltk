@@ -1023,6 +1023,20 @@ namespace Silk
         public static unsafe void Ldind_U1() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Ldind_U2() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Ldind_U4() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Push the length (of type native unsigned int) of array on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// …, array, -> …, length,
+        /// </summary>
+        /// <remarks>
+        /// The ldlen instruction pushes the number of elements of array (a zero-based, one-dimensional
+        /// array) on the stack.
+        /// Arrays are objects and hence represented by a value of type O. The return value is a native
+        /// unsigned int.
+        /// </remarks>
         public static unsafe void Ldlen() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
