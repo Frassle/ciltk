@@ -408,6 +408,91 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void TestLdelem()
+        {
+            byte[] a = new byte[1] { 0xFF };
+            short[] b = new short[1] { 0xFF };
+            int[] c = new int[1] { 0xFF };
+            long[] d = new long[1] { 0xFF };
+            float[] e = new float[1] { 0xFF };
+            double[] f = new double[1] { 0xFF };
+
+            byte va;
+            short vb;
+            int vc;
+            long vd;
+            float ve;
+            double vf;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_I1();
+            Silk.Cil.Store(out va);
+            Assert.AreEqual(va, 0xFF, "Ldelem_I1 failed");
+
+            Silk.Cil.Load(b);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_I2();
+            Silk.Cil.Store(out vb);
+            Assert.AreEqual(vb, 0xFF, "Ldelem_I2 failed");
+
+            Silk.Cil.Load(c);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_I4();
+            Silk.Cil.Store(out vc);
+            Assert.AreEqual(vc, 0xFF, "Ldelem_I4 failed");
+
+            Silk.Cil.Load(d);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_I8();
+            Silk.Cil.Store(out vd);
+            Assert.AreEqual(vd, 0xFF, "Ldelem_I8 failed");
+
+            Silk.Cil.Load(e);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_R4();
+            Silk.Cil.Store(out ve);
+            Assert.AreEqual(ve, 0xFF, "Ldelem_R4 failed");
+
+            Silk.Cil.Load(f);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_R8();
+            Silk.Cil.Store(out vf);
+            Assert.AreEqual(vf, 0xFF, "Ldelem_R8 failed");
+        }
+
+        [TestMethod]
+        public void TestLdelemT()
+        {
+            TestStruct[] a = new TestStruct[1];
+            a[0] = new TestStruct() { A = 1, B = 2 };
+            TestStruct b;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem<TestStruct>();
+            Silk.Cil.Store(out b);
+
+            Assert.AreEqual(a[0], b);
+        }
+
+        [TestMethod]
+        public void TestLdelemRef()
+        {
+            TestDerivedClass[] a = new TestDerivedClass[1];
+            a[0] = new TestDerivedClass(1, 2, 3);
+            TestClass b;
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Ldelem_Ref();
+            Silk.Cil.Store(out b);
+
+            Assert.AreEqual(b.A, 1);
+            Assert.AreEqual(b.B, 2);
+        }
+
+        [TestMethod]
         public void TestStelem()
         {
             byte[] a = new byte[1];
