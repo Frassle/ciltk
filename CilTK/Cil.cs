@@ -1541,8 +1541,50 @@ namespace Silk
         public static void Throw() { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Unaligned() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Unbox() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Unbox_Any() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Extract a value-type from obj, its boxed representation.
+        /// 
+        /// Stack Transition:
+        /// ..., obj, -> ..., valueTypePtr,
+        /// </summary>
+        /// <remarks>
+        /// A value type has two separate representations (see Partition I) within the CLI:
+        /// - A ‘raw’ form used when a value type is embedded within another object.
+        /// - A ‘boxed’ form, where the data in the value type is wrapped (boxed) into an object,
+        /// so it can exist as an independent entity.
+        /// The unbox instruction converts obj (of type O), the boxed representation of a value type, to
+        /// valueTypePtr (a controlled-mutability managed pointer (§III.1.8.1.2.2), type &), its unboxed
+        /// form. valuetype is a metadata token (a typeref, typedef or typespec). The type of valuetype
+        /// contained within obj must be verifier-assignable-to valuetype.
+        /// Unlike box, which is required to make a copy of a value type for use in the object, unbox is not
+        /// required to copy the value type from the object. Typically it simply computes the address of the
+        /// value type that is already present inside of the boxed object.
+        /// [Note: Typically, unbox simply computes the address of the value type that is already present
+        /// inside of the boxed object. This approach is not possible when unboxing nullable value types.
+        /// Because Nullable&lt;T&gt; values are converted to boxed Ts during the box operation, an
+        /// implementation often must manufacture a new Nullable&lt;T&gt; on the heap and compute the address
+        /// to the newly allocated object. end note]
+        /// </remarks>
+        /// <typeparam name="T">valuetype</typeparam>
+        public static void Unbox<T>() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Extract a value-type from obj, its boxed representation
+        /// 
+        /// Stack Transition:
+        /// …, obj, -> …, value or obj,
+        /// </summary>
+        /// <remarks>
+        /// When applied to the boxed form of a value type, the unbox.any instruction extracts the value
+        /// contained within obj (of type O). (It is equivalent to unbox followed by ldobj.) When applied to
+        /// a reference type, the unbox.any instruction has the same effect as castclass typeTok.
+        /// If typeTok is a GenericParam, the runtime behavior is determined by the actual instantiation of
+        /// that parameter.
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Unbox_Any<T>() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Volatile() { throw new Exception("CilTK Rewriter not run."); }
         public static void Xor() { throw new Exception("CilTK Rewriter not run."); }
     }
