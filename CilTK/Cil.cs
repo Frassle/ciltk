@@ -1554,7 +1554,7 @@ namespace Silk
         /// - A ‘boxed’ form, where the data in the value type is wrapped (boxed) into an object,
         /// so it can exist as an independent entity.
         /// The unbox instruction converts obj (of type O), the boxed representation of a value type, to
-        /// valueTypePtr (a controlled-mutability managed pointer (§III.1.8.1.2.2), type &), its unboxed
+        /// valueTypePtr (a controlled-mutability managed pointer (§III.1.8.1.2.2), type &amp;), its unboxed
         /// form. valuetype is a metadata token (a typeref, typedef or typespec). The type of valuetype
         /// contained within obj must be verifier-assignable-to valuetype.
         /// Unlike box, which is required to make a copy of a value type for use in the object, unbox is not
