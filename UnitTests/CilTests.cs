@@ -474,5 +474,19 @@ namespace UnitTests
             Assert.AreEqual(a[0], b);
         }
 
+        [TestMethod]
+        public void TestStelemRef()
+        {
+            TestDerivedClass[] a = new TestDerivedClass[1];
+            TestClass b = new TestDerivedClass(1, 2, 3);            
+
+            Silk.Cil.Load(a);
+            Silk.Cil.Load(0);
+            Silk.Cil.Load(b);
+            Silk.Cil.Stelem_Ref();
+
+            Assert.AreEqual(a[0].A, 1);
+            Assert.AreEqual(a[0].B, 2);
+        }
     }
 }
