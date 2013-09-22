@@ -41,7 +41,7 @@ namespace Silk
         /// Add two values, returning a new value.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The add instruction adds value2 to value1 and pushes the result on the stack. Overflow is not 
@@ -53,7 +53,7 @@ namespace Silk
         /// Add signed integer values with overflow check.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The add.ovf instruction adds value1 and value2 and pushes the result on the stack. The 
@@ -69,7 +69,7 @@ namespace Silk
         /// Add unsigned integer values with overflow check.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The add.ovf instruction adds value1 and value2 and pushes the result on the stack. The 
@@ -85,7 +85,7 @@ namespace Silk
         /// Bitwise AND of two integral values, returns an integral value.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The and instruction computes the bitwise AND of value1 and value2and pushes the result on the 
@@ -98,7 +98,7 @@ namespace Silk
         /// Return argument list handle for the current method.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., argListHandle,
+        /// …, -> …, argListHandle,
         /// </summary>
         /// <remarks>
         /// The arglist instruction returns an opaque handle (having type System.RuntimeArgumentHandle) 
@@ -116,7 +116,7 @@ namespace Silk
         /// Branch to target if equal.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The beq instruction transfers control to target if value1 is equal to value2. The effect is identical 
@@ -138,7 +138,7 @@ namespace Silk
         /// Branch to target if greater than or equal to.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The bge instruction transfers control to target if value1 is greater than or equal to value2. The
@@ -163,7 +163,7 @@ namespace Silk
         /// Branch to target if greater than or equal to (unsigned or unordered).
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The bge.un instruction transfers control to target if value1 is greater than or equal to value2,
@@ -185,7 +185,7 @@ namespace Silk
         /// Branch to target if greater than.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The bgt instruction transfers control to target if value1 is greater than value2. The effect is
@@ -207,7 +207,7 @@ namespace Silk
         /// Branch to target if greater than (unsigned or unordered).
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The bgt.un instruction transfers control to target if value1 is greater than value2, when compared
@@ -230,7 +230,7 @@ namespace Silk
         /// Branch to target if less than or equal to.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The ble instruction transfers control to target if value1 is less than or equal to value2. target is
@@ -254,7 +254,7 @@ namespace Silk
         /// Branch to target if less than or equal to (unsigned or unordered).
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The ble.un instruction transfers control to target if value1 is less than or equal to value2, when
@@ -279,7 +279,7 @@ namespace Silk
         /// Branch to target if less than.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The blt instruction transfers control to target if value1 is less than value2. The effect is identical
@@ -301,7 +301,7 @@ namespace Silk
         /// Branch to target if less than (unsigned or unordered).
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The blt.un instruction transfers control to target if value1 is less than value2, when compared
@@ -324,7 +324,7 @@ namespace Silk
         /// Branch to target if unequal or unordered, short form.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ...,
+        /// …, value1, value2, -> …,
         /// </summary>
         /// <remarks>
         /// The bne.un instruction transfers control to target if value1 is not equal to value2, when
@@ -347,7 +347,7 @@ namespace Silk
         /// Convert a boxable value to its boxed form.
         /// 
         /// Stack Transition:
-        /// ..., val, -> ..., obj,
+        /// …, val, -> …, obj,
         /// </summary>
         /// <remarks>
         /// If typeTok is a value type, the box instruction converts val to its boxed form. When typeTok is a
@@ -370,7 +370,7 @@ namespace Silk
         /// Branch to target.
         /// 
         /// Stack Transition:
-        /// ..., -> ...,
+        /// …, -> …,
         /// </summary>
         /// <remarks>
         /// The br instruction unconditionally transfers control to target. target is represented as a signed
@@ -393,7 +393,7 @@ namespace Silk
         /// Inform a debugger that a breakpoint has been reached.
         /// 
         /// Stack Transition:
-        /// ..., -> ...,
+        /// …, -> …,
         /// </summary>
         /// <remarks>
         /// The break instruction is for debugging support. It signals the CLI to inform the debugger that a 
@@ -409,7 +409,7 @@ namespace Silk
         /// Branch to target if value is zero (false).
         /// 
         /// Stack Transition:
-        /// ..., value, -> ...,
+        /// …, value, -> …,
         /// </summary>
         /// <remarks>
         /// The brfalse instruction transfers control to target if value (of type int32, int64, object
@@ -430,7 +430,7 @@ namespace Silk
         /// Branch to target if value is non-zero (true).
         /// 
         /// Stack Transition:
-        /// ..., value, -> ...,
+        /// …, value, -> …,
         /// </summary>
         /// <remarks>
         /// The brtrue instruction transfers control to target if value (of type native int) is nonzero (true).
@@ -455,7 +455,7 @@ namespace Silk
         /// callsitedescr.
         /// 
         /// Stack Transition:
-        /// ..., arg0, arg1 ... argN, ftn, -> ..., retVal (not always returned),
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
         /// </summary>
         /// <remarks>
         /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
@@ -498,7 +498,7 @@ namespace Silk
         /// Cast obj to typeTok.
         /// 
         /// Stack Transition:
-        /// ..., obj, -> ..., obj2,
+        /// …, obj, -> …, obj2,
         /// </summary>
         /// <remarks>
         /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
@@ -523,7 +523,7 @@ namespace Silk
         /// Push 1 (of type int32) if value1 equals value2, else push 0
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The ceq instruction compares value1 and value2. If value1 is equal to value2, then 1 (of type 
@@ -539,7 +539,7 @@ namespace Silk
         /// Push 1 (of type int32) if value1 > value2, else push 0.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The cgt instruction compares value1 and value2. If value1 is strictly greater than value2, then 1 
@@ -558,7 +558,7 @@ namespace Silk
         /// unordered, else push 0.
         /// 
         /// Stack Transition:
-        /// ..., value1, value2, -> ..., result,
+        /// …, value1, value2, -> …, result,
         /// </summary>
         /// <remarks>
         /// The cgt.un instruction compares value1 and value2. A value of 1 (of type int32) is pushed on 
@@ -579,7 +579,7 @@ namespace Silk
         /// Throw ArithmeticException if value is not a finite number.
         /// 
         /// Stack Transition:
-        /// ..., value, -> ..., result,
+        /// …, value, -> …, result,
         /// </summary>
         /// <remarks>
         /// The ckfinite instruction throws ArithmeticException if value (a floating-point number) is 
@@ -628,7 +628,7 @@ namespace Silk
         /// Copy data from memory to memory.
         /// 
         /// Stack Transition:
-        /// ..., destaddr, srcaddr, size, -> ...,
+        /// …, destaddr, srcaddr, size, -> …,
         /// </summary>
         /// <remarks>
         /// The cpblk instruction copies size (of type unsigned int32) bytes from address srcaddr (of type
@@ -648,7 +648,7 @@ namespace Silk
         /// Copy a value type from src to dest.
         /// 
         /// Stack Transition:
-        /// ..., dest, src, -> ...,
+        /// …, dest, src, -> …,
         /// </summary>
         /// <remarks>
         /// The cpobj instruction copies the value at the address specified by src (an unmanaged pointer,
@@ -673,7 +673,7 @@ namespace Silk
         /// End an exception handling filter clause.
         /// 
         /// Stack Transition:
-        /// ..., value -> ...,
+        /// …, value -> …,
         /// </summary>
         /// <remarks>
         /// Used to return from the filter clause of an exception (see the Exception Handling subclause of
@@ -702,7 +702,7 @@ namespace Silk
         /// End finally clause of an exception block.
         /// 
         /// Stack Transition:
-        /// ..., -> ...,
+        /// …, -> …,
         /// </summary>
         /// <remarks>
         /// Return from the finally or fault clause of an exception block (see the Exception Handling
@@ -732,7 +732,7 @@ namespace Silk
         /// Set all bytes in a block of memory to a given byte value.
         /// 
         /// Stack Transition:
-        /// ..., addr, value, size -> ...,
+        /// …, addr, value, size -> …,
         /// </summary>
         /// <remarks>
         /// The initblk instruction sets size (of type unsigned int32) bytes starting at addr (of type native
@@ -751,7 +751,7 @@ namespace Silk
         /// Initialize the value at address dest.
         /// 
         /// Stack Transition:
-        /// ..., dest, -> ...,
+        /// …, dest, -> …,
         /// </summary>
         /// <remarks>
         /// The initobj instruction initializes an address with a default value. typeTok is a metadata token (a
@@ -770,7 +770,7 @@ namespace Silk
         /// that class or interface.
         /// 
         /// Stack Transition:
-        /// ..., obj, -> ..., result,
+        /// …, obj, -> …, result,
         /// </summary>
         /// <remarks>
         /// typeTok is a metadata token (a typeref, typedef or typespec), indicating the desired
@@ -794,7 +794,7 @@ namespace Silk
         /// Load argument numbered num onto the stack.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., value,
+        /// …, -> …, value,
         /// </summary>
         /// <remarks>
         /// The ldarg num instruction pushes onto the evaluation stack, the num’th incoming argument, 
@@ -819,7 +819,7 @@ namespace Silk
         /// Fetch the address of argument argNum.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., address of argument number argNum,
+        /// …, -> …, address of argument number argNum,
         /// </summary>
         /// <remarks>
         /// The ldarga instruction fetches the address (of type &amp;, i.e., managed pointer) of the argNum’th 
@@ -837,7 +837,7 @@ namespace Silk
         /// Push num of type int32 onto the stack as int32.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., num,
+        /// …, -> …, num,
         /// </summary>
         /// <remarks>
         /// The ldc num instruction pushes number num or some constant onto the stack. There are special 
@@ -861,7 +861,7 @@ namespace Silk
         /// Push num of type int64 onto the stack as int64.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., num,
+        /// …, -> …, num,
         /// </summary>
         /// <remarks>
         /// The ldc num instruction pushes number num or some constant onto the stack. There are special 
@@ -885,7 +885,7 @@ namespace Silk
         /// Push num of type float32 onto the stack as float32.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., num,
+        /// …, -> …, num,
         /// </summary>
         /// <remarks>
         /// The ldc num instruction pushes number num or some constant onto the stack. There are special 
@@ -909,7 +909,7 @@ namespace Silk
         /// Push num of type float64 onto the stack as float64.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., num,
+        /// …, -> …, num,
         /// </summary>
         /// <remarks>
         /// The ldc num instruction pushes number num or some constant onto the stack. There are special 
@@ -933,7 +933,7 @@ namespace Silk
         /// Load the element at index onto the top of the stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, -> ..., value,
+        /// …, array, index, -> …, value,
         /// </summary>
         /// <remarks>
         /// The ldelem instruction loads the value of the element with index index (of type native int or
@@ -967,7 +967,7 @@ namespace Silk
         /// Push a pointer to a method referenced by method, on the stack
         /// 
         /// Stack Transition:
-        /// ..., -> ..., ftn,
+        /// …, -> …, ftn,
         /// </summary>
         /// <remarks>
         /// The ldftn instruction pushes a method pointer (§II.14.5) to the native code implementing the 
@@ -1010,7 +1010,7 @@ namespace Silk
         /// Load local variable of index indx onto stack.
         ///
         /// Stack Transition:
-        /// ..., -> ..., value,
+        /// …, -> …, value,
         /// </summary>
         /// <remarks>
         /// The ldloc indx instruction pushes the contents of the local variable number indx onto the 
@@ -1035,7 +1035,7 @@ namespace Silk
         /// Push a null reference on the stack.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., null value,
+        /// …, -> …, null value,
         /// </summary>
         /// <remarks>
         /// The ldnull pushes a null reference (type O) on the stack. This is used to initialize locations before
@@ -1052,7 +1052,7 @@ namespace Silk
         /// Copy the value stored at address src to the stack.
         /// 
         /// Stack Transition:
-        /// ..., src, -> ..., val,
+        /// …, src, -> …, val,
         /// </summary>
         /// <remarks>
         /// The ldobj instruction copies a value to the evaluation stack. typeTok is a metadata token (a
@@ -1078,7 +1078,7 @@ namespace Silk
         /// Push a string object for the literal str.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., str,
+        /// …, -> …, str,
         /// </summary>
         /// <remarks>
         /// The ldstr instruction pushes a new string object representing the literal stored in the metadata as
@@ -1099,7 +1099,7 @@ namespace Silk
         /// Exit a protected region of code.
         /// 
         /// Stack Transition:
-        /// ..., -> 
+        /// …, -> 
         /// </summary>
         /// <remarks>
         /// The leave instruction unconditionally transfers control to target. target is represented as a signed
@@ -1123,7 +1123,7 @@ namespace Silk
         /// Allocate space from the local memory pool.
         /// 
         /// Stack Transition:
-        /// ..., size, -> ..., address,
+        /// …, size, -> …, address,
         /// </summary>
         /// <remarks>
         /// The localloc instruction allocates size (type native unsigned int or U4) bytes from the local
@@ -1151,7 +1151,7 @@ namespace Silk
         /// Create a new array with elements of type etype.
         /// 
         /// Stack Transition:
-        /// ..., numElems, -> ..., array,
+        /// …, numElems, -> …, array,
         /// </summary>
         /// <remarks>
         /// The newarr instruction pushes a reference to a new zero-based, one-dimensional array whose
@@ -1176,7 +1176,7 @@ namespace Silk
         /// Do nothing.
         /// 
         /// Stack Transition:
-        /// ..., -> ...,
+        /// …, -> …,
         /// </summary>
         /// <remarks>
         /// The nop instruction does nothing. It is intended to fill in space if bytecodes are patched.
@@ -1197,7 +1197,7 @@ namespace Silk
         /// 
         /// Stack Transition:
         ///  retVal on callee evaluation stack (not always present), ->
-        ///  ..., retVal on caller evaluation stack (not always present),
+        ///  …, retVal on caller evaluation stack (not always present),
         /// </summary>
         /// <remarks>
         /// Return from the current method. The return type, if any, of the current method determines the 
@@ -1217,7 +1217,7 @@ namespace Silk
         /// Rethrow the current exception.
         /// 
         /// Stack Transition:
-        /// ..., -> ...,
+        /// …, -> …,
         /// </summary>
         /// <remarks>
         /// The rethrow instruction is only permitted within the body of a catch handler (see Partition I). It
@@ -1234,7 +1234,7 @@ namespace Silk
         /// Push the size, in bytes, of a type as an unsigned int32.
         /// 
         /// Stack Transition:
-        /// ..., -> ..., size (4 bytes, unsigned),
+        /// …, -> …, size (4 bytes, unsigned),
         /// </summary>
         /// <remarks>
         /// Returns the size, in bytes, of a type. typeTok can be a generic parameter, a reference type or a
@@ -1258,7 +1258,7 @@ namespace Silk
         /// Replace array element at index with the value on the stack
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem instruction replaces the value of the element with zero-based index index (of type
@@ -1280,7 +1280,7 @@ namespace Silk
         /// the stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1305,7 +1305,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1330,7 +1330,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1355,7 +1355,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1380,7 +1380,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1405,7 +1405,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1430,7 +1430,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1455,7 +1455,7 @@ namespace Silk
         /// stack.
         /// 
         /// Stack Transition:
-        /// ..., array, index, value, -> ...,
+        /// …, array, index, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
@@ -1489,7 +1489,7 @@ namespace Silk
         /// Pop a value from stack into local variable indx
         /// 
         /// Stack Transition:
-        ///  ..., value, -> ...,
+        ///  …, value, -> …,
         /// </summary>
         /// <remarks>
         /// The stloc indx instruction pops the top value off the evaluation stack and moves it into local 
@@ -1508,7 +1508,7 @@ namespace Silk
         /// Store a value of type typeTok at an address.
         /// 
         /// Stack Transition:
-        /// ..., dest, src, -> ...,
+        /// …, dest, src, -> …,
         /// </summary>
         /// <remarks>
         /// The stobj instruction copies the value src to the address dest. If typeTok is not a generic
@@ -1532,7 +1532,7 @@ namespace Silk
         /// Jump to one of n values.
         /// 
         /// Stack Transition:
-        /// ..., value, -> ...,
+        /// …, value, -> …,
         /// </summary>
         /// <remarks>
         /// The switch instruction implements a jump table. The format of the instruction is an unsigned
@@ -1560,7 +1560,7 @@ namespace Silk
         /// Throw an exception.
         /// 
         /// Stack Transition:
-        /// ..., object, -> ...,
+        /// …, object, -> …,
         /// </summary>
         /// <remarks>
         /// The throw instruction throws the exception object (type O) on the stack and empties the stack.
@@ -1576,7 +1576,7 @@ namespace Silk
         /// Extract a value-type from obj, its boxed representation.
         /// 
         /// Stack Transition:
-        /// ..., obj, -> ..., valueTypePtr,
+        /// …, obj, -> …, valueTypePtr,
         /// </summary>
         /// <remarks>
         /// A value type has two separate representations (see Partition I) within the CLI:
