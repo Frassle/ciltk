@@ -1209,7 +1209,19 @@ namespace Silk
         /// </remarks>
         public static void Ret() { throw new Exception("CilTK Rewriter not run."); }
 
+        /// <summary>
+        /// Rethrow the current exception.
+        /// 
+        /// Stack Transition:
+        /// ..., -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The rethrow instruction is only permitted within the body of a catch handler (see Partition I). It
+        /// throws the same exception that was caught by this handler. A rethrow does not change the stack
+        /// trace in the object.
+        /// </remarks>
         public static void Rethrow() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Shl() { throw new Exception("CilTK Rewriter not run."); }
         public static void Shr() { throw new Exception("CilTK Rewriter not run."); }
         public static void Shr_Un() { throw new Exception("CilTK Rewriter not run."); }
@@ -1513,7 +1525,21 @@ namespace Silk
         public static void Sub_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
         public static void Switch() { throw new Exception("CilTK Rewriter not run."); }
         public static void Tail() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Throw an exception.
+        /// 
+        /// Stack Transition:
+        /// ..., object, -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The throw instruction throws the exception object (type O) on the stack and empties the stack.
+        /// For details of the exception mechanism, see Partition I.
+        /// [Note: While the CLI permits any object to be thrown, the CLS describes a specific exception
+        /// class that shall be used for language interoperability. end note]
+        /// </remarks>
         public static void Throw() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Unaligned() { throw new Exception("CilTK Rewriter not run."); }
         public static void Unbox() { throw new Exception("CilTK Rewriter not run."); }
         public static void Unbox_Any() { throw new Exception("CilTK Rewriter not run."); }
