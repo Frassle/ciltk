@@ -547,5 +547,39 @@ namespace UnitTests
 
             Assert.AreSame(a, c);
         }
+
+        [TestMethod]
+        public void TestSwitch()
+        {
+            for (int i = 0; i <= 5; ++i)
+            {
+                Silk.Cil.Load(i);
+                Silk.Cil.Switch("0;1;2;3;4");
+
+                Assert.AreEqual(5, i);
+                Silk.Cil.Br("end");
+
+                Silk.Cil.Label("0");
+                Assert.AreEqual(0, i);
+                Silk.Cil.Br("end");
+
+                Silk.Cil.Label("1");
+                Assert.AreEqual(1, i);
+                Silk.Cil.Br("end");
+
+                Silk.Cil.Label("2");
+                Assert.AreEqual(2, i);
+                Silk.Cil.Br("end");
+
+                Silk.Cil.Label("3");
+                Assert.AreEqual(3, i);
+                Silk.Cil.Br("end");
+
+                Silk.Cil.Label("4");
+                Assert.AreEqual(4, i);
+
+                Silk.Cil.Label("end");
+            }
+        }
     }
 }

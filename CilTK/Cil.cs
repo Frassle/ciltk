@@ -1527,7 +1527,33 @@ namespace Silk
         public static unsafe void Sub() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Sub_Ovf() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Sub_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Switch() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Jump to one of n values.
+        /// 
+        /// Stack Transition:
+        /// ..., value, -> ...,
+        /// </summary>
+        /// <remarks>
+        /// The switch instruction implements a jump table. The format of the instruction is an unsigned
+        /// int32 representing the number of targets N, followed by N int32 values specifying jump targets:
+        /// these targets are represented as offsets (positive or negative) from the beginning of the
+        /// instruction following this switch instruction.
+        /// The switch instruction pops value off the stack and compares it, as an unsigned integer, to n. If
+        /// value is less than n, execution is transferred to the value’th target, where targets are numbered
+        /// from 0 (i.e., a value of 0 takes the first target, a value of 1 takes the second target, and so on). If
+        /// value is not less than n, execution continues at the next instruction (fall through).
+        /// If the target instruction has one or more prefix codes, control can only be transferred to the first
+        /// of these prefixes.
+        /// Control transfers into and out of try, catch, filter, and finally blocks cannot be performed by
+        /// this instruction. (Such transfers are severely restricted and shall use the leave instruction instead;
+        /// see Partition I for details).
+        /// </remarks>
+        /// <param name="targets">
+        /// List of jump targets, seperated by ';'.
+        /// </param>
+        public static unsafe void Switch(string targets) { throw new Exception("CilTK Rewriter not run."); }
+
         public static unsafe void Tail() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>

@@ -203,6 +203,13 @@ namespace Weave
                             var real = (double)operand;
                             ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
                         }
+                        else if (opcode.OperandType == OperandType.InlineSwitch)
+                        {
+                            var target_string = (string)operand;
+                            var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body.Method, label)).ToArray();
+
+                            ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
+                        }
                         else if (opcode.OperandType == OperandType.InlineType)
                         {
                             Console.WriteLine("Inline type opcode ({0}) without generic argument, ignoring.", opcode);
