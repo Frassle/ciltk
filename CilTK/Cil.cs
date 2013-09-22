@@ -4,6 +4,30 @@ using System.Text;
 
 namespace Silk
 {
+    [Flags]
+    public enum FaultCheck : byte
+    {
+        /// <summary>
+        /// typecheck (castclass, unbox, ldelema, stelem, stelem). The CLI can optionally skip
+        /// any type checks normally performed as part of the execution of the subsequent instruction.
+        /// InvalidCastException can optionally still be thrown if the check would fail.
+        /// </summary>
+        TypeCheck = 0x01,
+        /// <summary>
+        /// rangecheck (ldelem.*, ldelema, stelem.*). The CLI can optionally skip any array range
+        /// checks normally performed as part of the execution of the subsequent instruction.
+        /// IndexOutOfRangeException can optionally still be thrown if the check would fail.
+        /// </summary>
+        RangeCheck = 0x02,
+        /// <summary>
+        /// nullcheck (ldfld, stfld, callvirt, ldvirtftn, ldelem.*, stelem.*, ldelema). The CLI can
+        /// optionally skip any null-reference checks normally performed as part of the execution of the
+        /// subsequent instruction. NullReferenceException can optionally still be thrown if the check
+        /// would fail.
+        /// </summary>
+        NullCheck = 0x04,
+    }
+
     public static unsafe class Cil
     {
         /// <summary>
@@ -1203,7 +1227,32 @@ namespace Silk
         public static unsafe void Newarr<T>() { throw new Exception("CilTK Rewriter not run."); }
         
         public static unsafe void Newobj() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void No() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// The specified fault check(s) normally performed
+        /// as part of the execution of the subsequent
+        /// instruction can/shall be skipped.
+        /// </summary>
+        /// <remarks>
+        /// This prefix indicates that the subsequent instruction need not perform the specified fault check
+        /// when it is executed. The byte that follows the instruction code indicates which checks can
+        /// optionally be skipped. This instruction is not verifiable.
+        /// The prefix can be used in the following circumstances:
+        /// 0x01: typecheck (castclass, unbox, ldelema, stelem, stelem). The CLI can optionally skip
+        /// any type checks normally performed as part of the execution of the subsequent instruction.
+        /// InvalidCastException can optionally still be thrown if the check would fail.
+        /// 0x02: rangecheck (ldelem.*, ldelema, stelem.*). The CLI can optionally skip any array range
+        /// checks normally performed as part of the execution of the subsequent instruction.
+        /// IndexOutOfRangeException can optionally still be thrown if the check would fail.
+        /// 0x04: nullcheck (ldfld, stfld, callvirt, ldvirtftn, ldelem.*, stelem.*, ldelema). The CLI can
+        /// optionally skip any null-reference checks normally performed as part of the execution of the
+        /// subsequent instruction. NullReferenceException can optionally still be thrown if the check
+        /// would fail.
+        /// The byte values can be OR-ed; e.g.; a value of 0x05 indicates that both typecheck and nullcheck
+        /// can optionally be omitted.
+        /// </remarks>
+        /// <param name="faultCheck">The fault check(s) to skip.</param>
+        public static unsafe void No(FaultCheck faultCheck) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Do nothing.
@@ -1219,7 +1268,22 @@ namespace Silk
         public static unsafe void Not() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Or() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Pop() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Specify that the subsequent array address operation performs no
+        /// type check at runtime, and that it returns a controlled-mutability
+        /// managed pointer
+        /// </summary>
+        /// <remarks>
+        /// This prefix can only appear only immediately preceding the ldelema instruction and calls to the
+        /// special Address method on arrays. Its effect on the subsequent operation is twofold.
+        /// 1. At run-time, no type check operation is performed. (For the value class case there is never
+        /// a runtime time check so this is a noop in that case).
+        /// 2. The verifier treats the result of the address-of operation as a controlled-mutability managed
+        /// pointer (§III.1.8.1.2.2).
+        /// </remarks>
         public static unsafe void Readonly() { throw new Exception("CilTK Rewriter not run."); }
+
         public static unsafe void Refanytype() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Refanyval() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Rem() { throw new Exception("CilTK Rewriter not run."); }
@@ -1587,6 +1651,42 @@ namespace Silk
         /// </param>
         public static unsafe void Switch(string targets) { throw new Exception("CilTK Rewriter not run."); }
 
+        /// <summary>
+        /// Subsequent call terminates current method.
+        /// </summary>
+        /// <remarks>
+        /// The tail. prefix shall immediately precede a call, calli, or callvirt instruction. It indicates that the
+        /// current method’s stack frame is no longer required and thus can be removed before the call
+        /// instruction is executed. Because the value returned by the call will be the value returned by this
+        /// method, the call can be converted into a cross-method jump.
+        /// The evaluation stack shall be empty except for the arguments being transferred by the following
+        /// call. The instruction following the call instruction shall be a ret. Thus the only valid code
+        /// sequence is
+        /// tail. call (or calli or callvirt) somewhere
+        /// ret
+        /// Correct CIL shall not branch to the call instruction, but it is permitted to branch to the ret. The
+        /// only values on the stack shall be the arguments for the method being called.
+        /// The tail. call (or calli or callvirt) instruction cannot be used to transfer control out of a try, filter,
+        /// catch, or finally block. See Partition I.
+        /// The current frame cannot be discarded when control is transferred from untrusted code to trusted
+        /// code, since this would jeopardize code identity security. Security checks can therefore cause the
+        /// tail. to be ignored, leaving a standard call instruction.
+        /// Similarly, in order to allow the exit of a synchronized region to occur after the call returns, the
+        /// tail. prefix is ignored when used to exit a method that is marked synchronized.
+        /// There can also be implementation-specific restrictions that prevent the tail. prefix from being
+        /// obeyed in certain cases. While an implementation is free to ignore the tail. prefix under these
+        /// circumstances, they should be clearly documented as they can affect the behavior of programs.
+        /// CLI implementations are required to honor tail. call requests where caller and callee methods
+        /// can be statically determined to lie in the same assembly; and where the caller is not in a
+        /// synchronized region; and where caller and callee satisfy all conditions listed in the
+        /// “Verifiability” rules below. (To “honor” the tail. prefix means to remove the caller’s frame,
+        /// rather than revert to a regular call sequence). Consequently, a CLI implementation need not
+        /// honor tail. calli or tail. callvirt sequences.
+        /// [Rationale: tail. calls allow some linear space algorithms to be converted to constant space
+        /// algorithms and are required by some languages. In the presence of ldloca and ldarga instructions
+        /// it isn’t always possible for a compiler from CIL to native code to optimally determine when a
+        /// tail. can be automatically inserted. end rationale]
+        /// </remarks>
         public static unsafe void Tail() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
@@ -1603,7 +1703,28 @@ namespace Silk
         /// </remarks>
         public static unsafe void Throw() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static unsafe void Unaligned() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Subsequent pointer instruction might be unaligned.
+        /// </summary>
+        /// <remarks>
+        /// The unaligned. prefix specifies that addr (an unmanaged pointer (&amp;), or native int) on the
+        /// stack mignt not be aligned to the natural size of the immediately following ldind, stind, ldfld,
+        /// stfld, ldobj, stobj, initblk, or cpblk instruction. That is, for a ldind.i4 instruction the alignment of
+        /// addr might not be to a 4-byte boundary. For initblk and cpblk the default alignment is
+        /// architecture-dependent (4-byte on 32-bit CPUs, 8-byte on 64-bit CPUs). Code generators that do
+        /// not restrict their output to a 32-bit word size (see Partition I and Partition II) shall use unaligned.
+        /// if the alignment is not known at compile time to be 8-byte.
+        /// The value of alignment shall be 1, 2, or 4 and means that the generated code should assume that
+        /// addr is byte, double-byte, or quad-byte-aligned, respectively.
+        /// [Rationale: While the alignment for a cpblk instruction would logically require two numbers
+        /// (one for the source and one for the destination), there is no noticeable impact on performance if
+        /// only the lower number is specified. end rationale]
+        /// The unaligned. and volatile. prefixes can be combined in either order. They shall immediately
+        /// precede a ldind, stind, ldfld, stfld, ldobj, stobj, initblk, or cpblk instruction.
+        /// [Note: See Partition I, 12.7 for information about atomicity and data alignment. end note]
+        /// </remarks>
+        /// <param name="alignment">Alignment to use.</param>
+        public static unsafe void Unaligned(byte alignment) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Extract a value-type from obj, its boxed representation.
@@ -1648,7 +1769,22 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Unbox_Any<T>() { throw new Exception("CilTK Rewriter not run."); }
 
+        /// <summary>
+        /// Subsequent pointer reference is volatile.
+        /// </summary>
+        /// <remarks>
+        /// The volatile. prefix specifies that addr is a volatile address (i.e., it can be referenced externally to
+        /// the current thread of execution) and the results of reading that location cannot be cached or that
+        /// multiple stores to that location cannot be suppressed. Marking an access as volatile. affects only
+        /// that single access; other accesses to the same location shall be marked separately. Access to
+        /// volatile locations need not be performed atomically. (See Partition I, “Memory Model and
+        /// Optimizations”)
+        /// The unaligned. and volatile. prefixes can be combined in either order. They shall immediately
+        /// precede a ldind, stind, ldfld, stfld, ldobj, stobj, initblk, or cpblk instruction. Only the volatile.
+        /// prefix is allowed with the ldsfld and stsfld instructions.
+        /// </remarks>
         public static unsafe void Volatile() { throw new Exception("CilTK Rewriter not run."); }
+
         public static unsafe void Xor() { throw new Exception("CilTK Rewriter not run."); }
     }
 }
