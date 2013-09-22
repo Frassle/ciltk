@@ -1142,7 +1142,29 @@ namespace Silk
         public static void Mul_Ovf() { throw new Exception("CilTK Rewriter not run."); }
         public static void Mul_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
         public static void Neg() { throw new Exception("CilTK Rewriter not run."); }
-        public static void Newarr() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Create a new array with elements of type etype.
+        /// 
+        /// Stack Transition:
+        /// ..., numElems -> ..., array
+        /// </summary>
+        /// <remarks>
+        /// The newarr instruction pushes a reference to a new zero-based, one-dimensional array whose
+        /// elements are of type etype, a metadata token (a typeref, typedef or typespec; see Partition II).
+        /// numElems (of type native int or int32) specifies the number of elements in the array. Valid
+        /// array indexes are 0 ≤ index &lt; numElems. The elements of an array can be any type, including
+        /// value types.
+        /// Zero-based, one-dimensional arrays of numbers are created using a metadata token referencing
+        /// the appropriate value type (System.Int32, etc.). Elements of the array are initialized to 0 of the
+        /// appropriate type.
+        /// One-dimensional arrays that aren’t zero-based and multidimensional arrays are created using
+        /// newobj rather than newarr. More commonly, they are created using the methods of
+        /// System.Array class in the Base Framework.
+        /// </remarks>
+        /// <typeparam name="T">etype</typeparam>
+        public static void Newarr<T>() { throw new Exception("CilTK Rewriter not run."); }
+        
         public static void Newobj() { throw new Exception("CilTK Rewriter not run."); }
         public static void No() { throw new Exception("CilTK Rewriter not run."); }
 

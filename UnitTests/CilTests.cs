@@ -358,5 +358,18 @@ namespace UnitTests
 
             Assert.AreEqual(a, TestClass.Static);
         }
+        
+        [TestMethod]
+        public void TestNewarr()
+        {
+            int[] a;
+
+            Silk.Cil.Ldc_I4(5);
+            Silk.Cil.Newarr<int>();
+            Silk.Cil.Store(out a);
+
+            Assert.IsNotNull(a);
+            Assert.AreEqual(a.Length, 5);
+        }
     }
 }
