@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
@@ -25,11 +26,6 @@ namespace Weave
         {
             get;
             private set;
-        }
-
-        protected Mono.Cecil.Cil.Instruction Nop()
-        {
-            return Mono.Cecil.Cil.Instruction.Create(Mono.Cecil.Cil.OpCodes.Nop);
         }
 
         public void Visit(Mono.Cecil.AssemblyDefinition assembly)
@@ -63,9 +59,10 @@ namespace Weave
                 var il = body.GetILProcessor();
                 il.Body.SimplifyMacros();
 
-                for (int i = 0; i < body.Instructions.Count; ++i)
+                Instruction instruction = body.Instructions[0];
+                while (instruction != null)
                 {
-                    Visit(il, body.Instructions[i]);
+                    instruction = Visit(il, instruction);
                 }
 
                 il.Body.OptimizeMacros();
@@ -85,6 +82,6 @@ namespace Weave
             }
         }
 
-        protected abstract void Visit(Mono.Cecil.Cil.ILProcessor ilProcessor, Mono.Cecil.Cil.Instruction instruction);
+        protected abstract Instruction Visit(Mono.Cecil.Cil.ILProcessor ilProcessor, Mono.Cecil.Cil.Instruction instruction);
     }
 }
