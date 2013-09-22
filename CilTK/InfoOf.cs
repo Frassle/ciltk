@@ -6,7 +6,7 @@ namespace Silk
 {
     public static class InfoOf
     {
-        public static System.Reflection.ParameterInfo Paramater<T>(T paramater)
+        public static System.Reflection.ParameterInfo Parameter<T>(T parameter)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
