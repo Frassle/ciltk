@@ -140,6 +140,11 @@ namespace Weave
                 {
                     maybeOpcode = OpCodes.Stelem_Any;
                 }
+                // Special case ldelem because we don't want to call it Stelem_Any
+                if (calledMethod.Name == "Ldelem")
+                {
+                    maybeOpcode = OpCodes.Ldelem_Any;
+                }
             }
             
             if(maybeOpcode.HasValue)
