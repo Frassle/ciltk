@@ -1237,15 +1237,228 @@ namespace Silk
         public static void Sizeof<T>() { throw new Exception("CilTK Rewriter not run."); }
 
         public static void Starg(int num) { throw new Exception("CilTK Rewriter not run."); }
-        public static void Stelem_Any() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the value on the stack
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem instruction replaces the value of the element with zero-based index index (of type
+        /// native int or int32) in the one-dimensional array array, with value. Arrays are objects and
+        /// hence are represented by a value of type O. The type of value must be array-element-compatiblewith
+        /// typeTok in the instruction.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
+        /// <typeparam name="T">typeTok</typeparam>
+        public static void Stelem<T>() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the native int value on
+        /// the stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_I() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the int8 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_I1() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the int16 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_I2() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the int32 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_I4() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the int64 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_I8() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the float32 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_R4() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the float64 value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_R8() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Replace array element at index with the ref value on the
+        /// stack.
+        /// 
+        /// Stack Transition:
+        /// ..., array, index, value, -> ...
+        /// </summary>
+        /// <remarks>
+        /// The stelem.&lt;type&gt; instruction replaces the value of the element with zero-based index index (of
+        /// type int32 or native int) in the one-dimensional array array with value. Arrays are objects and
+        /// hence represented by a value of type O.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// All variants, except stelem.ref, are equivalent to the stelem instruction (§III.4.26) with an
+        /// appropriate typeTok.
+        /// Note that stelem.ref implicitly casts value to the element type of array before assigning the
+        /// value to the array element. This cast can fail, even for verified code. Thus the stelem.ref
+        /// instruction can throw the ArrayTypeMismatchException. This behavior differs from stelem.
+        /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
         public static void Stelem_Ref() { throw new Exception("CilTK Rewriter not run."); }
+
         public static void Stfld() { throw new Exception("CilTK Rewriter not run."); }
         public static void Stind_I() { throw new Exception("CilTK Rewriter not run."); }
         public static void Stind_I1() { throw new Exception("CilTK Rewriter not run."); }
