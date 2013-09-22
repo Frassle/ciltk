@@ -21,6 +21,16 @@ namespace UnitTests
             public int A;
             public int B;
 
+            public TestClass()
+            {
+            }
+
+            public TestClass(int a, int b)
+            {
+                A = a;
+                B = b;
+            }
+
             public override bool Equals(object obj)
             {
                 var other = obj as TestClass;
@@ -36,6 +46,15 @@ namespace UnitTests
         class TestDerivedClass : TestClass
         {
             public int C;
+
+            public TestDerivedClass()
+            {
+            }
+
+            public TestDerivedClass(int a, int b, int c) : base(a, b)
+            {
+                C = c;
+            }
 
             public override bool Equals(object obj)
             {
