@@ -31,5 +31,4 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
     }
-
 }
