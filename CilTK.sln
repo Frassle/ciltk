@@ -6,6 +6,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave", "Rewriter\Weave.csproj", "{60430B2C-945C-453A-8181-FE6BCC530AE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{EB959322-F332-4F61-994A-4FCC9C39EC9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60430B2C-945C-453A-8181-FE6BCC530AE2} = {60430B2C-945C-453A-8181-FE6BCC530AE2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
