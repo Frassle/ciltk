@@ -33,7 +33,7 @@ namespace Weave
             foreach (var module in assembly.Modules)
             {
                 CurrentModule = module;
-                foreach (var type in module.Types)
+                foreach (var type in module.GetTypes())
                 {
                     CurrentType = type;
                     foreach (var method in type.Methods)
