@@ -164,7 +164,7 @@ namespace Weave
                 }
                 else
                 {
-                    object operand = GetOperand(instruction);
+                    object operand = instruction.Previous.Operand;
                     ilProcessor.Remove(instruction.Previous);
 
                     if (opcode.OperandType == OperandType.InlineVar)
@@ -223,34 +223,6 @@ namespace Weave
             }
 
             return nextInstruction;
-        }
-
-        private object GetOperand(Instruction instruction)
-        {
-            var ld = instruction.Previous;
-
-            if (ld.OpCode == OpCodes.Ldstr)
-            {
-                return ld.Operand as string;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I4)
-            {
-                return (int)ld.Operand;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_I8)
-            {
-                return (long)ld.Operand;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_R4)
-            {
-                return (float)ld.Operand;
-            }
-            else if (ld.OpCode == OpCodes.Ldc_R8)
-            {
-                return (double)ld.Operand;
-            }
-
-            return null;
         }
     }
 }
