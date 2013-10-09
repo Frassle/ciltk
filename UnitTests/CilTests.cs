@@ -6,43 +6,6 @@ namespace UnitTests
     [TestClass]
     public class CilTests
     {
-        struct TestStruct
-        {
-            public static int Static;
-
-            public int A;
-            public int B;
-        }
-
-        class TestClass
-        {
-            public static int Static;
-
-            public int A;
-            public int B;
-
-            public TestClass()
-            {
-            }
-
-            public TestClass(int a, int b)
-            {
-                A = a;
-                B = b;
-            }
-
-            public override bool Equals(object obj)
-            {
-                var other = obj as TestClass;
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return A == other.A && B == other.B;
-            }
-        }
-
         class TestDerivedClass : TestClass
         {
             public int C;
