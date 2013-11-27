@@ -187,7 +187,7 @@ namespace Weave
                     }
                     else if (opcode.OperandType == OperandType.InlineBrTarget)
                     {
-                        var jump = Labels.GetJumpLocation(ilProcessor.Body.Method, (string)operand);
+                        var jump = Labels.GetJumpLocation(ilProcessor.Body, (string)operand);
                         ilProcessor.Replace(instruction, Instruction.Create(opcode, jump));
                     }
                     else if (opcode.OperandType == OperandType.ShortInlineI)
@@ -218,7 +218,7 @@ namespace Weave
                     else if (opcode.OperandType == OperandType.InlineSwitch)
                     {
                         var target_string = (string)operand;
-                        var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body.Method, label)).ToArray();
+                        var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body, label)).ToArray();
 
                         ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
                     }
