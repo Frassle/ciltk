@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mono.Cecil.Rocks;
+using Silk.Loom;
 
 namespace Weave
 {
@@ -17,7 +18,7 @@ namespace Weave
             Labels = labels;
         }
 
-        protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
+        protected override bool ShouldVisit(Instruction instruction)
         {
             if (instruction.OpCode == OpCodes.Call)
             {
@@ -25,42 +26,49 @@ namespace Weave
 
                 if (calledMethod != null && calledMethod.DeclaringType.FullName == "Silk.Cil")
                 {
-                    if (calledMethod.Name == "KeepAlive")
-                    {
-                        var next = instruction.Next;
-                        ilProcessor.Remove(instruction.Previous);
-                        ilProcessor.Remove(instruction);
-                        return next;
-                    }
-                    else if (calledMethod.Name == "Load")
-                    {
-                        /*
-                         * The compiler will have inserted the appropriate load instructions to put the value on the 
-                         * operand stack in preperation to call Load<T>. Thus all we have to do is remove the call instruction,
-                         * that keeps the value on the stack instead of popping it for the call.
-                         */
-                        var next = instruction.Next;
-                        ilProcessor.Remove(instruction);
-                        return next;
-                    }
-                    else if (calledMethod.Name == "Store")
-                    {
-                        /*
-                         * The compiler will have inserted instructions to load the addr of the location
-                         * we want to store to. We need to look at these instructions and replace them
-                         * with the appropriate standard store instruction. We then remove the call to Store.
-                         */
-
-                        return ReplaceStore(ilProcessor, instruction, calledMethod);
-                    }
-                    else
-                    {
-                        return ReplaceInstruction(ilProcessor, instruction, calledMethod);
-                    }
+                    return true;
                 }
             }
 
-            return instruction.Next;
+            return false;
+        }
+
+        protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
+        {
+            var calledMethod = instruction.Operand as MethodReference;
+
+            if (calledMethod.Name == "KeepAlive")
+            {
+                var next = instruction.Next;
+                ilProcessor.Remove(instruction.Previous);
+                ilProcessor.Remove(instruction);
+                return next;
+            }
+            else if (calledMethod.Name == "Load")
+            {
+                /*
+                    * The compiler will have inserted the appropriate load instructions to put the value on the 
+                    * operand stack in preperation to call Load<T>. Thus all we have to do is remove the call instruction,
+                    * that keeps the value on the stack instead of popping it for the call.
+                    */
+                var next = instruction.Next;
+                ilProcessor.Remove(instruction);
+                return next;
+            }
+            else if (calledMethod.Name == "Store")
+            {
+                /*
+                    * The compiler will have inserted instructions to load the addr of the location
+                    * we want to store to. We need to look at these instructions and replace them
+                    * with the appropriate standard store instruction. We then remove the call to Store.
+                    */
+
+                return ReplaceStore(ilProcessor, instruction, calledMethod);
+            }
+            else
+            {
+                return ReplaceInstruction(ilProcessor, instruction, calledMethod);
+            }
         }
 
         Instruction ReplaceStore(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)

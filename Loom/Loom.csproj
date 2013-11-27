@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60430B2C-945C-453A-8181-FE6BCC530AE2}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{DAF5D6F1-3734-4CD4-AD7F-15B1B674FAA6}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Weave</RootNamespace>
-    <AssemblyName>Weave</AssemblyName>
+    <RootNamespace>Silk.Loom</RootNamespace>
+    <AssemblyName>Silk.Loom</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -46,27 +44,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CilReplacer.cs" />
-    <Compile Include="LabelReplacer.cs" />
-    <Compile Include="Mono.Options\Options.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="InstructionVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CilTK\Silk.csproj">
-      <Project>{2bb73334-5e30-4a65-a8fb-6e07e2663870}</Project>
-      <Name>Silk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Loom\Loom.csproj">
-      <Project>{daf5d6f1-3734-4cd4-ad7f-15b1b674faa6}</Project>
-      <Name>Loom</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

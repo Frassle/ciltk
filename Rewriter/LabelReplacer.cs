@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Silk.Loom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +10,25 @@ namespace Weave
 {
     class LabelReplacer : InstructionVisitor
     {
-        Dictionary<Tuple<MethodDefinition, string>, Instruction> Labels;
+        Dictionary<Tuple<MethodBody, string>, Instruction> Labels;
 
         public LabelReplacer()
         {
-            Labels = new Dictionary<Tuple<MethodDefinition, string>, Instruction>();
+            Labels = new Dictionary<Tuple<MethodBody, string>, Instruction>();
         }
 
-        public Instruction GetJumpLocation(MethodDefinition method, string label)
+        public Instruction GetJumpLocation(MethodBody methodBody, string label)
         {
             Instruction instruction;
-            if (!Labels.TryGetValue(Tuple.Create(method, label), out instruction))
+            if (!Labels.TryGetValue(Tuple.Create(methodBody, label), out instruction))
             {
-                Console.WriteLine("Label {0} in method {1} not found.", label, method.FullName);
+                Console.WriteLine("Label {0} in method {1} not found.", label, methodBody.Method.FullName);
                 Environment.Exit(1);
             }
             return instruction;
         }
 
-        protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
+        protected override bool ShouldVisit(Instruction instruction)
         {
             if (instruction.OpCode == OpCodes.Call)
             {
@@ -35,14 +36,14 @@ namespace Weave
 
                 if (method != null && method.DeclaringType.FullName == "Silk.Cil" && method.Name == "Label")
                 {
-                    return ReplaceLabel(ilProcessor, instruction);
+                    return true;
                 }
             }
 
-            return instruction.Next;
+            return false;
         }
 
-        Instruction ReplaceLabel(ILProcessor ilProcessor, Instruction instruction)
+        protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
         {
             var ld = instruction.Previous;
 
@@ -63,7 +64,7 @@ namespace Weave
 
             var jump_location = Instruction.Create(OpCodes.Nop);
             ilProcessor.Replace(instruction, jump_location);
-            Labels.Add(Tuple.Create(CurrentMethod, label), jump_location);
+            Labels.Add(Tuple.Create(ilProcessor.Body, label), jump_location);
 
             return jump_location.Next;
         }

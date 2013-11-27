@@ -1,41 +1,21 @@
-﻿using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
 
-namespace Weave
+namespace Silk.Loom
 {
-    abstract class InstructionVisitor
+    public abstract class InstructionVisitor
     {
-        protected ModuleDefinition CurrentModule
-        {
-            get;
-            private set;
-        }
-
-        protected MethodDefinition CurrentMethod
-        {
-            get;
-            private set;
-        }
-
-        protected TypeDefinition CurrentType
-        {
-            get;
-            private set;
-        }
-
         public void Visit(Mono.Cecil.AssemblyDefinition assembly)
         {
             foreach (var module in assembly.Modules)
             {
-                CurrentModule = module;
                 foreach (var type in module.GetTypes())
                 {
-                    CurrentType = type;
                     foreach (var method in type.Methods)
                     {
                         Visit(method);
@@ -44,9 +24,7 @@ namespace Weave
                     {
                         Visit(property);
                     }
-                    CurrentType = null;
                 }
-                CurrentModule = null;
             }
         }
 
@@ -54,19 +32,25 @@ namespace Weave
         {
             if (method.HasBody)
             {
-                CurrentMethod = method;
                 var body = method.Body;
                 var il = body.GetILProcessor();
                 il.Body.SimplifyMacros();
 
                 Instruction instruction = body.Instructions[0];
+
                 while (instruction != null)
                 {
-                    instruction = Visit(il, instruction);
+                    if (ShouldVisit(instruction))
+                    {
+                        instruction = Visit(il, instruction);
+                    }
+                    else
+                    {
+                        instruction = instruction.Next;
+                    }
                 }
 
                 il.Body.OptimizeMacros();
-                CurrentMethod = null;
             }
         }
 
@@ -80,6 +64,11 @@ namespace Weave
             {
                 Visit(property.SetMethod);
             }
+        }
+
+        protected virtual bool ShouldVisit(Mono.Cecil.Cil.Instruction instruction)
+        {
+            return true;
         }
 
         protected abstract Instruction Visit(Mono.Cecil.Cil.ILProcessor ilProcessor, Mono.Cecil.Cil.Instruction instruction);
