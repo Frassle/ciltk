@@ -44,10 +44,10 @@ namespace UnitTests
         [TestMethod]
         public void TestSizeof()
         {
-            Assert.AreEqual(4, Sizeof<int>(), "int");
-            Assert.AreEqual(8, Sizeof<long>(), "long");
-            Assert.AreEqual(8, Sizeof<TestStruct>(), "TestStruct");
-            Assert.AreEqual(IntPtr.Size, Sizeof<TestClass>(), "TestClass");
+            Assert.AreEqual(4u, Sizeof<int>(), "int");
+            Assert.AreEqual(8u, Sizeof<long>(), "long");
+            Assert.AreEqual(8u, Sizeof<TestStruct>(), "TestStruct");
+            Assert.AreEqual((uint)IntPtr.Size, Sizeof<TestClass>(), "TestClass");
         }
     }
 }
