@@ -36,13 +36,16 @@ namespace Weave
         protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
         {
             var calledMethod = instruction.Operand as MethodReference;
+            var next = instruction.Next;
 
             if (calledMethod.Name == "KeepAlive")
             {
-                var next = instruction.Next;
                 ilProcessor.Remove(instruction.Previous);
                 ilProcessor.Remove(instruction);
-                return next;
+            }
+            else if (calledMethod.Name.StartsWith("Declare"))
+            {
+                AddVariable(ilProcessor, instruction, calledMethod);
             }
             else if (calledMethod.Name == "Load")
             {
@@ -51,9 +54,7 @@ namespace Weave
                 * operand stack in preperation to call Load<T>. Thus all we have to do is remove the call instruction,
                 * that keeps the value on the stack instead of popping it for the call.
                 */
-                var next = instruction.Next;
                 ilProcessor.Remove(instruction);
-                return next;
             }
             else if (calledMethod.Name == "Store")
             {
@@ -69,6 +70,29 @@ namespace Weave
             {
                 return ReplaceInstruction(ilProcessor, instruction, calledMethod);
             }
+
+            return next;
+        }
+
+        private void AddVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            string name = instruction.Previous.Operand as string;
+            ilProcessor.Remove(instruction.Previous);
+
+            var generic_method = calledMethod as GenericInstanceMethod;
+            var typetok = generic_method.GenericArguments[0];
+
+            VariableDefinition variable;
+            if (calledMethod.Name == "DeclarePinnedVariable")
+            {
+                variable = new VariableDefinition(name, new PinnedType(typetok));
+            }
+            else
+            {
+                variable = new VariableDefinition(name, typetok);
+            }
+
+            ilProcessor.Body.Variables.Add(variable);
         }
 
         Instruction ReplaceStore(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)

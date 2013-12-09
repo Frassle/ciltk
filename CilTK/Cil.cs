@@ -30,6 +30,10 @@ namespace Silk
 
     public static unsafe class Cil
     {
+        public static unsafe void DeclareVariable<T>() { throw new Exception("CilTK Rewriter not run."); }
+
+        public static unsafe void DeclarePinnedVariable<T>() { throw new Exception("CilTK Rewriter not run."); } 
+
         /// <summary>
         /// Defines a new label in the instruction stream.
         /// </summary>
