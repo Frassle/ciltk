@@ -45,7 +45,7 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="value">The value to keep alive.</param>
-        public static unsafe void KeepAlive<T>(T value) { }
+        public static unsafe void KeepAlive<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Loads a variable onto the top of the execution stack.
