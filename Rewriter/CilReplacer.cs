@@ -77,7 +77,6 @@ namespace Weave
         private void AddVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
             string name = instruction.Previous.Operand as string;
-            ilProcessor.Remove(instruction.Previous);
 
             var generic_method = calledMethod as GenericInstanceMethod;
             var typetok = generic_method.GenericArguments[0];
@@ -92,6 +91,8 @@ namespace Weave
                 variable = new VariableDefinition(name, typetok);
             }
 
+            ilProcessor.Remove(instruction.Previous);
+            ilProcessor.Remove(instruction);
             ilProcessor.Body.Variables.Add(variable);
         }
 
