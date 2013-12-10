@@ -644,5 +644,20 @@ namespace UnitTests
                 Silk.Cil.Label("end");
             }
         }
+
+        [TestMethod]
+        public void TestDeclareVariable()
+        {
+            int cvar = 0;
+            Silk.Cil.DeclareVariable<int>("svar");
+
+            Silk.Cil.Load(1);
+            //brittle need to access silk declared vars by name
+            Silk.Cil.Stloc(1);
+            Silk.Cil.Ldloc(1);
+            Silk.Cil.Stloc(0);
+
+            Assert.AreEqual(1, cvar);
+        }
     }
 }
