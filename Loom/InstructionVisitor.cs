@@ -8,27 +8,14 @@ using Mono.Cecil.Rocks;
 
 namespace Silk.Loom
 {
-    public abstract class InstructionVisitor
+    public abstract class InstructionVisitor : MethodVisitor
     {
-        public void Visit(Mono.Cecil.AssemblyDefinition assembly)
+        public InstructionVisitor()
+            : base(true)
         {
-            foreach (var module in assembly.Modules)
-            {
-                foreach (var type in module.GetTypes())
-                {
-                    foreach (var method in type.Methods)
-                    {
-                        Visit(method);
-                    }
-                    foreach (var property in type.Properties)
-                    {
-                        Visit(property);
-                    }
-                }
-            }
         }
 
-        void Visit(Mono.Cecil.MethodDefinition method)
+        protected override void Visit(MethodDefinition method)
         {
             if (method.HasBody)
             {
@@ -51,18 +38,6 @@ namespace Silk.Loom
                 }
 
                 il.Body.OptimizeMacros();
-            }
-        }
-
-        void Visit(Mono.Cecil.PropertyDefinition property)
-        {
-            if (property.GetMethod != null)
-            {
-                Visit(property.GetMethod);
-            }
-            if (property.SetMethod != null)
-            {
-                Visit(property.SetMethod);
             }
         }
 
