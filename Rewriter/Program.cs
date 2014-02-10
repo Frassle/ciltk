@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -24,13 +27,26 @@ namespace Weave
             {
                 var extra = options.Parse(args);
 
-                var readParameters = new Mono.Cecil.ReaderParameters()
+                var pdb = Path.ChangeExtension(input, "pdb");
+                var mdb = Path.ChangeExtension(input, "mdb");
+                ISymbolReaderProvider provider = null;
+                if (File.Exists(pdb))
                 {
-                    ReadingMode = Mono.Cecil.ReadingMode.Immediate,
+                    provider = new Mono.Cecil.Pdb.PdbReaderProvider();
+                }
+                else if (File.Exists(mdb))
+                {
+                    provider = new Mono.Cecil.Mdb.MdbReaderProvider();
+                }
+
+                var readParameters = new ReaderParameters()
+                {
+                    ReadingMode = ReadingMode.Immediate,
                     ReadSymbols = true,
+                    SymbolReaderProvider = provider,
                 };
 
-                var writeParameters = new Mono.Cecil.WriterParameters()
+                var writeParameters = new WriterParameters()
                 {
                     WriteSymbols = true,
                 };
@@ -39,6 +55,7 @@ namespace Weave
                 {
                     writeParameters.StrongNameKeyPair = new System.Reflection.StrongNameKeyPair(keyPairContainer);
                 }
+
                 if (output == null)
                 {
                     output = input;
@@ -49,7 +66,7 @@ namespace Weave
                 Console.WriteLine("Writing assembly to {0}", output);
 
                 var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
-
+                
                 var labelReplace = new LabelReplacer();
                 labelReplace.Visit(assembly);
 
