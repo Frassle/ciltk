@@ -43,26 +43,25 @@ namespace Weave
                 ilProcessor.Remove(instruction.Previous);
                 ilProcessor.Remove(instruction);
             }
-            else if (calledMethod.Name.StartsWith("Declare"))
-            {
-                AddVariable(ilProcessor, instruction, calledMethod);
-            }
             else if (calledMethod.Name == "Load")
             {
                 /*
-                * The compiler will have inserted the appropriate load instructions to put the value on the 
-                * operand stack in preperation to call Load<T>. Thus all we have to do is remove the call instruction,
-                * that keeps the value on the stack instead of popping it for the call.
-                */
+                 * The compiler will have inserted the appropriate load 
+                 * instructions to put the value on the operand stack in
+                 * preperation to call Load<T>. Thus all we have to do is 
+                 * remove the call instruction, that keeps the value on the
+                 * stack instead of popping it for the call.
+                 */
                 ilProcessor.Remove(instruction);
             }
             else if (calledMethod.Name == "Store")
             {
                 /*
-                * The compiler will have inserted instructions to load the addr of the location
-                * we want to store to. We need to look at these instructions and replace them
-                * with the appropriate standard store instruction. We then remove the call to Store.
-                */
+                 * The compiler will have inserted instructions to load the
+                 * addr of the location we want to store to. We need to look 
+                 * at these instructions and replace them with the appropriate
+                 * standard store instruction. We then remove the call to Store.
+                 */
 
                 return ReplaceStore(ilProcessor, instruction, calledMethod);
             }
@@ -72,28 +71,6 @@ namespace Weave
             }
 
             return next;
-        }
-
-        private void AddVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
-        {
-            string name = instruction.Previous.Operand as string;
-
-            var generic_method = calledMethod as GenericInstanceMethod;
-            var typetok = generic_method.GenericArguments[0];
-
-            VariableDefinition variable;
-            if (calledMethod.Name == "DeclarePinnedVariable")
-            {
-                variable = new VariableDefinition(name, new PinnedType(typetok));
-            }
-            else
-            {
-                variable = new VariableDefinition(name, typetok);
-            }
-
-            ilProcessor.Remove(instruction.Previous);
-            ilProcessor.Remove(instruction);
-            ilProcessor.Body.Variables.Add(variable);
         }
 
         Instruction ReplaceStore(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
