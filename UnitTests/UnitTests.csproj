@@ -61,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClasses.cs" />
     <Compile Include="ComplexCilTests.cs" />
+    <Compile Include="InfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CilTK\Silk.csproj">
