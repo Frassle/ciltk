@@ -66,9 +66,12 @@ namespace Weave
                 Console.WriteLine("Writing assembly to {0}", output);
 
                 var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
-                
+                                
                 var labelReplace = new LabelReplacer();
                 labelReplace.Visit(assembly);
+
+                var infoReplace = new InfoReplacer();
+                infoReplace.Visit(assembly);
 
                 var cilReplacer = new CilReplacer(labelReplace);
                 cilReplacer.Visit(assembly);

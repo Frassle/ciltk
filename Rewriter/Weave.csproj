@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CilReplacer.cs" />
+    <Compile Include="InfoReplacer.cs" />
     <Compile Include="LabelReplacer.cs" />
     <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Program.cs" />
