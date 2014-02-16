@@ -6,30 +6,6 @@ namespace UnitTests
     [TestClass]
     public class CilTests
     {
-        class TestDerivedClass : TestClass
-        {
-            public int C;
-
-            public TestDerivedClass()
-            {
-            }
-
-            public TestDerivedClass(int a, int b, int c) : base(a, b)
-            {
-                C = c;
-            }
-
-            public override bool Equals(object obj)
-            {
-                var other = obj as TestDerivedClass;
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return base.Equals(other) && C == other.C;
-            }
-        }
 
         public void JustReturn()
         {
