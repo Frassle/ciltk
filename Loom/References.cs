@@ -130,7 +130,7 @@ namespace Silk.Loom
         }
 
 
-        public static FieldReference FindField(AssemblyDefinition assembly, string name)
+        public static FieldDefinition FindField(AssemblyDefinition assembly, string name)
         {
             var parts = SplitName(name);
 
@@ -158,6 +158,72 @@ namespace Silk.Loom
             }
             
             throw new Exception(string.Format("Field {0} not found.", name));
+        }
+
+        public static TypeReference FindType(AssemblyDefinition assembly, string name)
+        {
+            var parts = SplitName(name);
+
+            foreach (var module in assembly.Modules)
+            {
+                var type = module.Types.FirstOrDefault(t => t.FullName == parts.Typename);
+                if (type != null)
+                {
+                    var innertype = type;
+                    for (int i = 0; i < parts.Innertypes.Length; ++i)
+                    {
+                        innertype = innertype.NestedTypes.First(t => t.Name == parts.Innertypes[i]);
+                        if (innertype == null)
+                            break;
+                    }
+                    if (innertype != null)
+                    {
+                        return innertype;
+                    }
+                }
+            }
+
+            throw new Exception(string.Format("Type {0} not found.", name));
+        }
+
+        public static MethodDefinition FindMethod(AssemblyDefinition assembly, string name)
+        {
+            var parts = SplitName(name);
+
+            foreach (var module in assembly.Modules)
+            {
+                var type = module.Types.FirstOrDefault(t => t.FullName == parts.Typename);
+                if (type != null)
+                {
+                    var innertype = type;
+                    for (int i = 0; i < parts.Innertypes.Length; ++i)
+                    {
+                        innertype = innertype.NestedTypes.First(t => t.Name == parts.Innertypes[i]);
+                        if (innertype == null)
+                            break;
+                    }
+                    if (innertype != null)
+                    {
+                        var method = innertype.Methods.First(f => f.Name == parts.Membername);
+                        if (method != null)
+                        {
+                            int i;
+                            for (i = 0; i < parts.Paramaters.Length; ++i)
+                            {
+                                if (method.Parameters[i].ParameterType.FullName != parts.Paramaters[i])
+                                    break;
+                            }
+
+                            if(i == parts.Paramaters.Length)
+                            {
+                                return method;
+                            }
+                        }
+                    }
+                }
+            }
+
+            throw new Exception(string.Format("Type {0} not found.", name));
         }
     }
 }
