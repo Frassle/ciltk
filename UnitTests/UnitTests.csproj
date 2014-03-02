@@ -62,16 +62,11 @@
     <Compile Include="TestClasses.cs" />
     <Compile Include="ComplexCilTests.cs" />
     <Compile Include="InfoTests.cs" />
-    <Compile Include="LoomTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CilTK\Silk.csproj">
       <Project>{2bb73334-5e30-4a65-a8fb-6e07e2663870}</Project>
       <Name>Silk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Loom\Loom.csproj">
-      <Project>{daf5d6f1-3734-4cd4-ad7f-15b1b674faa6}</Project>
-      <Name>Loom</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
