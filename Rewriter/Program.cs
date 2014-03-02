@@ -76,6 +76,25 @@ namespace Weave
                 var cilReplacer = new CilReplacer(labelReplace);
                 cilReplacer.Visit(assembly);
 
+                //remove references to Silk
+                foreach (var module in assembly.Modules)
+                {
+                    int index = -1;
+                    for(int i = 0; i < module.AssemblyReferences.Count; ++i)
+                    {
+                        if(module.AssemblyReferences[i].Name == "Silk")
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if(index != -1)
+                    {
+                        module.AssemblyReferences.RemoveAt(index);
+                    }
+                }
+
                 assembly.Write(output, writeParameters);
             }
             catch (Mono.Options.OptionException ex)
