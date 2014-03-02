@@ -33,8 +33,8 @@ namespace UnitTests
         [TestMethod]
         public void TestExternalMethod()
         {
-            var info = Silk.Info.Method("System.Void Silk.Cil::Label(System.String)");
-            Assert.AreEqual("Label", info.Name);
+            var info = Silk.Info.Method("System.Void System.Console::Write(System.String)");
+            Assert.AreEqual("Write", info.Name);
             Assert.AreEqual("System.Void", info.ReturnType.FullName);
         }
     }
