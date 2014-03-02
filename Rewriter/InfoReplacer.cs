@@ -10,39 +10,6 @@ namespace Weave
 {
     class InfoReplacer : InstructionVisitor
     {
-        public static string[] SplitName(string name)
-        {
-            // Name = Identifer
-            // Type = NAMESPACE.Name | Type/Name | Type`Integer
-            // Field = Type Type::Name
-            // Parameters = "" | Type | Parameters,Type
-            // Method = Type Type::Name(Parameters)
-            return name.Split(new string[] { "::", "/", " "}, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public static FieldReference FindField(ModuleDefinition module, string name)
-        {
-            var fields = module.GetTypes().SelectMany(type => type.Fields);
-            FieldReference fieldReference = null;
-
-            foreach (var field in fields)
-            {
-                var fieldName = field.FullName.Split(' ')[1];
-                if (fieldName == name)
-                {
-                    fieldReference = field;
-                    break;
-                }
-            }
-
-            if (fieldReference == null)
-            {
-                throw new Exception(string.Format("Field {0} not found.", name));
-            }
-
-            return fieldReference;
-        }
-
         protected override bool ShouldVisit(Instruction instruction)
         {
             if (instruction.OpCode == OpCodes.Call)
@@ -89,19 +56,26 @@ namespace Weave
 
         private void ReplaceMethod(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            throw new NotImplementedException();
+            var module = ilProcessor.Body.Method.Module;
+
+            var name = instruction.Previous.Operand as string;
+
+            var methodReference = Silk.Loom.References.FindMethod(module, name);
+
+            var getMethodFromHandle = module.Import(
+                typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle",
+                new[] { typeof(RuntimeMethodHandle) }));
+
+            var ldtoken = Instruction.Create(OpCodes.Ldtoken, methodReference);
+            var call = Instruction.Create(OpCodes.Call, getMethodFromHandle);
+
+            ilProcessor.Replace(instruction.Previous, ldtoken);
+            ilProcessor.Replace(instruction, call);
         }
 
         private void ReplaceVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var name = instruction.Previous.Operand as string;
-
-            var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == name);
-
-            if (variable == null)
-            {
-                throw new Exception(string.Format("Variable {0} not found.", name));
-            }
+            throw new NotImplementedException();
         }
 
         private void ReplaceField(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
@@ -110,17 +84,17 @@ namespace Weave
 
             var name = instruction.Previous.Operand as string;
 
-            var fieldReference = FindField(module, name);
+            var fieldReference = Silk.Loom.References.FindField(module, name);
 
             var getFieldFromHandle = module.Import(
                 typeof(System.Reflection.FieldInfo).GetMethod("GetFieldFromHandle",
                 new[] { typeof(RuntimeFieldHandle) }));
 
-            ilProcessor.InsertAfter(instruction, Instruction.Create(OpCodes.Call, getFieldFromHandle));
-            ilProcessor.InsertAfter(instruction, Instruction.Create(OpCodes.Ldtoken, fieldReference));
+            var ldtoken = Instruction.Create(OpCodes.Ldtoken, fieldReference);
+            var call = Instruction.Create(OpCodes.Call, getFieldFromHandle);
 
-            ilProcessor.Remove(instruction.Previous);
-            ilProcessor.Remove(instruction);
+            ilProcessor.Replace(instruction.Previous, ldtoken);
+            ilProcessor.Replace(instruction, call);
         }
 
         private void ReplaceProperty(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
