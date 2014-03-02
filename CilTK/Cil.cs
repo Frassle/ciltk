@@ -472,7 +472,14 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Brtrue(string label) { throw new Exception("CilTK Rewriter not run."); }
 
-        public static unsafe void Call(object method) { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Call method described by method.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN -> …, retVal (not always returned)
+        /// </summary>
+        /// <param name="method">The method to call.</param>
+        public static unsafe void Call(string method) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Call method indicated on the stack with arguments described by 
@@ -516,7 +523,7 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-        public static unsafe void Callvirt() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Callvirt(string method) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Cast obj to typeTok.
@@ -1002,9 +1009,49 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldelema<T>() { throw new Exception("CilTK Rewriter not run."); }
-        
-        public static unsafe void Ldfld() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldflda() { throw new Exception("CilTK Rewriter not run."); }
+  
+        /// <summary>
+        /// Push the value of field of object (or value type) obj, onto the stack.
+        /// 
+        /// Stack Transition:
+        /// ..., obj -> ..., value
+        /// </summary>
+        /// <remarks>
+        /// The ldfld instruction pushes onto the stack the value of a field of obj. obj shall be an object
+        /// (type O), a managed pointer (type &), an unmanaged pointer (type native int), or an instance of
+        /// a value type. The use of an unmanaged pointer is not permitted in verifiable code. field is a
+        /// metadata token (a fieldref or fielddef see Partition II) that shall refer to a field member. The
+        /// return type is that associated with field. ldfld pops the object reference off the stack and pushes
+        /// the value for the field in its place. The field can be either an instance field (in which case obj
+        /// shall not be null) or a static field.
+        /// The ldfld instruction can be preceded by either or both of the unaligned. and volatile. prefixes.
+        /// If required field values are converted to the representation of their intermediate type (§I.8.7)
+        /// when loaded onto the stack (§III.1.1.1).
+        /// [Note: That is field values that are smaller than 4 bytes, a boolean or a character are converted to
+        /// 4 bytes by sign or zero-extension as appropriate. Floating-point values are converted to their
+        /// native size (type F). end note]
+        /// </remarks>
+        /// <param name="field">The field to load.</param>
+        public static unsafe void Ldfld(string field) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Push the address of field of object obj on the stack.
+        /// 
+        /// Stack Transition:
+        /// ..., obj -> ..., address
+        /// </summary>
+        /// <remarks>
+        /// The ldflda instruction pushes the address of a field of obj. obj is either an object, type O, a
+        /// managed pointer, type &, or an unmanaged pointer, type native int. The use of an unmanaged
+        /// pointer is not allowed in verifiable code. The value returned by ldflda is a managed pointer
+        /// (type &) unless obj is an unmanaged pointer, in which case it is an unmanaged pointer (type
+        /// native int).
+        /// field is a metadata token (a fieldref or fielddef; see Partition II) that shall refer to a field
+        /// member. The field can be either an instance field (in which case obj shall not be null) or a static
+        /// field.
+        /// </remarks>
+        /// <param name="field">The field to load.</param>
+        public static unsafe void Ldflda(string field) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Push a pointer to a method referenced by method, on the stack
@@ -1034,7 +1081,8 @@ namespace Silk
         /// architecture of the underlying machine, the native calling conventions, and the implementation 
         /// technology of the VES (JIT, interpreter, threaded code, etc.). end note] 
         /// </remarks>
-        public static unsafe void Ldftn(System.Reflection.MethodInfo method) { throw new Exception("CilTK Rewriter not run."); }
+        /// <param name="method"></param>
+        public static unsafe void Ldftn(string method) { throw new Exception("CilTK Rewriter not run."); }
 
         public static unsafe void Ldind_I() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Ldind_I1() { throw new Exception("CilTK Rewriter not run."); }
@@ -1128,8 +1176,8 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldobj<T>() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static unsafe void Ldsfld() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldsflda() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldsfld(string field) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldsflda(string field) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Push a string object for the literal str.
@@ -1150,7 +1198,7 @@ namespace Silk
         /// <param name="str">The literal string to load.</param>
         public static unsafe void Ldstr(string str) { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Ldtoken() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldvirtftn() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldvirtftn(string method) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Exit a protected region of code.
@@ -1226,7 +1274,7 @@ namespace Silk
         /// <typeparam name="T">etype</typeparam>
         public static unsafe void Newarr<T>() { throw new Exception("CilTK Rewriter not run."); }
         
-        public static unsafe void Newobj() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Newobj(string method) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// The specified fault check(s) normally performed
@@ -1572,7 +1620,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_Ref() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static unsafe void Stfld() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stfld(string field) { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Stind_I() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Stind_I1() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Stind_I2() { throw new Exception("CilTK Rewriter not run."); }
@@ -1620,7 +1668,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Stobj<T>() { throw new Exception("CilTK Rewriter not run."); }
 
-        public static unsafe void Stsfld() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stsfld(string field) { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Sub() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Sub_Ovf() { throw new Exception("CilTK Rewriter not run."); }
         public static unsafe void Sub_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
