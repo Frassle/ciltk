@@ -102,6 +102,16 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void TestCall()
+        {
+            int result;
+            Silk.Cil.Ldc_I4(1);
+            Silk.Cil.Call("System.Int32 UnitTests.TestClass::Increment(System.Int32)");
+            Silk.Cil.Store(out result);
+            Assert.AreEqual(2, result);
+        }
+
+        [TestMethod]
         public void TestSizeof()
         {
             int size = 0;

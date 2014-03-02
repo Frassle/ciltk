@@ -74,6 +74,11 @@ namespace UnitTests
 
             return A == other.A && B == other.B;
         }
+
+        public static int Increment(int i)
+        {
+            return i + 1;
+        }
     }
 
     class TestDerivedClass : TestClass
