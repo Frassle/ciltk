@@ -11,6 +11,11 @@ namespace UnitTests
 
         public int A;
         public int B;
+
+        public int Add(int c)
+        {
+            return A + B + c;
+        }
     }
 
     class TestClass

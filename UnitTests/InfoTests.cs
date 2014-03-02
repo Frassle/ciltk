@@ -7,21 +7,35 @@ namespace UnitTests
     public class InfoTests
     {
         [TestMethod]
-        public void TestVariable()
+        public void TestField()
         {
-            int a = 0;
-            var ainfo = Silk.Info.Variable("a");
-            Assert.AreEqual(0, ainfo.LocalIndex);
-            Assert.AreEqual(typeof(int), ainfo.LocalType);
-            Silk.Cil.KeepAlive(a);
+            var info = Silk.Info.Field("System.Int32 UnitTests.TestStruct::A");
+            Assert.AreEqual("A", info.Name);
+            Assert.AreEqual(typeof(int), info.FieldType);
         }
 
         [TestMethod]
-        public void TestField()
+        public void TestExternalField()
         {
-            var info = Silk.Info.Field("UnitTests.TestStruct::A");
-            Assert.AreEqual("A", info.Name);
-            Assert.AreEqual(typeof(int), info.FieldType);
+            var info = Silk.Info.Field("System.String System.String::Empty");
+            Assert.AreEqual("Empty", info.Name);
+            Assert.AreEqual(typeof(string), info.FieldType);
+        }
+
+        [TestMethod]
+        public void TestMethod()
+        {
+            var info = Silk.Info.Method("System.Int32 UnitTests.TestStruct::Add(System.Int32)");
+            Assert.AreEqual("Add", info.Name);
+            Assert.AreEqual(typeof(int), info.ReturnType);
+        }
+
+        [TestMethod]
+        public void TestExternalMethod()
+        {
+            var info = Silk.Info.Method("System.Void Silk.Cil::Label(System.String)");
+            Assert.AreEqual("Label", info.Name);
+            Assert.AreEqual("System.Void", info.ReturnType.FullName);
         }
     }
 }
