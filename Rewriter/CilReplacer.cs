@@ -224,6 +224,22 @@ namespace Weave
 
                         ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
                     }
+                    else if (opcode.OperandType == OperandType.InlineField)
+                    {
+                        var module = ilProcessor.Body.Method.Module;
+                        var field = (string)operand;
+                        var fieldref = Silk.Loom.References.FindField(module, field);
+
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, fieldref));
+                    }
+                    else if (opcode.OperandType == OperandType.InlineMethod)
+                    {
+                        var module = ilProcessor.Body.Method.Module;
+                        var method = (string)operand;
+                        var methodref = Silk.Loom.References.FindMethod(module, method);
+
+                        ilProcessor.Replace(instruction, Instruction.Create(opcode, methodref));
+                    }
                     else if (opcode.OperandType == OperandType.InlineType)
                     {
                         Console.WriteLine("Inline type opcode ({0}) without generic argument, ignoring.", opcode);
