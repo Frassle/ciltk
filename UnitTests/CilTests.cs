@@ -111,6 +111,22 @@ namespace UnitTests
             Assert.AreEqual(2, result);
         }
 
+        delegate int TestFunction(int a);
+        [TestMethod]
+        public void TestCalli()
+        {
+            TestFunction test_function = (x => x + 1);
+            var function = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(test_function);
+            int result;
+
+            Silk.Cil.Ldc_I4(1);
+            Silk.Cil.Load(function);
+            Silk.Cil.Calli(System.Runtime.InteropServices.CallingConvention.StdCall, typeof(int), typeof(int));
+            Silk.Cil.Store(out result);
+
+            Assert.AreEqual(2, result);
+        }
+
         [TestMethod]
         public void TestSizeof()
         {

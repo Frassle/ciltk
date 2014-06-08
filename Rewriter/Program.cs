@@ -10,6 +10,8 @@ namespace Weave
 {
     class Program
     {
+        public static string InputAssembly { get; private set; }
+
         static void Main(string[] args)
         {
             string input = null;
@@ -65,8 +67,9 @@ namespace Weave
                 Console.WriteLine("Reading assembly from {0}", input);
                 Console.WriteLine("Writing assembly to {0}", output);
 
-                var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
-                                
+                InputAssembly = input;
+                var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);                
+
                 var labelReplace = new LabelReplacer();
                 labelReplace.Visit(assembly);
 
@@ -97,7 +100,7 @@ namespace Weave
 
                 assembly.Write(output, writeParameters);
             }
-            catch (Mono.Options.OptionException ex)
+            catch (Mono.Options.OptionException)
             {
                 options.WriteOptionDescriptions(Console.Out);
             }

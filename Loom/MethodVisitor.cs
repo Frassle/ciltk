@@ -32,6 +32,7 @@ namespace Silk.Loom
                     }
                     foreach (var property in type.Properties)
                     {
+                        Visit(property);
                     }
                 }
             }

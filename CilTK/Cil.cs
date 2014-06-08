@@ -518,7 +518,259 @@ namespace Silk
         /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
         /// and so on. 
         /// </remarks>
-        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, params Type[] parameterTypes)
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Call method indicated on the stack with arguments described by 
+        /// callsitedescr.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN, ftn, -> …, retVal (not always returned),
+        /// </summary>
+        /// <remarks>
+        /// The calli instruction calls ftn (a pointer to a method entry point) with the arguments arg0 … argN. 
+        /// The types of these arguments are described by the signature callsitedescr. (See Partition I for a 
+        /// description of the CIL calling sequence.) The calli instruction can be immediately preceded by a 
+        /// tail. prefix to specify that the current method state should be released before transferring control. 
+        /// If the call would transfer control to a method of higher trust than the originating method the stack 
+        /// frame will not be released; instead, the execution will continue silently as if the tail. prefix had 
+        /// not been supplied. 
+        /// [A callee of “higher trust” is defined as one whose permission grant-set is a strict superset of the 
+        /// grant-set of the caller.] 
+        /// The ftn argument must be a method pointer to a method that can be legitimately called with the 
+        /// arguments described by callsitedescr (a metadata token for a stand-alone signature). Such a 
+        /// pointer can be created using the ldftn or ldvirtftn instructions, or could have been passed in from 
+        /// native code. 
+        /// The standalone signature specifies the number and type of parameters being passed, as well as 
+        /// the calling convention (See Partition II) The calling convention is not checked dynamically, so 
+        /// code that uses a calli instruction will not work correctly if the destination does not actually use 
+        /// the specified calling convention. 
+        /// The arguments are placed on the stack in left-to-right order. That is, the first argument is 
+        /// computed and placed on the stack, then the second argument, and so on. The argument-building 
+        /// code sequence for an instance or virtual method shall push that instance reference (the this
+        /// pointer, which shall not be null) first. [Note: for calls to methods on value types, the this
+        /// pointer is a managed pointer, not an instance reference. §I.8.6.1.5. end note] 
+        /// The arguments are passed as though by implicit starg (§III.3.61) instructions, see Implicit 
+        /// argument coercion §III.1.6. 
+        /// calli pops the this pointer, if any, and the arguments off the evaluation stack before calling the 
+        /// method. If the method has a return value, it is pushed on the stack upon method completion. On 
+        /// the callee side, the arg0 parameter/this pointer is accessed as argument 0, arg1 as argument 1, 
+        /// and so on. 
+        /// </remarks>
+        public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
