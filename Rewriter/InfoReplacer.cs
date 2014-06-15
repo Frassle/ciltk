@@ -60,7 +60,7 @@ namespace Weave
 
             var name = instruction.Previous.Operand as string;
 
-            var methodReference = Silk.Loom.References.FindMethod(module, name);
+            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body, name);
 
             var getMethodFromHandle = module.Import(
                 typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle",
@@ -84,7 +84,7 @@ namespace Weave
 
             var name = instruction.Previous.Operand as string;
 
-            var fieldReference = Silk.Loom.References.FindField(module, name);
+            var fieldReference = Silk.Loom.References.FindField(module, ilProcessor.Body, name);
 
             var getFieldFromHandle = module.Import(
                 typeof(System.Reflection.FieldInfo).GetMethod("GetFieldFromHandle",

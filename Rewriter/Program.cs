@@ -41,8 +41,12 @@ namespace Weave
                     provider = new Mono.Cecil.Mdb.MdbReaderProvider();
                 }
 
+                var assemblyResolver = new DefaultAssemblyResolver();
+                assemblyResolver.AddSearchDirectory(System.IO.Path.GetDirectoryName(input));
+
                 var readParameters = new ReaderParameters()
                 {
+                    AssemblyResolver = assemblyResolver,
                     ReadingMode = ReadingMode.Immediate,
                     ReadSymbols = true,
                     SymbolReaderProvider = provider,
@@ -68,7 +72,9 @@ namespace Weave
                 Console.WriteLine("Writing assembly to {0}", output);
 
                 InputAssembly = input;
-                var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);                
+                var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
+
+                var mscorlib = assembly.MainModule.AssemblyReferences.First(reference => reference.Name == "mscorlib");
 
                 var labelReplace = new LabelReplacer();
                 labelReplace.Visit(assembly);
@@ -98,6 +104,15 @@ namespace Weave
                     }
                 }
 
+                for (int i = 0; i < assembly.MainModule.AssemblyReferences.Count; ++i)
+                {
+                    if (assembly.MainModule.AssemblyReferences[i].Name == mscorlib.Name && assembly.MainModule.AssemblyReferences[i].Version != mscorlib.Version)
+                    {
+                        assembly.MainModule.AssemblyReferences.RemoveAt(i);
+                        i = 0;
+                    }
+                }
+                
                 assembly.Write(output, writeParameters);
             }
             catch (Mono.Options.OptionException)

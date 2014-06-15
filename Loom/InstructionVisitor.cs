@@ -5,6 +5,7 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using Microsoft.FSharp.Collections;
 
 namespace Silk.Loom
 {
@@ -15,6 +16,8 @@ namespace Silk.Loom
         {
         }
 
+        protected Dictionary<Instruction, FSharpList<Tuple<Instruction, StackAnalyser.StackEntry>>> Analysis;
+
         protected override void Visit(MethodDefinition method)
         {
             if (method.HasBody)
@@ -23,12 +26,18 @@ namespace Silk.Loom
                 var il = body.GetILProcessor();
                 il.Body.SimplifyMacros();
 
+                Analysis = null;
+
                 Instruction instruction = body.Instructions[0];
 
                 while (instruction != null)
                 {
                     if (ShouldVisit(instruction))
                     {
+                        if (Analysis == null)
+                        {
+                            Analysis = StackAnalyser.Analyse(method);
+                        }
                         instruction = Visit(il, instruction);
                     }
                     else

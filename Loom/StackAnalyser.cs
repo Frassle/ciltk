@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using TStack = System.Collections.Generic.Stack<System.Tuple<Mono.Cecil.Cil.Instruction, Silk.Loom.StackAnalyser.StackEntry>>;
+using TStack = Microsoft.FSharp.Collections.FSharpList<System.Tuple<Mono.Cecil.Cil.Instruction, Silk.Loom.StackAnalyser.StackEntry>>;
 
 namespace Silk.Loom
 {
@@ -31,43 +31,66 @@ namespace Silk.Loom
             {
                 if (value != null)
                 {
-                    Type = module.Import(value.GetType());
+                    Type = References.FindType(module, null, value.GetType().FullName);
                     IsConstant = true;
                     Value = value;
                 }
                 else
                 {
-                    Type = module.Import(typeof(object));
+                    Type = References.FindType(module, null, "System.Object");
                     IsConstant = true;
                     Value = null;
                 }
             }
         }
 
+        static Dictionary<string, Type> RefiedTypes;
+
         private static Type Reify(TypeReference type)
         {
-            var assembly = type.Scope.Name;
-
-            try
+            if (RefiedTypes == null)
             {
-                var loadedAssembly = System.Reflection.Assembly.Load(assembly);
+                var types = new Dictionary<string, Type>();
+                types.Add("System.Void", typeof(void));
+                types.Add("System.SByte", typeof(sbyte));
+                types.Add("System.Int16", typeof(short));
+                types.Add("System.Int32", typeof(int));
+                types.Add("System.Int64", typeof(long));
+                types.Add("System.Byte", typeof(byte));
+                types.Add("System.UInt16", typeof(ushort));
+                types.Add("System.UInt32", typeof(uint));
+                types.Add("System.UInt64", typeof(ulong));
+                types.Add("System.Single", typeof(float));
+                types.Add("System.Double", typeof(double));
+                RefiedTypes = types;
+            }
 
-                if (type.IsGenericInstance)
-                {
-                    var genericType = type as GenericInstanceType;
-                    var ty = loadedAssembly.GetType(genericType.ElementType.FullName);
-                    var args = genericType.GenericArguments.Select(arg => Reify(arg)).ToArray();
-                    return ty.MakeGenericType(args);
-                }
-                else
-                {
-                    return loadedAssembly.GetType(type.FullName);
-                }
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+            Type ty = null;
+            RefiedTypes.TryGetValue(type.FullName, out ty);
+            return ty;
+
+            //var assembly = type.Scope.Name;
+
+            //try
+            //{
+            //    var loadedAssembly = System.Reflection.Assembly.Load(assembly);
+
+            //    if (type.IsGenericInstance)
+            //    {
+            //        var genericType = type as GenericInstanceType;
+            //        var ty = loadedAssembly.GetType(genericType.ElementType.FullName);
+            //        var args = genericType.GenericArguments.Select(arg => Reify(arg)).ToArray();
+            //        return ty.MakeGenericType(args);
+            //    }
+            //    else
+            //    {
+            //        return loadedAssembly.GetType(type.FullName);
+            //    }
+            //}
+            //catch(Exception)
+            //{
+            //    return null;
+            //}
         }
 
         private static System.Reflection.MethodInfo Reify(MethodReference method)
@@ -94,43 +117,56 @@ namespace Silk.Loom
             return null;
         }
 
-        public static void RemoveInstructionChain(MethodDefinition method, Instruction instruction)
+        public static Instruction RemoveInstructionChain(MethodDefinition method, Instruction instruction, Dictionary<Instruction, TStack> analysis)
         {
-            var stack = StackAnalyser.Analyse(method)[instruction.Previous];
-
             var ilProcessor = method.Body.GetILProcessor();
-            ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
+            var nop = Instruction.Create(OpCodes.Nop);
 
-            switch (instruction.OpCode.StackBehaviourPop)
+            if (instruction.OpCode.StackBehaviourPop == StackBehaviour.Pop0)
             {
-                case StackBehaviour.Pop0:
-                    break;
-                case StackBehaviour.Pop1:
-                    RemoveInstructionChain(method, stack.Pop().Item1);
-                    break;
-                case StackBehaviour.Varpop:
-                    {
-                        if (instruction.OpCode.OperandType == OperandType.InlineMethod)
-                        {
-                            var m = instruction.Operand as MethodReference;
-                            for (int i = 0; i < m.Parameters.Count; ++i)
-                            {
-                                RemoveInstructionChain(method, stack.Pop().Item1);
-                            }
-                            if (m.HasThis)
-                            {
-                                RemoveInstructionChain(method, stack.Pop().Item1);
-                            }
-                            break;
-                        }
-                        else
-                        {
-                            throw new NotImplementedException();
-                        }
-                    }
-                default:
-                    throw new NotImplementedException();
+                ilProcessor.Replace(instruction, nop);
             }
+            else
+            {
+                var stack = analysis[instruction.Previous];
+                ilProcessor.Replace(instruction, nop);
+
+                switch (instruction.OpCode.StackBehaviourPop)
+                {
+                    case StackBehaviour.Pop1:
+                        RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                        break;
+                    case StackBehaviour.Varpop:
+                        {
+                            if (instruction.OpCode.OperandType == OperandType.InlineMethod)
+                            {
+                                var m = instruction.Operand as MethodReference;
+                                for (int i = 0; i < m.Parameters.Count; ++i)
+                                {
+                                    RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                                    stack = stack.Tail;
+                                }
+                                if (m.HasThis)
+                                {
+                                    RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                throw new NotImplementedException();
+                            }
+                        }
+                    case StackBehaviour.Popref_popi:
+                        RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                        RemoveInstructionChain(method, stack.Tail.Head.Item1, analysis);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            return nop;
         }
 
         private static System.Reflection.FieldInfo Reify(FieldReference field)
@@ -149,7 +185,14 @@ namespace Silk.Loom
             {
                 return null;
             }
-        }  
+        }
+
+        private static Tuple<Instruction, StackEntry> Pop(ref TStack stack)
+        {
+            var value = stack.Head;
+            stack = stack.Tail;
+            return value;
+        }
 
         public static Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
         {
@@ -163,14 +206,10 @@ namespace Silk.Loom
                 var instruction = instructions[i];
                 var previous_instruction = instruction.Previous;
 
-                TStack stack = new TStack();
-                TStack previous_stack;
-                if (previous_instruction != null && map.TryGetValue(previous_instruction, out previous_stack))
+                TStack stack = TStack.Empty;
+                if (previous_instruction != null)
                 {
-                    foreach (var item in previous_stack.Reverse())
-                    {
-                        stack.Push(item);
-                    }
+                    stack = map[previous_instruction];
                 }
 
                 switch (instruction.OpCode.Code)
@@ -179,29 +218,29 @@ namespace Silk.Loom
                     case Code.Add_Ovf:
                     case Code.Add_Ovf_Un:
                         {
-                            var a = stack.Pop().Item2;
-                            var b = stack.Pop().Item2;
+                            var a = Pop(ref stack).Item2;
+                            var b = Pop(ref stack).Item2;
                             if (a.IsConstant & b.IsConstant)
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, a.Value + b.Value)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, a.Value + b.Value)), stack);
                             }
                             else
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(a.Type)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
                             }
                             break;
                         }
                     case Code.And:
                         {
-                            var a = stack.Pop().Item2;
-                            var b = stack.Pop().Item2;
+                            var a = Pop(ref stack).Item2;
+                            var b = Pop(ref stack).Item2;
                             if (a.IsConstant & b.IsConstant)
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, a.Value & b.Value)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, a.Value & b.Value)), stack);
                             }
                             else
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(a.Type)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
                             }
                             break;
                         }
@@ -222,20 +261,20 @@ namespace Silk.Loom
                     case Code.Blt_Un:
                     case Code.Blt_Un_S:
                         {
-                            stack.Pop();
-                            stack.Pop();
+                            Pop(ref stack);
+                            Pop(ref stack);
                             break;
                         }
                     case Code.Box:
                         {
-                            var a = stack.Pop().Item2;
+                            var a = Pop(ref stack).Item2;
                             if (a.IsConstant)
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, (object)a.Value)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (object)a.Value)), stack);
                             }
                             else
                             {
-                                stack.Push(Tuple.Create(instruction, new StackEntry(a.Type)));
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
                             }
                             break;
                         }
@@ -248,7 +287,7 @@ namespace Silk.Loom
                     case Code.Brtrue:
                     case Code.Brtrue_S:
                         {
-                            stack.Pop();
+                            Pop(ref stack);
                             break;
                         }
                     case Code.Call:
@@ -258,17 +297,17 @@ namespace Silk.Loom
                             StackEntry[] args = new StackEntry[m.Parameters.Count];
                             for (int j = 0; j < m.Parameters.Count; ++j)
                             {
-                                args[j] = stack.Pop().Item2;
+                                args[j] = Pop(ref stack).Item2;
                             }
                             Array.Reverse(args);
 
                             StackEntry self = default(StackEntry);
                             if(m.HasThis)
                             {
-                                self = stack.Pop().Item2;
+                                self = Pop(ref stack).Item2;
                             }
 
-                            if (args.All(arg => arg.IsConstant) && (!m.HasThis || self.IsConstant))
+                            if (args.All(arg => arg.IsConstant) && (!m.HasThis || self.IsConstant) && (m.DeclaringType.FullName != "Silk.Cil")) // We know the Silk methods will just throw
                             {
                                 var meth = Reify(m);
                                 if (meth != null)
@@ -278,7 +317,7 @@ namespace Silk.Loom
                                     try
                                     {
                                         var result = meth.Invoke(obj, parameters);
-                                        stack.Push(Tuple.Create(instruction, new StackEntry(module, result)));
+                                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, result)), stack);
                                         break;
                                     }
                                     catch (Exception)
@@ -287,7 +326,7 @@ namespace Silk.Loom
                                 }                                
                             }
                             
-                            stack.Push(Tuple.Create(instruction, new StackEntry(m.ReturnType)));
+                            stack = TStack.Cons(Tuple.Create(instruction, new StackEntry(m.ReturnType)), stack);
                             break;
                         }
                     case Code.Calli:
@@ -351,52 +390,52 @@ namespace Silk.Loom
                     case Code.Ldarg_S:
                     case Code.Ldarga:
                     case Code.Ldarga_S:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Ldc_I4:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I4_0:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 0)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 0)), stack);
                         break;
                     case Code.Ldc_I4_1:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 1)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 1)), stack);
                         break;
                     case Code.Ldc_I4_2:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 2)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 2)), stack);
                         break;
                     case Code.Ldc_I4_3:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 3)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 3)), stack);
                         break;
                     case Code.Ldc_I4_4:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 4)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 4)), stack);
                         break;
                     case Code.Ldc_I4_5:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 5)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 5)), stack);
                         break;
                     case Code.Ldc_I4_6:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 6)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 6)), stack);
                         break;
                     case Code.Ldc_I4_7:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 7)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 7)), stack);
                         break;
                     case Code.Ldc_I4_8:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, 8)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 8)), stack);
                         break;
                     case Code.Ldc_I4_M1:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, -1)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, -1)), stack);
                         break;
                     case Code.Ldc_I4_S:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I8:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, (long)instruction.Operand)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (long)instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R4:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, (float)instruction.Operand)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (float)instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R8:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, (double)instruction.Operand)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (double)instruction.Operand)), stack);
                         break;
                     case Code.Ldelem_Any:
                     case Code.Ldelem_I:
@@ -413,12 +452,12 @@ namespace Silk.Loom
                     case Code.Ldelema:
                     case Code.Ldfld:
                     case Code.Ldflda:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Ldftn:
                         {
                             var mref = instruction.Operand as MethodReference;
-                            stack.Push(Tuple.Create(instruction, new StackEntry(module, mref)));
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(module, mref)), stack);
                             break;
                         }
                     case Code.Ldind_I:
@@ -433,7 +472,7 @@ namespace Silk.Loom
                     case Code.Ldind_U2:
                     case Code.Ldind_U4:
                     case Code.Ldlen:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Ldloc:
                     case Code.Ldloc_0:
@@ -447,29 +486,29 @@ namespace Silk.Loom
                             bool isAddress = instruction.OpCode.Code == Code.Ldloca || instruction.OpCode.Code == Code.Ldloca_S;
                             var loc = instruction.Operand as VariableDefinition;
                             var ty = isAddress ? Mono.Cecil.Rocks.TypeReferenceRocks.MakePointerType(loc.VariableType) : loc.VariableType;
-                            stack.Push(Tuple.Create(instruction, new StackEntry(ty)));
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
                             break;
                         }
                     case Code.Ldnull:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, null)), stack);
                         break;
                     case Code.Ldobj:
                         {
-                            var src = stack.Pop();
+                            var src = Pop(ref stack);
                             var type = instruction.Operand as TypeReference;
                             Type ty = Reify(type);
-                            stack.Push(Tuple.Create(instruction, new StackEntry(module, ty)));
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(module, ty)), stack);
                         }
                         break;
                     case Code.Ldsfld:
                     case Code.Ldsflda:
                         {
                             var field = instruction.Operand as FieldReference;
-                            stack.Push(Tuple.Create(instruction, new StackEntry(field.FieldType)));
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(field.FieldType)), stack);
                             break;
                         }
                     case Code.Ldstr:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(module, instruction.Operand as string)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, instruction.Operand as string)), stack);
                         break;
                     case Code.Ldtoken:
                         {
@@ -477,18 +516,39 @@ namespace Silk.Loom
 
                             if (token is Mono.Cecil.MethodReference)
                             {
-                                var m = Reify((Mono.Cecil.MethodReference)token).MethodHandle;
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, m)));
+                                var m = Reify((Mono.Cecil.MethodReference)token);
+                                if (m == null)
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeMethodHandle"))), stack);
+                                }
+                                else
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, m.MethodHandle)), stack);
+                                }
                             }
                             if (token is Mono.Cecil.TypeReference)
                             {
-                                var t = Reify((Mono.Cecil.TypeReference)token).TypeHandle;
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, t)));
+                                var t = Reify((Mono.Cecil.TypeReference)token); 
+                                if (t == null)
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeTypeHandle"))), stack);
+                                }
+                                else
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, t.TypeHandle)), stack);
+                                }
                             }
                             if (token is Mono.Cecil.FieldReference)
                             {
-                                var f = Reify((Mono.Cecil.FieldReference)token).FieldHandle;
-                                stack.Push(Tuple.Create(instruction, new StackEntry(module, f)));
+                                var f = Reify((Mono.Cecil.FieldReference)token); 
+                                if (f == null)
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeFieldHandle"))), stack);
+                                }
+                                else
+                                {
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, f.FieldHandle)), stack);
+                                }
                             }
                             break;
                         }
@@ -501,11 +561,11 @@ namespace Silk.Loom
                     case Code.Mul_Ovf:
                     case Code.Mul_Ovf_Un:
                     case Code.Neg:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Newarr:
                         {
-                            var length = stack.Pop().Item2;
+                            var length = Pop(ref stack).Item2;
                             var type = (Mono.Cecil.TypeReference)instruction.Operand;
                             if (length.IsConstant)
                             {
@@ -513,12 +573,12 @@ namespace Silk.Loom
                                 if (ty != null)
                                 {
                                     var arr = Array.CreateInstance(ty, (int)length.Value);
-                                    stack.Push(Tuple.Create(instruction, new StackEntry(module, arr)));
+                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, arr)), stack);
                                     break;
                                 }
                             }
-                            
-                            stack.Push(Tuple.Create(instruction, new StackEntry(Mono.Cecil.Rocks.TypeReferenceRocks.MakeArrayType(type))));
+
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(Mono.Cecil.Rocks.TypeReferenceRocks.MakeArrayType(type))), stack);
                             break;
                         }
                     case Code.Newobj:
@@ -526,9 +586,9 @@ namespace Silk.Loom
                             var ctor = instruction.Operand as MethodReference;
                             for (int j = 0; j < ctor.Parameters.Count; ++j)
                             {
-                                stack.Pop();
+                                Pop(ref stack);
                             }
-                            stack.Push(Tuple.Create(instruction, new StackEntry(ctor.DeclaringType)));
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ctor.DeclaringType)), stack);
                             break;
                         }
                     case Code.No:
@@ -537,10 +597,10 @@ namespace Silk.Loom
                         break;
                     case Code.Not:
                     case Code.Or:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Pop:
-                        stack.Pop();
+                        Pop(ref stack);
                         break;
                     case Code.Readonly:
                     case Code.Refanytype:
@@ -555,7 +615,7 @@ namespace Silk.Loom
                     case Code.Sizeof:
                     case Code.Starg:
                     case Code.Starg_S:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Stelem_Any:
                     case Code.Stelem_I:
@@ -567,9 +627,9 @@ namespace Silk.Loom
                     case Code.Stelem_R8:
                     case Code.Stelem_Ref:
                         {
-                            stack.Pop();
-                            stack.Pop();
-                            stack.Pop();
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            Pop(ref stack);
                             break;
                         }
                     case Code.Stfld:
@@ -581,7 +641,7 @@ namespace Silk.Loom
                     case Code.Stind_R4:
                     case Code.Stind_R8:
                     case Code.Stind_Ref:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Stloc:
                     case Code.Stloc_0:
@@ -589,14 +649,14 @@ namespace Silk.Loom
                     case Code.Stloc_2:
                     case Code.Stloc_3:
                     case Code.Stloc_S:
-                        stack.Pop();
+                        Pop(ref stack);
                         break;
                     case Code.Stobj:
-                        stack.Pop();
-                        stack.Pop();
+                        Pop(ref stack);
+                        Pop(ref stack);
                         break;
                     case Code.Stsfld:
-                        stack.Pop();
+                        Pop(ref stack);
                         break;
                     case Code.Sub:
                     case Code.Sub_Ovf:
@@ -609,7 +669,7 @@ namespace Silk.Loom
                     case Code.Unbox_Any:
                     case Code.Volatile:
                     case Code.Xor:
-                        stack.Push(Tuple.Create(instruction, new StackEntry(null)));
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     default:
                         throw new NotImplementedException();

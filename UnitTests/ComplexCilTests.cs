@@ -8,6 +8,38 @@ namespace UnitTests
     [TestClass]
     public class ComplexCilTests
     {
+        static IntPtr[] EntryPoints = new IntPtr[1];
+        static IntPtr ExtensionString;
+
+        delegate IntPtr IntPtr_IntPtr_Delegate(IntPtr i);
+
+        static IntPtr wglGetExtensionsString(IntPtr i)
+        {
+            return ExtensionString;
+        }
+        
+        static ComplexCilTests()
+        {
+            ExtensionString = Marshal.StringToHGlobalAnsi("extension");
+            EntryPoints[0] = Marshal.GetFunctionPointerForDelegate(new IntPtr_IntPtr_Delegate(wglGetExtensionsString));
+        }
+
+        static string GetExtensionsString(IntPtr hdc)
+        {
+            Silk.Cil.Ldarg(0);
+            Silk.Cil.Load(EntryPoints);
+            Silk.Cil.Ldc_I4(0);
+            Silk.Cil.Ldelem_I();
+            Silk.Cil.Calli(CallingConvention.Winapi, typeof(IntPtr), typeof(IntPtr));
+            return Marshal.PtrToStringAnsi(Silk.Cil.Peek<IntPtr>());
+        }
+
+        [TestMethod]
+        public void TestExtensionString()
+        {
+            Assert.AreEqual("extension", GetExtensionsString(IntPtr.Zero));
+        }
+
         static void CopyTo<T>(IntPtr dst, T value)
         {
             Cil.Ldarg(0);

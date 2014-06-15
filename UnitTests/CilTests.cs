@@ -646,5 +646,30 @@ namespace UnitTests
                 Silk.Cil.Label("end");
             }
         }
+
+        [TestMethod]
+        public void TestLoadAddress()
+        {
+            int a = 1;
+
+            Silk.Cil.LoadAddress(a);
+            Silk.Cil.Ldc_I4(2);
+            Silk.Cil.Stind_I4();
+
+            Assert.AreEqual(2, a);
+        }
+
+        [TestMethod]
+        public void TestPeek()
+        {
+            int a = 1;
+
+            Silk.Cil.Ldc_I4(1);
+            Silk.Cil.Ldc_I4(2);
+            Silk.Cil.Add();
+            a = Silk.Cil.Peek<int>();
+
+            Assert.AreEqual(3, a);
+        }
     }
 }

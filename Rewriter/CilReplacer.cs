@@ -40,9 +40,13 @@ namespace Weave
 
             if (calledMethod.Name == "KeepAlive")
             {
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
-            else if (calledMethod.Name == "Load")
+            else if (calledMethod.Name == "Pin" || calledMethod.Name == "PinByName")
+            {
+                return ReplacePin(ilProcessor, instruction, calledMethod);
+            }
+            else if (calledMethod.Name == "Load" || calledMethod.Name == "Peek")
             {
                 /*
                  * The compiler will have inserted the appropriate load 
@@ -52,6 +56,14 @@ namespace Weave
                  * stack instead of popping it for the call.
                  */
                 ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
+            }
+            else if (calledMethod.Name == "LoadAddress")
+            {
+                /*
+                 * The compiler will have inserted the a load instruction, we 
+                 * need to change it to the appropriate load address instruction.
+                 */
+                return ReplaceLoadAddress(ilProcessor, instruction, calledMethod);
             }
             else if (calledMethod.Name == "Store")
             {
@@ -64,10 +76,192 @@ namespace Weave
 
                 return ReplaceStore(ilProcessor, instruction, calledMethod);
             }
+            else if (calledMethod.Name == "LoadByName")
+            {
+                return ReplaceLoadByName(ilProcessor, instruction, calledMethod);
+            }
+            else if (calledMethod.Name == "StoreByName")
+            {
+                return ReplaceStoreByName(ilProcessor, instruction, calledMethod);
+            }
+            else if (calledMethod.Name == "DeclareLocal")
+            {
+                return ReplaceDeclareLocal(ilProcessor, instruction, calledMethod);
+            }
             else
             {
                 return ReplaceInstruction(ilProcessor, instruction, calledMethod);
             }
+
+            return next;
+        }
+
+        private Instruction ReplaceLoadByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var variableName = stack.Head.Item2;
+
+            if (!variableName.IsConstant)
+            {
+                throw new Exception("Expected constant values to be passed to LoadByName");
+            }
+
+
+            var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
+            if (variable != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var ldloc = Instruction.Create(OpCodes.Ldloc, variable);
+                ilProcessor.Replace(nop, ldloc);
+                return ldloc.Next;
+            }
+
+            var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
+            if (parameter != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var ldarg = Instruction.Create(OpCodes.Ldarg, parameter);
+                ilProcessor.Replace(nop, ldarg);
+                return ldarg.Next;
+            }
+
+            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+        }
+
+        private Instruction ReplaceStoreByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var variableName = stack.Head.Item2;
+
+            if (!variableName.IsConstant)
+            {
+                throw new Exception("Expected constant values to be passed to LoadByName");
+            }
+
+
+            var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
+            if (variable != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var stloc = Instruction.Create(OpCodes.Stloc, variable);
+                ilProcessor.Replace(nop, stloc);
+                return stloc.Next;
+            }
+
+            var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
+            if (parameter != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var starg = Instruction.Create(OpCodes.Starg, parameter);
+                ilProcessor.Replace(nop, starg);
+                return starg.Next;
+            }
+
+            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+        }
+
+        private Instruction ReplaceDeclareLocal(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var name = stack.Head.Item2;
+            var type = stack.Tail.Head.Item2;
+
+            if (name.IsConstant && type.IsConstant)
+            {
+                var variableType = References.FindType(ilProcessor.Body.Method.Module, ilProcessor.Body, type.Value);
+
+                ilProcessor.Body.Variables.Add(new VariableDefinition(name.Value, variableType));
+            }
+            else
+            {
+                throw new Exception("Expected constant values to be passed to DeclareLocal");
+            }
+            
+            return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+        }
+
+        private Instruction ReplacePin(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var next = instruction.Next;
+            if (calledMethod.Name == "Pin")
+            {
+                var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+                var operandInstruction = stack.Head.Item1;
+
+                // operandInstruction should be the load instruction for the variable passed in
+
+                if (!(operandInstruction.Operand is VariableDefinition))
+                {
+                    throw new Exception("Expected local variable to be passed to Pin");
+                }
+
+                var variable = operandInstruction.Operand as VariableDefinition;
+
+                variable.VariableType = new PinnedType(variable.VariableType);
+
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+            }
+            else
+            {
+                var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+                var variableName = stack.Head.Item2;
+
+                if (!(variableName.IsConstant && variableName.Value is string))
+                {
+                    throw new Exception("Expected constant string to be passed to PinByName");
+                }
+
+                var variable = ilProcessor.Body.Variables.FirstOrDefault(var => var.Name == variableName.Value);
+
+                if (variable == null)
+                {
+                    throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+                }
+
+                variable.VariableType = new PinnedType(variable.VariableType);
+
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+            }
+            return next;
+        }
+
+        private Instruction ReplaceLoadAddress(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var generic_method = calledMethod as GenericInstanceMethod;
+            var typetok = generic_method.GenericArguments[0];
+
+            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+
+            var operandEntry = stack.Head;
+            var addr_instruction = operandEntry.Item1;
+            var next = instruction.Next;
+
+            if (addr_instruction.OpCode == OpCodes.Ldloc)
+            {
+                var local = (VariableDefinition)addr_instruction.Operand;
+                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldloca, local));
+            }
+            else if (addr_instruction.OpCode == OpCodes.Ldarg)
+            {
+                var argument = (ParameterDefinition)addr_instruction.Operand;
+                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldarga, argument));
+            }
+            else if (addr_instruction.OpCode == OpCodes.Ldsfld)
+            {
+                var field = (FieldReference)addr_instruction.Operand;
+                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldsflda, field));
+            }
+            else if (addr_instruction.OpCode == OpCodes.Ldfld)
+            {
+                var field = (FieldReference)addr_instruction.Operand;
+                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldflda, field));
+            }
+            else
+            {
+                throw new Exception("ReplaceLoadAddress: How did we get here?!");
+            }
+
+            ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
 
             return next;
         }
@@ -77,9 +271,9 @@ namespace Weave
             var generic_method = calledMethod as GenericInstanceMethod;
             var typetok = generic_method.GenericArguments[0];
 
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
 
-            var operandEntry = stack.Pop();
+            var operandEntry = stack.Head;
             var addr_instruction = operandEntry.Item1;
             var next = instruction.Next;
 
@@ -176,15 +370,15 @@ namespace Weave
                 }
                 if (calledMethod.Parameters.Count == 1)
                 {
-                    var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+                    var stack = Analysis[instruction.Previous];
 
-                    var operandEntry = stack.Pop();
-                    StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, operandEntry.Item1);
+                    var operandEntry = stack.Head;
+                    StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, operandEntry.Item1, Analysis);
 
                     if (!operandEntry.Item2.IsConstant)
                     {
                         Console.WriteLine("Inline ({0}) without constant argument, ignoring.", opcode);
-                        StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction);
+                        StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                         return nextInstruction;
                     }
 
@@ -241,7 +435,7 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var field = (string)operand;
-                        var fieldref = Silk.Loom.References.FindField(module, field);
+                        var fieldref = Silk.Loom.References.FindField(module, ilProcessor.Body, field);
 
                         ilProcessor.Replace(instruction, Instruction.Create(opcode, fieldref));
                     }
@@ -249,7 +443,7 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var method = (string)operand;
-                        var methodref = Silk.Loom.References.FindMethod(module, method);
+                        var methodref = Silk.Loom.References.FindMethod(module, ilProcessor.Body, method);
 
                         ilProcessor.Replace(instruction, Instruction.Create(opcode, methodref));
                     }
@@ -274,27 +468,27 @@ namespace Weave
         {
             //public static unsafe void Calli(
             //System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, ...)
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
             Tuple<Instruction, StackAnalyser.StackEntry> entry;
 
             var module = ilProcessor.Body.Method.Module;
 
-            var args = new List<StackAnalyser.StackEntry>();
+            var args = new List<Tuple<Instruction, StackAnalyser.StackEntry>>();
             for (int i = 0; i < calledMethod.Parameters.Count - 2; ++i)
             {
-                entry = stack.Pop();
-                args.Add(entry.Item2);
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, entry.Item1);
+                entry = stack.Head;
+                stack = stack.Tail;
+                args.Add(entry);
             }
             args.Reverse();
 
-            entry = stack.Pop();
-            var returnType = entry.Item2;
-            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, entry.Item1);
+            entry = stack.Head;
+            stack = stack.Tail;
+            var returnType = entry;
 
-            entry = stack.Pop();
+            entry = stack.Head;
+            stack = stack.Tail;
             var callingConvention = entry.Item2;
-            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, entry.Item1);
 
             Mono.Cecil.MethodCallingConvention methodCallingConvention;
             if (callingConvention.IsConstant)
@@ -310,7 +504,7 @@ namespace Weave
                     case System.Runtime.InteropServices.CallingConvention.ThisCall:
                         methodCallingConvention = MethodCallingConvention.ThisCall; break;
                     case System.Runtime.InteropServices.CallingConvention.Winapi:
-                        methodCallingConvention = MethodCallingConvention.Generic; break;
+                        methodCallingConvention = MethodCallingConvention.StdCall; break;
                     default:
                         methodCallingConvention = MethodCallingConvention.Default; break;
                 }
@@ -318,36 +512,51 @@ namespace Weave
             else
             {
                 Console.WriteLine("Calling convention passed to Calli is not a constant expression.");
-                var next = instruction.Next;
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction);
-                return next;
+                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
 
-            TypeReference returnTypeReference;
-            if (returnType.IsConstant)
+            TypeReference returnTypeReference = null;
+            if (returnType.Item2.IsConstant)
             {
-                Type retTy = returnType.Value;
+                Type retTy = returnType.Item2.Value;
                 returnTypeReference = module.Import(retTy);
             }
-            else
+            else if(returnType.Item1.OpCode == OpCodes.Call && returnType.Item1.Operand is MethodReference && (returnType.Item1.Operand as MethodReference).Name == "GetTypeFromHandle")
+            {
+                var ldtoken_stack = Analysis[returnType.Item1.Previous];
+                var ldtoken = ldtoken_stack.Head;
+
+                returnTypeReference = ldtoken.Item1.Operand as TypeReference;
+            }
+            
+            if(returnTypeReference == null)
             {
                 Console.WriteLine("Return type passed to Calli is not a constant expression.");
-                var next = instruction.Next;
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction);
-                return next;
+                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
 
-            TypeReference[] parameterTypesArray;
-            if (args.All(arg => arg.IsConstant))
+            TypeReference[] parameterTypesArray = new TypeReference[args.Count];
+            for(int i = 0; i < args.Count; ++i)
             {
-                parameterTypesArray = args.Select(arg => module.Import((Type)arg.Value)).ToArray();
+                var arg = args[i];
+
+                if (arg.Item2.IsConstant)
+                {
+                    parameterTypesArray[i] = module.Import((Type)arg.Item2.Value);
+                }
+                else if (arg.Item1.OpCode == OpCodes.Call && arg.Item1.Operand is MethodReference && (arg.Item1.Operand as MethodReference).Name == "GetTypeFromHandle")
+                {
+                    var ldtoken_stack = Analysis[arg.Item1.Previous];
+                    var ldtoken = ldtoken_stack.Head;
+
+                    parameterTypesArray[i] = ldtoken.Item1.Operand as TypeReference;
+                }
             }
-            else
+
+            if (parameterTypesArray.Any(ty => ty == null))
             {
                 Console.WriteLine("Type passed to Calli is not a constant expression.");
-                var next = instruction.Next;
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction);
-                return next;
+                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
 
             var callSite = new CallSite(returnTypeReference);
@@ -358,9 +567,10 @@ namespace Weave
             }
 
             {
-                var next = instruction.Next;
-                ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Calli, callSite));
-                return next;
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var calli = Instruction.Create(OpCodes.Calli, callSite);
+                ilProcessor.Replace(nop, calli);
+                return calli.Next;
             }
         }
     }
