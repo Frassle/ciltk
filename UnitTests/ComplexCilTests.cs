@@ -1,85 +1,84 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Silk;
 using System.Runtime.InteropServices;
 
 namespace UnitTests
 {
-    [TestClass]
-    public class ComplexCilTests
-    {
-        static IntPtr[] EntryPoints = new IntPtr[1];
-        static IntPtr ExtensionString;
+	[TestFixture()]
+	public class ComplexCilTests
+	{
+		static IntPtr[] EntryPoints = new IntPtr[1];
+		static IntPtr ExtensionString;
 
-        delegate IntPtr IntPtr_IntPtr_Delegate(IntPtr i);
+		delegate IntPtr IntPtr_IntPtr_Delegate(IntPtr i);
 
-        static IntPtr wglGetExtensionsString(IntPtr i)
-        {
-            return ExtensionString;
-        }
-        
-        static ComplexCilTests()
-        {
-            ExtensionString = Marshal.StringToHGlobalAnsi("extension");
-            EntryPoints[0] = Marshal.GetFunctionPointerForDelegate(new IntPtr_IntPtr_Delegate(wglGetExtensionsString));
-        }
+		static IntPtr wglGetExtensionsString(IntPtr i)
+		{
+			return ExtensionString;
+		}
 
-        static string GetExtensionsString(IntPtr hdc)
-        {
-            Silk.Cil.Ldarg(0);
-            Silk.Cil.Load(EntryPoints);
-            Silk.Cil.Ldc_I4(0);
-            Silk.Cil.Ldelem_I();
-            Silk.Cil.Calli(CallingConvention.Winapi, typeof(IntPtr), typeof(IntPtr));
-            return Marshal.PtrToStringAnsi(Silk.Cil.Peek<IntPtr>());
-        }
+		static ComplexCilTests()
+		{
+			ExtensionString = Marshal.StringToHGlobalAnsi("extension");
+			EntryPoints[0] = Marshal.GetFunctionPointerForDelegate(new IntPtr_IntPtr_Delegate(wglGetExtensionsString));
+		}
 
-        [TestMethod]
-        public void TestExtensionString()
-        {
-            Assert.AreEqual("extension", GetExtensionsString(IntPtr.Zero));
-        }
+		static string GetExtensionsString(IntPtr hdc)
+		{
+			Silk.Cil.Ldarg(0);
+			Silk.Cil.Load(EntryPoints);
+			Silk.Cil.Ldc_I4(0);
+			Silk.Cil.Ldelem_I();
+			Silk.Cil.Calli(CallingConvention.Winapi, typeof(IntPtr), typeof(IntPtr));
+			return Marshal.PtrToStringAnsi(Silk.Cil.Peek<IntPtr>());
+		}
 
-        static void CopyTo<T>(IntPtr dst, T value)
-        {
-            Cil.Ldarg(0);
-            Cil.Ldarga(1);
-            Cil.Sizeof<T>();
-            Cil.Cpblk();
-        }
+		[Test()]
+		public void TestExtensionString()
+		{
+			Assert.AreEqual("extension", GetExtensionsString(IntPtr.Zero));
+		}
 
-        [TestMethod]
-        public void TestCopy()
-        {
-            TestStruct[] destination = new TestStruct[1];
-            GCHandle handle = GCHandle.Alloc(destination, GCHandleType.Pinned);
-            IntPtr dst = handle.AddrOfPinnedObject();
+		static void CopyTo<T>(IntPtr dst, T value)
+		{
+			Cil.Ldarg(0);
+			Cil.Ldarga(1);
+			Cil.Sizeof<T>();
+			Cil.Cpblk();
+		}
 
-            TestStruct value = new TestStruct() 
-            {
-                A = 1, B = 2,
-            };
+		[Test()]
+		public void TestCopy()
+		{
+			TestStruct[] destination = new TestStruct[1];
+			GCHandle handle = GCHandle.Alloc(destination, GCHandleType.Pinned);
+			IntPtr dst = handle.AddrOfPinnedObject();
 
-            CopyTo(dst, value);
+			TestStruct value = new TestStruct() {
+				A = 1, B = 2,
+			};
 
-            Assert.AreEqual(value, destination[0]);
-        }
+			CopyTo(dst, value);
 
-        static uint Sizeof<T>()
-        {
-            Cil.Sizeof<T>();
-            Cil.Ret();
+			Assert.AreEqual(value, destination[0]);
+		}
 
-            return 0;
-        }
+		static uint Sizeof<T>()
+		{
+			Cil.Sizeof<T>();
+			Cil.Ret();
 
-        [TestMethod]
-        public void TestSizeof()
-        {
-            Assert.AreEqual(4u, Sizeof<int>(), "int");
-            Assert.AreEqual(8u, Sizeof<long>(), "long");
-            Assert.AreEqual(8u, Sizeof<TestStruct>(), "TestStruct");
-            Assert.AreEqual((uint)IntPtr.Size, Sizeof<TestClass>(), "TestClass");
-        }
-    }
+			return 0;
+		}
+
+		[Test()]
+		public void TestSizeof()
+		{
+			Assert.AreEqual(4u, Sizeof<int>(), "int");
+			Assert.AreEqual(8u, Sizeof<long>(), "long");
+			Assert.AreEqual(8u, Sizeof<TestStruct>(), "TestStruct");
+			Assert.AreEqual((uint)IntPtr.Size, Sizeof<TestClass>(), "TestClass");
+		}
+	}
 }

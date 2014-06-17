@@ -5,139 +5,135 @@ using System.Text;
 
 namespace UnitTests
 {
-    struct TestStruct
-    {
-        public static int Static;
+	struct TestStruct
+	{
+		public static int Static;
 
-        public int A;
-        public int B;
+		public int A;
+		public int B;
 
-        public int Add(int c)
-        {
-            return A + B + c;
-        }
-    }
+		public int Add(int c)
+		{
+			return A + B + c;
+		}
+	}
 
-    class TestClass
-    {
-        public class InnerClass
-        {
-            public static int Static;
+	class TestClass
+	{
+		public class InnerClass
+		{
+			public static int Static;
 
-            public int A;
-            public int B;
+			public int A;
+			public int B;
 
-            public InnerClass()
-            {
-            }
+			public InnerClass()
+			{
+			}
 
-            public InnerClass(int a, int b)
-            {
-                A = a;
-                B = b;
-            }
+			public InnerClass(int a, int b)
+			{
+				A = a;
+				B = b;
+			}
 
-            public override bool Equals(object obj)
-            {
-                var other = obj as InnerClass;
-                if (other == null)
-                {
-                    return false;
-                }
+			public override bool Equals(object obj)
+			{
+				var other = obj as InnerClass;
+				if (other == null) {
+					return false;
+				}
 
-                return A == other.A && B == other.B;
-            }
-        }
+				return A == other.A && B == other.B;
+			}
+		}
 
-        public static int Static;
+		public static int Static;
 
-        public int A;
-        public int B;
+		public int A;
+		public int B;
 
-        public TestClass()
-        {
-        }
+		public TestClass()
+		{
+		}
 
-        public TestClass(int a, int b)
-        {
-            A = a;
-            B = b;
-        }
+		public TestClass(int a, int b)
+		{
+			A = a;
+			B = b;
+		}
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as TestClass;
-            if (other == null)
-            {
-                return false;
-            }
+		public override bool Equals(object obj)
+		{
+			var other = obj as TestClass;
+			if (other == null) {
+				return false;
+			}
 
-            return A == other.A && B == other.B;
-        }
+			return A == other.A && B == other.B;
+		}
 
-        public static int Increment(int i)
-        {
-            return i + 1;
-        }
-    }
+		public static int Increment(int i)
+		{
+			return i + 1;
+		}
+	}
 
-    class TestDerivedClass : TestClass
-    {
-        public int C;
+	class TestDerivedClass : TestClass
+	{
+		public int C;
 
-        public TestDerivedClass()
-        {
-        }
+		public TestDerivedClass()
+		{
+		}
 
-        public TestDerivedClass(int a, int b, int c)
-            : base(a, b)
-        {
-            C = c;
-        }
+		public TestDerivedClass(int a, int b, int c)
+			: base(a, b)
+		{
+			C = c;
+		}
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as TestDerivedClass;
-            if (other == null)
-            {
-                return false;
-            }
+		public override bool Equals(object obj)
+		{
+			var other = obj as TestDerivedClass;
+			if (other == null) {
+				return false;
+			}
 
-            return base.Equals(other) && C == other.C;
-        }
-    }
+			return base.Equals(other) && C == other.C;
+		}
+	}
 
-    class GenericClass<TA, TB>
-    {
-        public static int Static;
+	class GenericClass<TA, TB>
+	{
+		public static int Static;
 
-        public TA A;
-        public TB B;
+		public TA A;
+		public TB B;
 
-        public GenericClass()
-        {
-        }
+		public GenericClass()
+		{
+		}
 
-        public GenericClass(TA a, TB b)
-        {
-            A = a;
-            B = b;
-        }
+		public GenericClass(TA a, TB b)
+		{
+			A = a;
+			B = b;
+		}
 
-        public static T GenericMethod<T>(T t)
-        {
-            return t;
-        }
+		public static T GenericMethod<T>(T t)
+		{
+			return t;
+		}
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as GenericClass<TA, TB>;
-            if (other == null)
-            {
-                return false;
-            }
+		public override bool Equals(object obj)
+		{
+			var other = obj as GenericClass<TA, TB>;
+			if (other == null) {
+				return false;
+			}
 
-            return A.Equals(other.A) && B.Equals(other.B);
-        }
-    }
+			return A.Equals(other.A) && B.Equals(other.B);
+		}
+	}
 }
