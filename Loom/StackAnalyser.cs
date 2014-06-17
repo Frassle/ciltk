@@ -456,8 +456,9 @@ namespace Silk.Loom
                         break;
                     case Code.Ldftn:
                         {
-                            var mref = instruction.Operand as MethodReference;
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(module, mref)), stack);
+							stack = new TStack(Tuple.Create(
+								instruction, 
+								new StackEntry(References.FindType(module, method.Body, "System.IntPtr"))), stack);
                             break;
                         }
                     case Code.Ldind_I:

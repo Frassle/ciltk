@@ -30,10 +30,11 @@ namespace Silk
     
     public static unsafe class Cil
     {
-        public static unsafe void Pin<T>(T variable) { throw new Exception("CilTK Rewriter not run."); }
-
-        public static unsafe void PinByName(string variableName) { throw new Exception("CilTK Rewriter not run."); }
-
+		/// <summary>
+		/// Declare a new local variable.
+		/// </summary>
+		/// <param name="type">The type of the new variable.</param>
+		/// <param name="name">The name of the new variable.</param>
         public static unsafe void DeclareLocal(string type, string name) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>

@@ -42,10 +42,6 @@ namespace Weave
             {
                 StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
-            else if (calledMethod.Name == "Pin" || calledMethod.Name == "PinByName")
-            {
-                return ReplacePin(ilProcessor, instruction, calledMethod);
-            }
             else if (calledMethod.Name == "Load" || calledMethod.Name == "Peek")
             {
                 /*
@@ -178,51 +174,6 @@ namespace Weave
             }
             
             return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
-        }
-
-        private Instruction ReplacePin(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
-        {
-            var next = instruction.Next;
-            if (calledMethod.Name == "Pin")
-            {
-                var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
-                var operandInstruction = stack.Head.Item1;
-
-                // operandInstruction should be the load instruction for the variable passed in
-
-                if (!(operandInstruction.Operand is VariableDefinition))
-                {
-                    throw new Exception("Expected local variable to be passed to Pin");
-                }
-
-                var variable = operandInstruction.Operand as VariableDefinition;
-
-                variable.VariableType = new PinnedType(variable.VariableType);
-
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
-            }
-            else
-            {
-                var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
-                var variableName = stack.Head.Item2;
-
-                if (!(variableName.IsConstant && variableName.Value is string))
-                {
-                    throw new Exception("Expected constant string to be passed to PinByName");
-                }
-
-                var variable = ilProcessor.Body.Variables.FirstOrDefault(var => var.Name == variableName.Value);
-
-                if (variable == null)
-                {
-                    throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
-                }
-
-                variable.VariableType = new PinnedType(variable.VariableType);
-
-                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
-            }
-            return next;
         }
 
         private Instruction ReplaceLoadAddress(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)

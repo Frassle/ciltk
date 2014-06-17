@@ -56,6 +56,13 @@ namespace Silk.Loom
                 return new PointerType(element_type);
             }
 
+			// pinned type
+			if (name.EndsWith(" pinned"))
+			{
+				var element_type = FindType(module, method, name.Substring(0, name.Length - " pinned".Length));
+				return new PinnedType(element_type); 
+			}
+
             // generic type
             if (method != null)
             {
