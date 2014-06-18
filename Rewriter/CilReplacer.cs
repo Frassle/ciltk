@@ -207,6 +207,22 @@ namespace Weave
                 var field = (FieldReference)addr_instruction.Operand;
                 ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldflda, field));
             }
+            else if (
+                addr_instruction.OpCode == OpCodes.Ldelem_Any ||
+                addr_instruction.OpCode == OpCodes.Ldelem_I ||
+                addr_instruction.OpCode == OpCodes.Ldelem_I1 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_I2 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_I4 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_I8 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_U1 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_U2 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_U4 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_R4 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_R8 ||
+                addr_instruction.OpCode == OpCodes.Ldelem_Ref)
+            {
+                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldelema));
+            }
             else
             {
                 throw new Exception("ReplaceLoadAddress: How did we get here?!");
