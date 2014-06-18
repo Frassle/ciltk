@@ -47,7 +47,7 @@ namespace Weave
         {
             var label = Analysis[instruction.Previous].Head;
             
-            if (label.Item2.IsConstant)
+            if (!label.Item2.IsConstant)
             {
                 Console.WriteLine("Label call must be used with a string literal.");
                 Environment.Exit(1);
