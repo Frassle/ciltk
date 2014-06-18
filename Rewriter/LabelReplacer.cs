@@ -45,26 +45,17 @@ namespace Weave
 
         protected override Instruction Visit(ILProcessor ilProcessor, Instruction instruction)
         {
-            var ld = instruction.Previous;
-
-            if (ld.OpCode != OpCodes.Ldstr)
+            var label = Analysis[instruction.Previous].Head;
+            
+            if (label.Item2.IsConstant)
             {
                 Console.WriteLine("Label call must be used with a string literal.");
                 Environment.Exit(1);
             }
 
-            var label = ld.Operand as string;
-            if (label == null)
-            {
-                Console.WriteLine("Label call must be used with a string literal.");
-                Environment.Exit(1);
-            }
+            var jump_location = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
 
-            ilProcessor.Remove(instruction.Previous);
-
-            var jump_location = Instruction.Create(OpCodes.Nop);
-            ilProcessor.Replace(instruction, jump_location);
-            Labels.Add(Tuple.Create(ilProcessor.Body, label), jump_location);
+            Labels.Add(Tuple.Create(ilProcessor.Body, label.Item2.Value), jump_location);
 
             return jump_location.Next;
         }

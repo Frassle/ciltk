@@ -11,6 +11,36 @@ namespace Silk.Loom
 {
     public static class StackAnalyser
     {
+        public static Instruction ReplaceInstruction(ILProcessor ilProcessor, Instruction target, Instruction instruction)
+        {
+            var body = ilProcessor.Body;
+
+            foreach (var handler in body.ExceptionHandlers)
+            {
+                if (handler.TryStart == target) { handler.TryStart = instruction; }
+                if (handler.TryEnd == target) { handler.TryEnd = instruction; }
+                if (handler.HandlerStart == target) { handler.HandlerStart = instruction; }
+                if (handler.HandlerEnd == target) { handler.HandlerEnd = instruction; }
+                if (handler.FilterStart == target) { handler.FilterStart = instruction; }
+            }
+
+            foreach (var jmp in body.Instructions)
+            {
+                if (jmp.OpCode.OperandType == OperandType.InlineBrTarget)
+                {
+                    var jmp_target = jmp.Operand as Instruction;
+                    if (jmp_target == target)
+                    {
+                        jmp.Operand = instruction;
+                    }
+                }
+            }
+
+            ilProcessor.Replace(target, instruction);
+
+            return instruction;
+        }
+
         public struct StackEntry
         {
             public bool IsConstant { get; private set; }
@@ -124,12 +154,12 @@ namespace Silk.Loom
 
             if (instruction.OpCode.StackBehaviourPop == StackBehaviour.Pop0)
             {
-                ilProcessor.Replace(instruction, nop);
+                ReplaceInstruction(ilProcessor, instruction, nop);
             }
             else
             {
                 var stack = analysis[instruction.Previous];
-                ilProcessor.Replace(instruction, nop);
+                ReplaceInstruction(ilProcessor, instruction, nop);
 
                 switch (instruction.OpCode.StackBehaviourPop)
                 {

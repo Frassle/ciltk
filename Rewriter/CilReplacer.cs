@@ -51,7 +51,7 @@ namespace Weave
                  * remove the call instruction, that keeps the value on the
                  * stack instead of popping it for the call.
                  */
-                ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
+                StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
             }
             else if (calledMethod.Name == "LoadAddress")
             {
@@ -108,7 +108,7 @@ namespace Weave
             {
                 var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldloc = Instruction.Create(OpCodes.Ldloc, variable);
-                ilProcessor.Replace(nop, ldloc);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldloc);
                 return ldloc.Next;
             }
 
@@ -117,7 +117,7 @@ namespace Weave
             {
                 var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldarg = Instruction.Create(OpCodes.Ldarg, parameter);
-                ilProcessor.Replace(nop, ldarg);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldarg);
                 return ldarg.Next;
             }
 
@@ -140,7 +140,7 @@ namespace Weave
             {
                 var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var stloc = Instruction.Create(OpCodes.Stloc, variable);
-                ilProcessor.Replace(nop, stloc);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, stloc);
                 return stloc.Next;
             }
 
@@ -149,7 +149,7 @@ namespace Weave
             {
                 var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var starg = Instruction.Create(OpCodes.Starg, parameter);
-                ilProcessor.Replace(nop, starg);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, starg);
                 return starg.Next;
             }
 
@@ -190,22 +190,22 @@ namespace Weave
             if (addr_instruction.OpCode == OpCodes.Ldloc)
             {
                 var local = (VariableDefinition)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldloca, local));
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldloca, local));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldarg)
             {
                 var argument = (ParameterDefinition)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldarga, argument));
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldarga, argument));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldsfld)
             {
                 var field = (FieldReference)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldsflda, field));
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldsflda, field));
             }
             else if (addr_instruction.OpCode == OpCodes.Ldfld)
             {
                 var field = (FieldReference)addr_instruction.Operand;
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldflda, field));
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldflda, field));
             }
             else if (
                 addr_instruction.OpCode == OpCodes.Ldelem_Any ||
@@ -228,7 +228,7 @@ namespace Weave
                 throw new Exception("ReplaceLoadAddress: How did we get here?!");
             }
 
-            ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
+            StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
 
             return next;
         }
@@ -288,8 +288,8 @@ namespace Weave
                 throw new Exception("ReplaceStore: How did we get here?!");
             }
 
-            ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Nop));
-            ilProcessor.Replace(instruction, Instruction.Create(OpCodes.Nop));
+            StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Nop));
+            StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
 
             return next;
         }
@@ -327,13 +327,13 @@ namespace Weave
             {
                 var generic_method = calledMethod as GenericInstanceMethod;
                 var typetok = generic_method.GenericArguments[0];
-                ilProcessor.Replace(instruction, Instruction.Create(opcode, typetok));
+                StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, typetok));
             }
             else
             {
                 if (calledMethod.Parameters.Count == 0)
                 {
-                    ilProcessor.Replace(instruction, Instruction.Create(opcode));
+                    StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode));
                 }
                 if (calledMethod.Parameters.Count == 1)
                 {
@@ -354,49 +354,49 @@ namespace Weave
                     if (opcode.OperandType == OperandType.InlineVar)
                     {
                         var variable = ilProcessor.Body.Variables[(int)operand];
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, variable));
                     }
                     else if (opcode.OperandType == OperandType.InlineArg)
                     {
                         var variable = ilProcessor.Body.Method.Parameters[(int)operand];
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, variable));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, variable));
                     }
                     else if (opcode.OperandType == OperandType.InlineBrTarget)
                     {
                         var jump = Labels.GetJumpLocation(ilProcessor.Body, (string)operand);
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, jump));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, jump));
                     }
                     else if (opcode.OperandType == OperandType.ShortInlineI)
                     {
                         var integer = (byte)operand;
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, integer));
                     }
                     else if (opcode.OperandType == OperandType.InlineI)
                     {
                         var integer = (int)operand;
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, integer));
                     }
                     else if (opcode.OperandType == OperandType.InlineI8)
                     {
                         var integer = (long)operand;
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, integer));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, integer));
                     }
                     else if (opcode.OperandType == OperandType.ShortInlineR)
                     {
                         var real = (float)operand;
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, real));
                     }
                     else if (opcode.OperandType == OperandType.InlineR)
                     {
                         var real = (double)operand;
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, real));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, real));
                     }
                     else if (opcode.OperandType == OperandType.InlineSwitch)
                     {
                         var target_string = (string)operand;
                         var targets = target_string.Split(';').Select(label => Labels.GetJumpLocation(ilProcessor.Body, label)).ToArray();
 
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, targets));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, targets));
                     }
                     else if (opcode.OperandType == OperandType.InlineField)
                     {
@@ -404,7 +404,7 @@ namespace Weave
                         var field = (string)operand;
                         var fieldref = Silk.Loom.References.FindField(module, ilProcessor.Body, field);
 
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, fieldref));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, fieldref));
                     }
                     else if (opcode.OperandType == OperandType.InlineMethod)
                     {
@@ -412,7 +412,7 @@ namespace Weave
                         var method = (string)operand;
                         var methodref = Silk.Loom.References.FindMethod(module, ilProcessor.Body, method);
 
-                        ilProcessor.Replace(instruction, Instruction.Create(opcode, methodref));
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, methodref));
                     }
                     else if (opcode.OperandType == OperandType.InlineType)
                     {
@@ -536,7 +536,7 @@ namespace Weave
             {
                 var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var calli = Instruction.Create(OpCodes.Calli, callSite);
-                ilProcessor.Replace(nop, calli);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, calli);
                 return calli.Next;
             }
         }
