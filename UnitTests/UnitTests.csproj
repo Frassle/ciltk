@@ -17,11 +17,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterBuild" command="${SolutionDir}/Rewriter/bin/${ProjectConfigName}/Weave.exe --input ${TargetFile} --output ${TargetFile}" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -48,4 +43,8 @@
       <Name>Silk</Name>
     </ProjectReference>
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <Exec Command="$(SolutionDir)/Rewriter/bin/$(ConfigurationName)/Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) == 'Windows_NT'" />
+    <Exec Command="mono $(SolutionDir)/Rewriter/bin/$(ConfigurationName)/Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) != 'Windows_NT'" />
+  </Target>
 </Project>
