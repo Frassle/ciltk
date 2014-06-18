@@ -2284,13 +2284,69 @@ namespace Silk
         public static unsafe void Stelem_Ref() { throw new Exception("CilTK Rewriter not run."); }
 
         public static unsafe void Stfld(string field) { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type native int into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
         public static unsafe void Stind_I() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type int8 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
         public static unsafe void Stind_I1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Stind_I2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Stind_I4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Stind_I8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Stind_R4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Stind_R8() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type int16 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
+		public static unsafe void Stind_I2() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type int32 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
+		public static unsafe void Stind_I4() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type int64 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
+		public static unsafe void Stind_I8() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type float32 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
+		public static unsafe void Stind_R4() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type float64 into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
+		public static unsafe void Stind_R8() { throw new Exception("CilTK Rewriter not run."); }
+
+		/// <summary>
+		/// Store value of type object ref (type O) into memory at address
+		/// 
+		/// Stack Transition:
+		/// …, addr, value, -> …,
+		/// </summary>
         public static unsafe void Stind_Ref() { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
