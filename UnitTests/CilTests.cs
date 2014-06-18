@@ -656,6 +656,35 @@ namespace UnitTests
 		}
 
 		[Test()]
+		public void TestPinned()
+		{
+			Silk.Cil.DeclareLocal("System.Int32 pinned", "i");
+			int j = 0;
+
+			Silk.Cil.Ldc_I4(1);
+			Silk.Cil.StoreByName("i");
+			Silk.Cil.LoadByName("i");
+			Silk.Cil.Store(out j);
+
+			Assert.AreEqual(1, j);
+		}
+
+		[Test()]
+		public void TestManagedPointer()
+		{
+			Silk.Cil.DeclareLocal("System.Int32&", "i");
+			int j = 0;
+
+			Silk.Cil.LoadAddress(j);
+			Silk.Cil.StoreByName("i");
+			Silk.Cil.LoadByName("i");
+			Silk.Cil.Load(1);
+			Silk.Cil.Stind_I4();
+
+			Assert.AreEqual(1, j);
+		}
+
+		[Test()]
 		public void TestPeek()
 		{
 			int a = 1;
