@@ -685,6 +685,33 @@ namespace UnitTests
 		}
 
 		[Test()]
+		public void TestPinnedPointerCopy()
+		{
+			Silk.Cil.DeclareLocal("System.Byte& pinned", "bytes");
+			Silk.Cil.Load(new System.Byte[] { 1, 2, 3, 4, 5 });
+			Silk.Cil.Ldc_I4(0);
+			Silk.Cil.Ldelema<System.Byte>();
+			Silk.Cil.StoreByName("bytes");
+
+			IntPtr localloc;
+
+			Silk.Cil.Ldc_I4(5);
+			Silk.Cil.Localloc();
+			Silk.Cil.Store(out localloc);
+
+			Silk.Cil.Load(localloc);
+			Silk.Cil.LoadByName("bytes");
+			Silk.Cil.Ldc_I4(5);
+			Silk.Cil.Cpblk();
+
+			Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.ReadByte(localloc, 0));
+			Assert.AreEqual(2, System.Runtime.InteropServices.Marshal.ReadByte(localloc, 1));
+			Assert.AreEqual(3, System.Runtime.InteropServices.Marshal.ReadByte(localloc, 2));
+			Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.ReadByte(localloc, 3));
+			Assert.AreEqual(5, System.Runtime.InteropServices.Marshal.ReadByte(localloc, 4));
+		}
+
+		[Test()]
 		public void TestPeek()
 		{
 			int a = 1;
