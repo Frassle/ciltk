@@ -247,31 +247,11 @@ namespace Silk.Loom
                     case Code.Add:
                     case Code.Add_Ovf:
                     case Code.Add_Ovf_Un:
-                        {
-                            var a = Pop(ref stack).Item2;
-                            var b = Pop(ref stack).Item2;
-                            if (a.IsConstant & b.IsConstant)
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, a.Value + b.Value)), stack);
-                            }
-                            else
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
-                            }
-                            break;
-                        }
                     case Code.And:
                         {
                             var a = Pop(ref stack).Item2;
                             var b = Pop(ref stack).Item2;
-                            if (a.IsConstant & b.IsConstant)
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, a.Value & b.Value)), stack);
-                            }
-                            else
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
-                            }
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
                             break;
                         }
                     case Code.Beq:
@@ -298,14 +278,8 @@ namespace Silk.Loom
                     case Code.Box:
                         {
                             var a = Pop(ref stack).Item2;
-                            if (a.IsConstant)
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (object)a.Value)), stack);
-                            }
-                            else
-                            {
-                                stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
-                            }
+                            stack = new TStack(Tuple.Create(instruction, 
+                                new StackEntry(References.FindType(module, null, "System.Object"))), stack);
                             break;
                         }
                     case Code.Br:
@@ -335,25 +309,6 @@ namespace Silk.Loom
                             if(m.HasThis)
                             {
                                 self = Pop(ref stack).Item2;
-                            }
-
-                            if (args.All(arg => arg.IsConstant) && (!m.HasThis || self.IsConstant) && (m.DeclaringType.FullName != "Silk.Cil")) // We know the Silk methods will just throw
-                            {
-                                var meth = Reify(m);
-                                if (meth != null)
-                                {
-                                    var obj = (object)self.Value;
-                                    var parameters = args.Select(arg => (object)arg.Value).ToArray();
-                                    try
-                                    {
-                                        var result = meth.Invoke(obj, parameters);
-                                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, result)), stack);
-                                        break;
-                                    }
-                                    catch (Exception)
-                                    {
-                                    }
-                                }                                
                             }
                             
                             stack = TStack.Cons(Tuple.Create(instruction, new StackEntry(m.ReturnType)), stack);
@@ -486,9 +441,9 @@ namespace Silk.Loom
                         break;
                     case Code.Ldftn:
                         {
-							stack = new TStack(Tuple.Create(
-								instruction, 
-								new StackEntry(References.FindType(module, method.Body, "System.IntPtr"))), stack);
+                            stack = new TStack(Tuple.Create(
+                                instruction, 
+                                new StackEntry(References.FindType(module, method.Body, "System.IntPtr"))), stack);
                             break;
                         }
                     case Code.Ldind_I:
@@ -527,8 +482,7 @@ namespace Silk.Loom
                         {
                             var src = Pop(ref stack);
                             var type = instruction.Operand as TypeReference;
-                            Type ty = Reify(type);
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(module, ty)), stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(type)), stack);
                         }
                         break;
                     case Code.Ldsfld:
@@ -547,39 +501,18 @@ namespace Silk.Loom
 
                             if (token is Mono.Cecil.MethodReference)
                             {
-                                var m = Reify((Mono.Cecil.MethodReference)token);
-                                if (m == null)
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeMethodHandle"))), stack);
-                                }
-                                else
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, m.MethodHandle)), stack);
-                                }
+                                stack = new TStack(Tuple.Create(instruction, 
+                                    new StackEntry(References.FindType(module, null, "System.RuntimeMethodHandle"))), stack);
                             }
                             if (token is Mono.Cecil.TypeReference)
                             {
-                                var t = Reify((Mono.Cecil.TypeReference)token); 
-                                if (t == null)
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeTypeHandle"))), stack);
-                                }
-                                else
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, t.TypeHandle)), stack);
-                                }
+                                stack = new TStack(Tuple.Create(instruction, 
+                                    new StackEntry(References.FindType(module, null, "System.RuntimeTypeHandle"))), stack);
                             }
                             if (token is Mono.Cecil.FieldReference)
                             {
-                                var f = Reify((Mono.Cecil.FieldReference)token); 
-                                if (f == null)
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(References.FindType(module, null, "System.RuntimeFieldHandle"))), stack);
-                                }
-                                else
-                                {
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, f.FieldHandle)), stack);
-                                }
+                                stack = new TStack(Tuple.Create(instruction, 
+                                    new StackEntry(References.FindType(module, null, "System.RuntimeFieldHandle"))), stack);
                             }
                             break;
                         }
@@ -598,17 +531,6 @@ namespace Silk.Loom
                         {
                             var length = Pop(ref stack).Item2;
                             var type = (Mono.Cecil.TypeReference)instruction.Operand;
-                            if (length.IsConstant)
-                            {
-                                Type ty = Reify(type);
-                                if (ty != null)
-                                {
-                                    var arr = Array.CreateInstance(ty, (int)length.Value);
-                                    stack = new TStack(Tuple.Create(instruction, new StackEntry(module, arr)), stack);
-                                    break;
-                                }
-                            }
-
                             stack = new TStack(Tuple.Create(instruction, new StackEntry(Mono.Cecil.Rocks.TypeReferenceRocks.MakeArrayType(type))), stack);
                             break;
                         }
