@@ -44,7 +44,7 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Exec Command="$(SolutionDir)/Rewriter/bin/$(ConfigurationName)/Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) == 'Windows_NT'" />
-    <Exec Command="mono $(SolutionDir)/Rewriter/bin/$(ConfigurationName)/Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) != 'Windows_NT'" />
+    <Exec Command="$(SolutionDir)Rewriter\bin\$(ConfigurationName)\Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) == 'Windows_NT'" />
+    <Exec Command="mono $(SolutionDir)Rewriter\bin\$(ConfigurationName)\Weave.exe --input $(TargetPath) --output $(TargetPath)" Condition="$(OS) != 'Windows_NT'" />
   </Target>
 </Project>
