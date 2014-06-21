@@ -30,16 +30,44 @@ namespace Silk.Loom
 
             throw new Exception(string.Format("Field {0} not found.", name));
         }
+
+        static Dictionary<string, string> PrimativeTypeMap;
+
+        static References()
+        {
+            PrimativeTypeMap = new Dictionary<string, string>();
+            PrimativeTypeMap.Add("bool", "System.Boolean");
+            PrimativeTypeMap.Add("char", "System.Char");
+            PrimativeTypeMap.Add("float32", "System.Single");
+            PrimativeTypeMap.Add("float64", "System.Double");
+            PrimativeTypeMap.Add("int8", "System.SByte");
+            PrimativeTypeMap.Add("int16", "System.Int16");
+            PrimativeTypeMap.Add("int32", "System.Int32");
+            PrimativeTypeMap.Add("int64", "System.Int64");
+            PrimativeTypeMap.Add("native int", "System.IntPtr");
+            PrimativeTypeMap.Add("native unsigned int", "System.UIntPtr");
+            PrimativeTypeMap.Add("object", "System.Object");
+            PrimativeTypeMap.Add("string", "System.String");
+            PrimativeTypeMap.Add("typedref", "System.TypedReference");
+            PrimativeTypeMap.Add("unsigned int8", "System.Byte");
+            PrimativeTypeMap.Add("unsigned int16", "System.UInt16");
+            PrimativeTypeMap.Add("unsigned int32", "System.UInt32");
+            PrimativeTypeMap.Add("unsigned int64", "System.UInt64");
+            PrimativeTypeMap.Add("void", "System.Void");
+        }
         
         public static TypeReference FindType(ModuleDefinition module, MethodBody method, string name)
         {
-            var matchArray = System.Text.RegularExpressions.Regex.Match(name, "(.*?)\\[(,*)\\]");
-
-            // array type
-            if (matchArray.Success)
+            if (name.EndsWith("]"))
             {
-                var element_type = FindType(module, method, matchArray.Groups[1].Value);
-                return new ArrayType(element_type, matchArray.Groups[2].Length + 1);
+                var matchArray = System.Text.RegularExpressions.Regex.Match(name, "(.*?)\\[(,*)\\]");
+
+                // array type
+                if (matchArray.Success)
+                {
+                    var element_type = FindType(module, method, matchArray.Groups[1].Value);
+                    return new ArrayType(element_type, matchArray.Groups[2].Length + 1);
+                }
             }
 
             // ref type
@@ -68,48 +96,23 @@ namespace Silk.Loom
             {
                 foreach (var generic in method.Method.GenericParameters)
                 {
-                    if (generic.FullName == name)
+                    if (String.Equals(generic.FullName, name, StringComparison.Ordinal))
                         return generic;
                 }
 
                 foreach (var generic in method.Method.DeclaringType.GenericParameters)
                 {
-                    if (generic.FullName == name)
+                    if (String.Equals(generic.FullName, name, StringComparison.Ordinal))
                         return generic;
                 }
             }
 
-            // c# type
-            if (name == "byte")
-                name = "System.Byte";
-            else if (name == "ushort")
-                name = "System.UInt16";
-            else if (name == "uint")
-                name = "System.UInt32";
-            else if (name == "ulong")
-                name = "System.UInt64";
-            else if (name == "sbyte")
-                name = "System.SByte";
-            else if (name == "short")
-                name = "System.Int16";
-            else if (name == "int")
-                name = "System.Int32";
-            else if (name == "long")
-                name = "System.Int64";
-            else if (name == "float")
-                name = "System.Single";
-            else if (name == "double")
-                name = "System.Double";
-            else if (name == "string")
-                name = "System.String";
-            else if (name == "object")
-                name = "System.Object";
-            else if (name == "char")
-                name = "System.Char";
-            else if (name == "bool")
-                name = "System.Boolean";
-            else if (name == "void")
-                name = "System.Void";
+            // primative type
+            string realName;
+            if (PrimativeTypeMap.TryGetValue(name, out realName))
+            {
+                name = realName;
+            }
 
             // normal type
             var assemblies = new List<AssemblyDefinition>();
@@ -120,33 +123,43 @@ namespace Silk.Loom
                 assemblies.Add(module.AssemblyResolver.Resolve(reference));
             }
 
-            TypeReference maybeMatch = null;
-            int maybeCount = 0;
             foreach (var assembly in assemblies)
             {
                 foreach (var reference in assembly.Modules)
                 {
-                    foreach (var type in reference.GetTypes())
+                    foreach (var type in reference.Types)
                     {
-                        if (type.FullName == name)
+                        var foundType = MatchType(name, type);
+                        if (foundType != null)
                         {
                             return module.Import(type);
-                        }
-                        if (type.Name == name)
-                        {
-                            maybeMatch = type;
-                            ++maybeCount;
                         }
                     }
                 }
             }
 
-            if (maybeCount == 1)
+            throw new Exception(string.Format("Type {0} not found.", name));
+        }
+
+        private static TypeDefinition MatchType(string name, TypeDefinition type)
+        {
+            if (String.Equals(type.FullName, name, StringComparison.Ordinal))
             {
-                return module.Import(maybeMatch);
+                return type;
+            }
+            else if (name.StartsWith(type.FullName, StringComparison.Ordinal)) // could be a subtype
+            {
+                foreach (var subtype in type.NestedTypes)
+                {
+                    var foundType = MatchType(name, subtype);
+                    if (foundType != null)
+                    {
+                        return foundType;
+                    }
+                }
             }
 
-            throw new Exception(string.Format("Type {0} not found.", name));
+            return null;
         }
 
         public static MethodReference FindMethod(ModuleDefinition module, MethodBody method, string name)

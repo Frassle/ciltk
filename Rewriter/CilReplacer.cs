@@ -94,7 +94,7 @@ namespace Weave
 
         private Instruction ReplaceLoadByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
             var variableName = stack.Head.Item2;
 
             if (!variableName.IsConstant)
@@ -126,7 +126,7 @@ namespace Weave
 
         private Instruction ReplaceStoreByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
             var variableName = stack.Head.Item2;
 
             if (!variableName.IsConstant)
@@ -158,7 +158,7 @@ namespace Weave
 
         private Instruction ReplaceDeclareLocal(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
             var name = stack.Head.Item2;
             var type = stack.Tail.Head.Item2;
 
@@ -181,7 +181,7 @@ namespace Weave
             var generic_method = calledMethod as GenericInstanceMethod;
             var typetok = generic_method.GenericArguments[0];
 
-            var stack = StackAnalyser.Analyse(ilProcessor.Body.Method)[instruction.Previous];
+            var stack = Analysis[instruction.Previous];
 
             var operandEntry = stack.Head;
             var addr_instruction = operandEntry.Item1;

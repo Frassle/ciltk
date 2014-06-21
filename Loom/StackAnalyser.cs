@@ -56,18 +56,18 @@ namespace Silk.Loom
                 Value = null;
             }
 
-            internal StackEntry(Mono.Cecil.ModuleDefinition module, object value)
+            internal StackEntry(Mono.Cecil.ModuleDefinition module, MethodBody method, object value)
                 : this()
             {
                 if (value != null)
                 {
-                    Type = References.FindType(module, null, value.GetType().FullName);
+                    Type = References.FindType(module, method, value.GetType().FullName);
                     IsConstant = true;
                     Value = value;
                 }
                 else
                 {
-                    Type = References.FindType(module, null, "System.Object");
+                    Type = References.FindType(module, method, "System.Object");
                     IsConstant = true;
                     Value = null;
                 }
@@ -279,7 +279,7 @@ namespace Silk.Loom
                         {
                             var a = Pop(ref stack).Item2;
                             stack = new TStack(Tuple.Create(instruction, 
-                                new StackEntry(References.FindType(module, null, "System.Object"))), stack);
+                                new StackEntry(References.FindType(module, method.Body, "System.Object"))), stack);
                             break;
                         }
                     case Code.Br:
@@ -378,49 +378,49 @@ namespace Silk.Loom
                         stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
                     case Code.Ldc_I4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I4_0:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 0)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 0)), stack);
                         break;
                     case Code.Ldc_I4_1:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 1)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 1)), stack);
                         break;
                     case Code.Ldc_I4_2:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 2)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 2)), stack);
                         break;
                     case Code.Ldc_I4_3:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 3)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 3)), stack);
                         break;
                     case Code.Ldc_I4_4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 4)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 4)), stack);
                         break;
                     case Code.Ldc_I4_5:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 5)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 5)), stack);
                         break;
                     case Code.Ldc_I4_6:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 6)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 6)), stack);
                         break;
                     case Code.Ldc_I4_7:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 7)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 7)), stack);
                         break;
                     case Code.Ldc_I4_8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, 8)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 8)), stack);
                         break;
                     case Code.Ldc_I4_M1:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, -1)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, -1)), stack);
                         break;
                     case Code.Ldc_I4_S:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (int)instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (long)instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (float)instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, (double)instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldelem_Any:
                     case Code.Ldelem_I:
@@ -476,7 +476,7 @@ namespace Silk.Loom
                             break;
                         }
                     case Code.Ldnull:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, null)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, null)), stack);
                         break;
                     case Code.Ldobj:
                         {
@@ -493,7 +493,7 @@ namespace Silk.Loom
                             break;
                         }
                     case Code.Ldstr:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, instruction.Operand as string)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
                     case Code.Ldtoken:
                         {
@@ -501,18 +501,18 @@ namespace Silk.Loom
 
                             if (token is Mono.Cecil.MethodReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction, 
-                                    new StackEntry(References.FindType(module, null, "System.RuntimeMethodHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction,
+                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeMethodHandle"))), stack);
                             }
                             if (token is Mono.Cecil.TypeReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction, 
-                                    new StackEntry(References.FindType(module, null, "System.RuntimeTypeHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction,
+                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeTypeHandle"))), stack);
                             }
                             if (token is Mono.Cecil.FieldReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction, 
-                                    new StackEntry(References.FindType(module, null, "System.RuntimeFieldHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction,
+                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeFieldHandle"))), stack);
                             }
                             break;
                         }
