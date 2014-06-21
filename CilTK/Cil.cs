@@ -1672,6 +1672,25 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldelema<T>() { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Load the address of element at index onto the top of the stack.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, address,
+        /// </summary>
+        /// <remarks>
+        /// The ldelema instruction loads the address of the element with index index (of type int32 or
+        /// native int) in the zero-based one-dimensional array array (of element type verifier-assignable-to
+        /// typeTok) and places it on the top of the stack. Arrays are objects and hence represented by a
+        /// value of type O. The return address is a managed pointer (type &amp;).
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides an Address method. end note]
+        /// If this instruction is prefixed by the readonly. prefix, it produces a controlled-mutability
+        /// managed pointer (§III.1.8.1.2.2).
+        /// </remarks>
+        /// <param name="type">Type in the array.</param>
+        public static unsafe void Ldelema(string type) { throw new Exception("CilTK Rewriter not run."); }
   
         /// <summary>
         /// Push the value of field of object (or value type) obj, onto the stack.

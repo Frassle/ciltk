@@ -308,7 +308,7 @@ namespace Weave
                 {
                     opcode = OpCodes.Stelem_Any;
                 }
-                // Special case ldelem because we don't want to call it Stelem_Any
+                // Special case ldelem because we don't want to call it Ldelem_Any
                 else if (calledMethod.Name == "Ldelem")
                 {
                     opcode = OpCodes.Ldelem_Any;
@@ -416,7 +416,15 @@ namespace Weave
                     }
                     else if (opcode.OperandType == OperandType.InlineType)
                     {
-                        Console.WriteLine("Inline type opcode ({0}) without generic argument, ignoring.", opcode);
+                        var module = ilProcessor.Body.Method.Module;
+                        var type = (string)operand;
+                        var typeref = Silk.Loom.References.FindType(module, ilProcessor.Body, type);
+
+                        StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, typeref));
+                    }
+                    else
+                    {
+                        throw new ArgumentException(string.Format("Inline opcode ({0}) without argument, ignoring.", opcode));
                     }
                 }
                 else
