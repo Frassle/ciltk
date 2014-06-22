@@ -80,6 +80,10 @@ namespace Weave
             {
                 return ReplaceStoreByName(ilProcessor, instruction, calledMethod);
             }
+            else if (calledMethod.Name == "LoadAddressByName")
+            {
+                return ReplaceLoadAddressByName(ilProcessor, instruction, calledMethod);
+            }
             else if (calledMethod.Name == "DeclareLocal")
             {
                 return ReplaceDeclareLocal(ilProcessor, instruction, calledMethod);
@@ -156,6 +160,37 @@ namespace Weave
             throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
         }
 
+        private Instruction ReplaceLoadAddressByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var stack = Analysis[instruction.Previous];
+            var variableName = stack.Head.Item2;
+
+            if (!variableName.IsConstant)
+            {
+                throw new Exception("Expected constant values to be passed to LoadByName");
+            }
+
+            var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
+            if (variable != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var ldloc = Instruction.Create(OpCodes.Ldloca, variable);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldloc);
+                return ldloc.Next;
+            }
+
+            var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
+            if (parameter != null)
+            {
+                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var ldarg = Instruction.Create(OpCodes.Ldarga, parameter);
+                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldarg);
+                return ldarg.Next;
+            }
+
+            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+        }
+
         private Instruction ReplaceDeclareLocal(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
             var stack = Analysis[instruction.Previous];
@@ -208,7 +243,12 @@ namespace Weave
                 StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldflda, field));
             }
             else if (
-                addr_instruction.OpCode == OpCodes.Ldelem_Any ||
+                addr_instruction.OpCode == OpCodes.Ldelem_Any)
+            {
+                var type = (TypeReference)addr_instruction.Operand;
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldelema, type));
+            }
+            else if(
                 addr_instruction.OpCode == OpCodes.Ldelem_I ||
                 addr_instruction.OpCode == OpCodes.Ldelem_I1 ||
                 addr_instruction.OpCode == OpCodes.Ldelem_I2 ||
@@ -221,7 +261,53 @@ namespace Weave
                 addr_instruction.OpCode == OpCodes.Ldelem_R8 ||
                 addr_instruction.OpCode == OpCodes.Ldelem_Ref)
             {
-                ilProcessor.Replace(addr_instruction, Instruction.Create(OpCodes.Ldelema));
+                var module = ilProcessor.Body.Method.Module;
+
+                TypeReference type;
+                switch (addr_instruction.OpCode.Code)
+                {
+                    case Code.Ldelem_I:
+                        type = new TypeReference("System", "IntPtr", module, module);
+                        break;
+                    case Code.Ldelem_I1:
+                        type = new TypeReference("System", "SByte", module, module);
+                        break;
+                    case Code.Ldelem_I2:
+                        type = new TypeReference("System", "Int16", module, module);
+                        break;
+                    case Code.Ldelem_I4:
+                        type = new TypeReference("System", "Int32", module, module);
+                        break;
+                    case Code.Ldelem_I8:
+                        type = new TypeReference("System", "Int64", module, module);
+                        break;
+                    case Code.Ldelem_U1:
+                        type = new TypeReference("System", "Byte", module, module);
+                        break;
+                    case Code.Ldelem_U2:
+                        type = new TypeReference("System", "UInt16", module, module);
+                        break;
+                    case Code.Ldelem_U4:
+                        type = new TypeReference("System", "UInt32", module, module);
+                        break;
+                    case Code.Ldelem_R4:
+                        type = new TypeReference("System", "Single", module, module);
+                        break;
+                    case Code.Ldelem_R8:
+                        type = new TypeReference("System", "Double", module, module);
+                        break;
+                    case Code.Ldelem_Ref:
+                    default:
+                        {
+                            // array is the lower item in the stack
+                            var array_instruction = Analysis[addr_instruction.Previous].Tail.Head.Item1;
+                            // whatever load loaded this array it will have a type with it
+                            type = array_instruction.Operand as TypeReference;
+                        }
+                        break;
+                }
+
+                StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldelema, type));
             }
             else
             {

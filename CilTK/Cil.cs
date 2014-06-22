@@ -71,8 +71,14 @@ namespace Silk
         /// Loads the address of a variable onto the top of the execution stack.
         /// </summary>
         /// <typeparam name="T">The type to load.</typeparam>
-        /// <param name="value">The variable to load.</param>
+        /// <param name="value">The variable address to load.</param>
         public static unsafe void LoadAddress<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+
+        /// <summary>
+        /// Loads the address of a variable onto the top of the execution stack.
+        /// </summary>
+        /// <param name="variableName">The variable address to load.</param>
+        public static unsafe void LoadAddressByName(string variableName) { throw new Exception("CilTK Rewriter not run."); }
 
         /// <summary>
         /// Stores the value at the top of the execution stack to a variable.
