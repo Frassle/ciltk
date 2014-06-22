@@ -103,7 +103,7 @@ namespace Weave
 
             if (!variableName.IsConstant)
             {
-                throw new Exception("Expected constant values to be passed to LoadByName");
+                throw new Exception(string.Format("Expected constant values to be passed to LoadByName used in {0}", ilProcessor.Body.Method.FullName));
             }
 
 
@@ -125,7 +125,7 @@ namespace Weave
                 return ldarg.Next;
             }
 
-            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+            throw new Exception(string.Format("Variable \"{0}\", used in method {1}, not found!", variableName.Value, ilProcessor.Body.Method.FullName));
         }
 
         private Instruction ReplaceStoreByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
@@ -135,7 +135,7 @@ namespace Weave
 
             if (!variableName.IsConstant)
             {
-                throw new Exception("Expected constant values to be passed to LoadByName");
+                throw new Exception(string.Format("Expected constant values to be passed to StoreByName used in {0}", ilProcessor.Body.Method.FullName));
             }
 
 
@@ -157,7 +157,7 @@ namespace Weave
                 return starg.Next;
             }
 
-            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+            throw new Exception(string.Format("Variable \"{0}\", used in method {1}, not found!", variableName.Value, ilProcessor.Body.Method.FullName));
         }
 
         private Instruction ReplaceLoadAddressByName(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
@@ -167,7 +167,7 @@ namespace Weave
 
             if (!variableName.IsConstant)
             {
-                throw new Exception("Expected constant values to be passed to LoadByName");
+                throw new Exception(string.Format("Expected constant values to be passed to LoadAddressByName used in {0}", ilProcessor.Body.Method.FullName));
             }
 
             var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
@@ -188,7 +188,7 @@ namespace Weave
                 return ldarg.Next;
             }
 
-            throw new Exception(string.Format("Variable \"{0}\" not found", variableName.Value));
+            throw new Exception(string.Format("Variable \"{0}\", used in method {1}, not found!", variableName.Value, ilProcessor.Body.Method.FullName));
         }
 
         private Instruction ReplaceDeclareLocal(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
@@ -205,7 +205,7 @@ namespace Weave
             }
             else
             {
-                throw new Exception("Expected constant values to be passed to DeclareLocal");
+                throw new Exception(string.Format("Expected constant values to be passed to DeclareLocal used in method {0}", ilProcessor.Body.Method.FullName));
             }
             
             return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);

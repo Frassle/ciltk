@@ -89,16 +89,16 @@ namespace Weave
                 foreach (var module in assembly.Modules)
                 {
                     int index = -1;
-                    for(int i = 0; i < module.AssemblyReferences.Count; ++i)
+                    for (int i = 0; i < module.AssemblyReferences.Count; ++i)
                     {
-                        if(module.AssemblyReferences[i].Name == "Silk")
+                        if (module.AssemblyReferences[i].Name == "Silk")
                         {
                             index = i;
                             break;
                         }
                     }
 
-                    if(index != -1)
+                    if (index != -1)
                     {
                         module.AssemblyReferences.RemoveAt(index);
                     }
@@ -112,12 +112,19 @@ namespace Weave
                         i = 0;
                     }
                 }
-                
+
                 assembly.Write(output, writeParameters);
             }
             catch (Mono.Options.OptionException)
             {
                 options.WriteOptionDescriptions(Console.Out);
+                System.Environment.Exit(1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Weave encounted an exception: {0}", ex.GetType());
+                Console.WriteLine(ex.ToString());
+                System.Environment.Exit(1);
             }
         }
     }
