@@ -36,7 +36,7 @@ namespace Silk.Loom
                     {
                         if (Analysis == null)
                         {
-                            Analysis = StackAnalyser.Analyse(method);
+                            Analysis = Analyser.Analyse(method);
                         }
                         instruction = Visit(il, instruction);
                     }

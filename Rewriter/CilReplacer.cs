@@ -12,10 +12,12 @@ namespace Weave
     class CilReplacer : InstructionVisitor
     {
         LabelReplacer Labels;
+        System.Reflection.FieldInfo[] OpcodesFields;
 
         public CilReplacer(LabelReplacer labels)
         {
             Labels = labels;
+            OpcodesFields = typeof(OpCodes).GetFields();
         }
 
         protected override bool ShouldVisit(Instruction instruction)
@@ -384,7 +386,7 @@ namespace Weave
         {
             var nextInstruction = instruction.Next;
 
-            var opcodeField = typeof(OpCodes).GetFields().FirstOrDefault(info => info.Name == calledMethod.Name);
+            var opcodeField = OpcodesFields.FirstOrDefault(info => info.Name == calledMethod.Name);
             OpCode opcode;
 
             if (opcodeField == null)

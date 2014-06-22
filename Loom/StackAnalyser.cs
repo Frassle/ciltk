@@ -9,7 +9,7 @@ using TStack = Microsoft.FSharp.Collections.FSharpList<System.Tuple<Mono.Cecil.C
 
 namespace Silk.Loom
 {
-    public static class StackAnalyser
+    public class StackAnalyser
     {
         public static Instruction ReplaceInstruction(ILProcessor ilProcessor, Instruction target, Instruction instruction)
         {
@@ -44,14 +44,38 @@ namespace Silk.Loom
         public struct StackEntry
         {
             public bool IsConstant { get; private set; }
-            public TypeReference Type { get; private set; }
+
+            private TypeReference _Type;
+            private MethodBody _Method;
+            private ModuleDefinition _Module;
+            public TypeReference Type
+            {
+                get
+                {
+                    if (_Type == null)
+                    {
+                        if (Value == null)
+                        {
+                            _Type = References.FindType(_Module, _Method, "System.Object");
+                        }
+                        else
+                        {
+                            _Type = References.FindType(_Module, _Method, Value.GetType().FullName);
+                        }
+                    }
+
+                    return _Type;
+                }
+            }
 
             public dynamic Value { get; private set; }
 
             internal StackEntry(TypeReference type) 
                 : this()
             {
-                Type = type;
+                _Type = type;
+                _Module = null;
+                _Method = null;
                 IsConstant = false;
                 Value = null;
             }
@@ -59,18 +83,11 @@ namespace Silk.Loom
             internal StackEntry(Mono.Cecil.ModuleDefinition module, MethodBody method, object value)
                 : this()
             {
-                if (value != null)
-                {
-                    Type = References.FindType(module, method, value.GetType().FullName);
-                    IsConstant = true;
-                    Value = value;
-                }
-                else
-                {
-                    Type = References.FindType(module, method, "System.Object");
-                    IsConstant = true;
-                    Value = null;
-                }
+                _Type = null;
+                _Module = module;
+                _Method = method;
+                IsConstant = true;
+                Value = value;
             }
         }
 
@@ -249,7 +266,22 @@ namespace Silk.Loom
             return value;
         }
 
-        public static Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
+        private TypeReference _SystemObject;
+        private TypeReference _SystemIntPtr;
+        private TypeReference _SystemRuntimeMethodHandle;
+        private TypeReference _SystemRuntimeTypeHandle;
+        private TypeReference _SystemRuntimeFieldHandle;
+
+        public StackAnalyser(ModuleDefinition module)
+        {
+            _SystemObject = References.FindType(module, null, "System.Object");
+            _SystemIntPtr = References.FindType(module, null, "System.IntPtr");
+            _SystemRuntimeMethodHandle = References.FindType(module, null, "System.RuntimeMethodHandle");
+            _SystemRuntimeTypeHandle = References.FindType(module, null , "System.RuntimeTypeHandle");
+            _SystemRuntimeFieldHandle = References.FindType(module, null , "System.RuntimeFieldHandle");
+        }
+
+        public Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
         {
             var ilProcessor = method.Body.GetILProcessor();
             var instructions = ilProcessor.Body.Instructions;
@@ -303,8 +335,7 @@ namespace Silk.Loom
                     case Code.Box:
                         {
                             var a = Pop(ref stack).Item2;
-                            stack = new TStack(Tuple.Create(instruction, 
-                                new StackEntry(References.FindType(module, method.Body, "System.Object"))), stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemObject)), stack);
                             break;
                         }
                     case Code.Br:
@@ -467,8 +498,8 @@ namespace Silk.Loom
                     case Code.Ldftn:
                         {
                             stack = new TStack(Tuple.Create(
-                                instruction, 
-                                new StackEntry(References.FindType(module, method.Body, "System.IntPtr"))), stack);
+                                instruction,
+                                new StackEntry(_SystemIntPtr)), stack);
                             break;
                         }
                     case Code.Ldind_I:
@@ -526,18 +557,15 @@ namespace Silk.Loom
 
                             if (token is Mono.Cecil.MethodReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction,
-                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeMethodHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemRuntimeMethodHandle)), stack);
                             }
                             if (token is Mono.Cecil.TypeReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction,
-                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeTypeHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemRuntimeTypeHandle)), stack);
                             }
                             if (token is Mono.Cecil.FieldReference)
                             {
-                                stack = new TStack(Tuple.Create(instruction,
-                                    new StackEntry(References.FindType(module, method.Body, "System.RuntimeFieldHandle"))), stack);
+                                stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemRuntimeFieldHandle)), stack);
                             }
                             break;
                         }

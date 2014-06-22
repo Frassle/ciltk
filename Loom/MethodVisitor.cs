@@ -11,6 +11,7 @@ namespace Silk.Loom
     public abstract class MethodVisitor
     {
         private bool definitionsOnly;
+        protected StackAnalyser Analyser { get; private set; }
 
         public MethodVisitor(bool definitionsOnly)
         {
@@ -21,6 +22,8 @@ namespace Silk.Loom
         {
             foreach (var module in assembly.Modules)
             {
+                Analyser = new StackAnalyser(module);
+
                 foreach (var type in module.GetTypes())
                 {
                     foreach (var method in type.Methods)
