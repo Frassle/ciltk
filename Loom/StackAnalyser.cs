@@ -164,8 +164,38 @@ namespace Silk.Loom
                 switch (instruction.OpCode.StackBehaviourPop)
                 {
                     case StackBehaviour.Pop1:
+                    case StackBehaviour.Popi:
+                    case StackBehaviour.Popref:
                         RemoveInstructionChain(method, stack.Head.Item1, analysis);
                         break;
+                    case StackBehaviour.Pop1_pop1:
+                    case StackBehaviour.Popi_pop1:
+                    case StackBehaviour.Popi_popi:
+                    case StackBehaviour.Popi_popi8:
+                    case StackBehaviour.Popi_popr4:
+                    case StackBehaviour.Popi_popr8:
+                    case StackBehaviour.Popref_pop1:
+                    case StackBehaviour.Popref_popi:
+                        RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                        RemoveInstructionChain(method, stack.Tail.Head.Item1, analysis);
+                        break;
+                    case StackBehaviour.Popi_popi_popi:
+                    case StackBehaviour.Popref_popi_popi:
+                    case StackBehaviour.Popref_popi_popi8:
+                    case StackBehaviour.Popref_popi_popr4:
+                    case StackBehaviour.Popref_popi_popr8:
+                    case StackBehaviour.Popref_popi_popref:
+                        RemoveInstructionChain(method, stack.Head.Item1, analysis);
+                        RemoveInstructionChain(method, stack.Tail.Head.Item1, analysis);
+                        RemoveInstructionChain(method, stack.Tail.Tail.Head.Item1, analysis);
+                        break;
+                    case StackBehaviour.PopAll:
+                        {
+                            foreach (var item in stack)
+                            {
+                                RemoveInstructionChain(method, item.Item1, analysis);
+                            }
+                        } break;
                     case StackBehaviour.Varpop:
                         {
                             if (instruction.OpCode.OperandType == OperandType.InlineMethod)
@@ -180,17 +210,12 @@ namespace Silk.Loom
                                 {
                                     RemoveInstructionChain(method, stack.Head.Item1, analysis);
                                 }
-                                break;
                             }
                             else
                             {
                                 throw new NotImplementedException();
                             }
-                        }
-                    case StackBehaviour.Popref_popi:
-                        RemoveInstructionChain(method, stack.Head.Item1, analysis);
-                        RemoveInstructionChain(method, stack.Tail.Head.Item1, analysis);
-                        break;
+                        } break;
                     default:
                         throw new NotImplementedException();
                 }
