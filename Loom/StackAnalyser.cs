@@ -176,6 +176,7 @@ namespace Silk.Loom
         }
 
         private TypeReference _SystemObject;
+        private TypeReference _SystemBoolean;
         private TypeReference _SystemIntPtr;
         private TypeReference _SystemRuntimeMethodHandle;
         private TypeReference _SystemRuntimeTypeHandle;
@@ -184,6 +185,7 @@ namespace Silk.Loom
         public StackAnalyser(ModuleDefinition module)
         {
             _SystemObject = References.FindType(module, null, "System.Object");
+            _SystemObject = References.FindType(module, null, "System.Boolean");
             _SystemIntPtr = References.FindType(module, null, "System.IntPtr");
             _SystemRuntimeMethodHandle = References.FindType(module, null, "System.RuntimeMethodHandle");
             _SystemRuntimeTypeHandle = References.FindType(module, null , "System.RuntimeTypeHandle");
