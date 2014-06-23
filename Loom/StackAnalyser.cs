@@ -91,79 +91,6 @@ namespace Silk.Loom
             }
         }
 
-        static Dictionary<string, Type> RefiedTypes;
-
-        private static Type Reify(TypeReference type)
-        {
-            if (RefiedTypes == null)
-            {
-                var types = new Dictionary<string, Type>();
-                types.Add("System.Void", typeof(void));
-                types.Add("System.SByte", typeof(sbyte));
-                types.Add("System.Int16", typeof(short));
-                types.Add("System.Int32", typeof(int));
-                types.Add("System.Int64", typeof(long));
-                types.Add("System.Byte", typeof(byte));
-                types.Add("System.UInt16", typeof(ushort));
-                types.Add("System.UInt32", typeof(uint));
-                types.Add("System.UInt64", typeof(ulong));
-                types.Add("System.Single", typeof(float));
-                types.Add("System.Double", typeof(double));
-                RefiedTypes = types;
-            }
-
-            Type ty = null;
-            RefiedTypes.TryGetValue(type.FullName, out ty);
-            return ty;
-
-            //var assembly = type.Scope.Name;
-
-            //try
-            //{
-            //    var loadedAssembly = System.Reflection.Assembly.Load(assembly);
-
-            //    if (type.IsGenericInstance)
-            //    {
-            //        var genericType = type as GenericInstanceType;
-            //        var ty = loadedAssembly.GetType(genericType.ElementType.FullName);
-            //        var args = genericType.GenericArguments.Select(arg => Reify(arg)).ToArray();
-            //        return ty.MakeGenericType(args);
-            //    }
-            //    else
-            //    {
-            //        return loadedAssembly.GetType(type.FullName);
-            //    }
-            //}
-            //catch(Exception)
-            //{
-            //    return null;
-            //}
-        }
-
-        private static System.Reflection.MethodInfo Reify(MethodReference method)
-        {
-            var ty = Reify(method.DeclaringType);
-            if (ty != null)
-            {
-                var methods = ty.GetMethods();
-                foreach (var m in methods)
-                {
-                    if (m.Name == method.Name)
-                    {
-                        var parameters = m.GetParameters();
-                        if (parameters.Length == method.Parameters.Count)
-                        {
-                            if (parameters.Zip(method.Parameters, (param, paramRef) => param.ParameterType.FullName == paramRef.ParameterType.FullName).All(b => b))
-                            {
-                                return m;
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
         public static Instruction RemoveInstructionChain(MethodDefinition method, Instruction instruction, Dictionary<Instruction, TStack> analysis)
         {
             var ilProcessor = method.Body.GetILProcessor();
@@ -239,24 +166,6 @@ namespace Silk.Loom
             }
 
             return nop;
-        }
-
-        private static System.Reflection.FieldInfo Reify(FieldReference field)
-        {
-            var assembly = field.Module.Assembly.FullName;
-            var type = field.DeclaringType.FullName;
-            var name = field.Name;
-
-            try
-            {
-                var loadedAssembly = System.Reflection.Assembly.Load(assembly);
-                var ty = loadedAssembly.GetType(type);
-                return ty.GetField(name);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
         }
 
         private static Tuple<Instruction, StackEntry> Pop(ref TStack stack)
