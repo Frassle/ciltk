@@ -195,19 +195,43 @@ namespace Silk.Loom
 
         private TypeReference _SystemObject;
         private TypeReference _SystemBoolean;
+        private TypeReference _SystemSingle;
+        private TypeReference _SystemDouble;
+        private TypeReference _SystemSByte;
+        private TypeReference _SystemByte;
+        private TypeReference _SystemInt16;
+        private TypeReference _SystemUInt16;
+        private TypeReference _SystemInt32;
+        private TypeReference _SystemUInt32;
+        private TypeReference _SystemInt64;
+        private TypeReference _SystemUInt64;
         private TypeReference _SystemIntPtr;
+        private TypeReference _SystemUIntPtr;
         private TypeReference _SystemRuntimeMethodHandle;
         private TypeReference _SystemRuntimeTypeHandle;
         private TypeReference _SystemRuntimeFieldHandle;
+        private TypeReference _SystemTypedReference;
 
         public StackAnalyser(ModuleDefinition module)
         {
             _SystemObject = References.FindType(module, null, "System.Object");
             _SystemObject = References.FindType(module, null, "System.Boolean");
+            _SystemSingle = References.FindType(module, null, "System.Single");
+            _SystemDouble = References.FindType(module, null, "System.Double");
+            _SystemSByte = References.FindType(module, null, "System.SByte");
+            _SystemByte = References.FindType(module, null, "System.Byte");
+            _SystemInt16 = References.FindType(module, null, "System.Int16");
+            _SystemUInt16 = References.FindType(module, null, "System.UInt16");
+            _SystemInt32 = References.FindType(module, null, "System.Int32");
+            _SystemUInt32 = References.FindType(module, null, "System.UInt32");
+            _SystemInt64 = References.FindType(module, null, "System.Int64");
+            _SystemUInt64 = References.FindType(module, null, "System.UInt64");
             _SystemIntPtr = References.FindType(module, null, "System.IntPtr");
+            _SystemUIntPtr = References.FindType(module, null, "System.UIntPtr");
             _SystemRuntimeMethodHandle = References.FindType(module, null, "System.RuntimeMethodHandle");
             _SystemRuntimeTypeHandle = References.FindType(module, null, "System.RuntimeTypeHandle");
             _SystemRuntimeFieldHandle = References.FindType(module, null, "System.RuntimeFieldHandle");
+            _SystemTypedReference = References.FindType(module, null, "System.TypedReference");
         }
 
         public Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
@@ -230,16 +254,79 @@ namespace Silk.Loom
 
                 switch (instruction.OpCode.Code)
                 {
+                // Simple binary operators
                     case Code.Add:
                     case Code.Add_Ovf:
                     case Code.Add_Ovf_Un:
                     case Code.And:
+                    case Code.Div:
+                    case Code.Div_Un:
+                    case Code.Mul:
+                    case Code.Mul_Ovf:
+                    case Code.Mul_Ovf_Un:
+                    case Code.Or:
+                    case Code.Rem:
+                    case Code.Rem_Un:
+                    case Code.Sub:
+                    case Code.Sub_Ovf:
+                    case Code.Sub_Ovf_Un:
+                    case Code.Xor:
                         {
-                            var a = Pop(ref stack).Item2;
-                            var b = Pop(ref stack).Item2;
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Type)), stack);
-                            break;
+                            var a = Pop(ref stack);
+                            var b = Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Item2.Type)), stack);
                         }
+                        break;
+                // Simple unary operators
+                    case Code.Neg:
+                    case Code.Not:
+                        {
+                            var a = Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(a.Item2.Type)), stack);
+                        }
+                        break;
+                // Shift operators
+                    case Code.Shl:
+                    case Code.Shr:
+                    case Code.Shr_Un:
+                        {
+                            var a = Pop(ref stack);
+                            var b = Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(b.Item2.Type)), stack);
+                        }
+                        break;
+                // Compare operators
+                    case Code.Ceq:
+                    case Code.Cgt:
+                    case Code.Cgt_Un:
+                    case Code.Ckfinite:
+                    case Code.Clt:
+                    case Code.Clt_Un:
+                        {
+                            var a = Pop(ref stack);
+                            var b = Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemBoolean)), stack);
+                        }
+                        break;
+                // No push, pop3 instructions
+                    case Code.Cpblk:
+                    case Code.Initblk:
+                    case Code.Stelem_Any:
+                    case Code.Stelem_I:
+                    case Code.Stelem_I1:
+                    case Code.Stelem_I2:
+                    case Code.Stelem_I4:
+                    case Code.Stelem_I8:
+                    case Code.Stelem_R4:
+                    case Code.Stelem_R8:
+                    case Code.Stelem_Ref:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            Pop(ref stack);
+                        }
+                        break;
+                // No push, pop2 instructions
                     case Code.Beq:
                     case Code.Beq_S:
                     case Code.Bge:
@@ -256,112 +343,119 @@ namespace Silk.Loom
                     case Code.Blt_S:
                     case Code.Blt_Un:
                     case Code.Blt_Un_S:
+                    case Code.Cpobj:
+                    case Code.Stfld:
+                    case Code.Stind_I:
+                    case Code.Stind_I1:
+                    case Code.Stind_I2:
+                    case Code.Stind_I4:
+                    case Code.Stind_I8:
+                    case Code.Stind_R4:
+                    case Code.Stind_R8:
+                    case Code.Stind_Ref:
+                    case Code.Stobj:
                         {
                             Pop(ref stack);
                             Pop(ref stack);
-                            break;
                         }
-                    case Code.Box:
-                        {
-                            var a = Pop(ref stack).Item2;
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemObject)), stack);
-                            break;
-                        }
-                    case Code.Br:
-                    case Code.Br_S:
-                    case Code.Break:
                         break;
+                // No push, pop1 instructions
                     case Code.Brfalse:
                     case Code.Brfalse_S:
                     case Code.Brtrue:
                     case Code.Brtrue_S:
+                    case Code.Initobj:
+                    case Code.Pop:
+                    case Code.Starg:
+                    case Code.Starg_S:
+                    case Code.Stloc:
+                    case Code.Stloc_0:
+                    case Code.Stloc_1:
+                    case Code.Stloc_2:
+                    case Code.Stloc_3:
+                    case Code.Stloc_S:
+                    case Code.Stsfld:
+                    case Code.Switch:
+                    case Code.Throw:
                         {
                             Pop(ref stack);
-                            break;
                         }
+                        break;
+                // No push, no pop instructions
+                    case Code.Br:
+                    case Code.Br_S:
+                    case Code.Break:
+                    case Code.Constrained:
+                    case Code.Endfilter:
+                    case Code.Endfinally:
+                    case Code.Jmp:
+                    case Code.Leave:
+                    case Code.Leave_S:
+                    case Code.No:
+                    case Code.Nop:
+                    case Code.Readonly:
+                    case Code.Ret:
+                    case Code.Rethrow:
+                    case Code.Tail:
+                    case Code.Unaligned:
+                    case Code.Volatile:
+                        break;
+                //duplicate
+                    case Code.Dup:
+                        {
+                            stack = new TStack(Tuple.Create(instruction, stack.Head.Item2), stack);
+                        }
+                        break;
+                // box / unbox
+                    case Code.Box:
+                        {
+                            var a = Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemObject)), stack);
+                        }
+                        break;
+                    case Code.Unbox:
+                    case Code.Unbox_Any:
+                        {
+                            var a = Pop(ref stack);
+                            var ty = instruction.Operand as TypeReference;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
+                        }
+                        break;
+                // Call instructions
                     case Code.Call:
                     case Code.Callvirt:
                         {
                             var m = instruction.Operand as MethodReference;
-                            StackEntry[] args = new StackEntry[m.Parameters.Count];
                             for (int j = 0; j < m.Parameters.Count; ++j)
                             {
-                                args[j] = Pop(ref stack).Item2;
+                                Pop(ref stack);
                             }
-                            Array.Reverse(args);
 
-                            StackEntry self = default(StackEntry);
                             if (m.HasThis)
                             {
-                                self = Pop(ref stack).Item2;
+                                Pop(ref stack);
                             }
                             
-                            stack = TStack.Cons(Tuple.Create(instruction, new StackEntry(m.ReturnType)), stack);
-                            break;
-                        }
-                    case Code.Calli:
-                    case Code.Castclass:
-                    case Code.Ceq:
-                    case Code.Cgt:
-                    case Code.Cgt_Un:
-                    case Code.Ckfinite:
-                    case Code.Clt:
-                    case Code.Clt_Un:
-                    case Code.Constrained:
-                    case Code.Conv_I:
-                    case Code.Conv_I1:
-                    case Code.Conv_I2:
-                    case Code.Conv_I4:
-                    case Code.Conv_I8:
-                    case Code.Conv_Ovf_I:
-                    case Code.Conv_Ovf_I_Un:
-                    case Code.Conv_Ovf_I1:
-                    case Code.Conv_Ovf_I1_Un:
-                    case Code.Conv_Ovf_I2:
-                    case Code.Conv_Ovf_I2_Un:
-                    case Code.Conv_Ovf_I4:
-                    case Code.Conv_Ovf_I4_Un:
-                    case Code.Conv_Ovf_I8:
-                    case Code.Conv_Ovf_I8_Un:
-                    case Code.Conv_Ovf_U:
-                    case Code.Conv_Ovf_U_Un:
-                    case Code.Conv_Ovf_U1:
-                    case Code.Conv_Ovf_U1_Un:
-                    case Code.Conv_Ovf_U2:
-                    case Code.Conv_Ovf_U2_Un:
-                    case Code.Conv_Ovf_U4:
-                    case Code.Conv_Ovf_U4_Un:
-                    case Code.Conv_Ovf_U8:
-                    case Code.Conv_Ovf_U8_Un:
-                    case Code.Conv_R_Un:
-                    case Code.Conv_R4:
-                    case Code.Conv_R8:
-                    case Code.Conv_U:
-                    case Code.Conv_U1:
-                    case Code.Conv_U2:
-                    case Code.Conv_U4:
-                    case Code.Conv_U8:
-                    case Code.Cpblk:
-                    case Code.Cpobj:
-                    case Code.Div:
-                    case Code.Div_Un:
-                    case Code.Dup:
-                    case Code.Endfilter:
-                    case Code.Endfinally:
-                    case Code.Initblk:
-                    case Code.Initobj:
-                    case Code.Isinst:
-                    case Code.Jmp:
-                    case Code.Ldarg:
-                    case Code.Ldarg_0:
-                    case Code.Ldarg_1:
-                    case Code.Ldarg_2:
-                    case Code.Ldarg_3:
-                    case Code.Ldarg_S:
-                    case Code.Ldarga:
-                    case Code.Ldarga_S:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(m.ReturnType)), stack);                        
+                        }    
                         break;
+                    case Code.Calli:
+                        {
+                            var s = instruction.Operand as CallSite;
+                            for (int j = 0; j < s.Parameters.Count; ++j)
+                            {
+                                Pop(ref stack);
+                            }
+
+                            if (s.HasThis)
+                            {
+                                Pop(ref stack);
+                            }
+
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(s.ReturnType)), stack);
+                        }
+                        break;
+                // Constant loading functions
                     case Code.Ldc_I4:
                         stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
@@ -407,44 +501,29 @@ namespace Silk.Loom
                     case Code.Ldc_R8:
                         stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
-                    case Code.Ldelem_Any:
-                    case Code.Ldelem_I:
-                    case Code.Ldelem_I1:
-                    case Code.Ldelem_I2:
-                    case Code.Ldelem_I4:
-                    case Code.Ldelem_I8:
-                    case Code.Ldelem_R4:
-                    case Code.Ldelem_R8:
-                    case Code.Ldelem_Ref:
-                    case Code.Ldelem_U1:
-                    case Code.Ldelem_U2:
-                    case Code.Ldelem_U4:
-                    case Code.Ldelema:
-                    case Code.Ldfld:
-                    case Code.Ldflda:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
+                    case Code.Ldstr:
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
                         break;
-                    case Code.Ldftn:
+                    case Code.Ldnull:
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, null)), stack);
+                        break;
+                // Argument loading instructions
+                    case Code.Ldarg:
+                    case Code.Ldarg_0:
+                    case Code.Ldarg_1:
+                    case Code.Ldarg_2:
+                    case Code.Ldarg_3:
+                    case Code.Ldarg_S:
+                    case Code.Ldarga:
+                    case Code.Ldarga_S:
                         {
-                            stack = new TStack(Tuple.Create(
-                                    instruction,
-                                    new StackEntry(_SystemIntPtr)), stack);
-                            break;
+                            bool isAddress = instruction.OpCode.Code == Code.Ldarga || instruction.OpCode.Code == Code.Ldarga_S;
+                            var loc = instruction.Operand as ParameterDefinition;
+                            var ty = isAddress ? Mono.Cecil.Rocks.TypeReferenceRocks.MakePointerType(loc.ParameterType) : loc.ParameterType;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
                         }
-                    case Code.Ldind_I:
-                    case Code.Ldind_I1:
-                    case Code.Ldind_I2:
-                    case Code.Ldind_I4:
-                    case Code.Ldind_I8:
-                    case Code.Ldind_R4:
-                    case Code.Ldind_R8:
-                    case Code.Ldind_Ref:
-                    case Code.Ldind_U1:
-                    case Code.Ldind_U2:
-                    case Code.Ldind_U4:
-                    case Code.Ldlen:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
+                // Variable loading instructions
                     case Code.Ldloc:
                     case Code.Ldloc_0:
                     case Code.Ldloc_1:
@@ -458,16 +537,15 @@ namespace Silk.Loom
                             var loc = instruction.Operand as VariableDefinition;
                             var ty = isAddress ? Mono.Cecil.Rocks.TypeReferenceRocks.MakePointerType(loc.VariableType) : loc.VariableType;
                             stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
-                            break;
                         }
-                    case Code.Ldnull:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, null)), stack);
                         break;
-                    case Code.Ldobj:
+                // Field loading instructions
+                    case Code.Ldfld:
+                    case Code.Ldflda:
                         {
-                            var src = Pop(ref stack);
-                            var type = instruction.Operand as TypeReference;
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(type)), stack);
+                            Pop(ref stack);
+                            var field = instruction.Operand as FieldReference;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(field.FieldType)), stack);
                         }
                         break;
                     case Code.Ldsfld:
@@ -475,10 +553,225 @@ namespace Silk.Loom
                         {
                             var field = instruction.Operand as FieldReference;
                             stack = new TStack(Tuple.Create(instruction, new StackEntry(field.FieldType)), stack);
+                        }
+                        break;
+                // Array loading instructions
+                    case Code.Ldelem_I:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_I1:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSByte)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_I2:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt16)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_I4:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt32)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_I8:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt64)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_R4:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSingle)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_R8:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemDouble)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_U1:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemByte)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_U2:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt16)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_U4:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt64)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_Ref:
+                        {
+                            Pop(ref stack);
+                            var array = Pop(ref stack);
+                            var ty = array.Item2.Type.GetElementType();
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
+                        }
+                        break;
+                    case Code.Ldelem_Any:
+                    case Code.Ldelema:
+                        {
+                            Pop(ref stack);
+                            Pop(ref stack);
+                            bool isAddress = instruction.OpCode.Code == Code.Ldelem_Any || instruction.OpCode.Code == Code.Ldelema;
+                            var elem = instruction.Operand as TypeReference;
+                            var ty = isAddress ? Mono.Cecil.Rocks.TypeReferenceRocks.MakePointerType(elem) : elem;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
+                        }
+                        break;
+                    case Code.Ldlen:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUIntPtr)), stack);
+                        }
+                        break;
+                // Indirect load instructions
+                    case Code.Ldind_I:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);
+                        }
+                        break;
+                    case Code.Ldind_I1:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSByte)), stack);
+                        }
+                        break;
+                    case Code.Ldind_I2:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt16)), stack);
+                        }
+                        break;
+                    case Code.Ldind_I4:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt32)), stack);
+                        }
+                        break;
+                    case Code.Ldind_I8:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt64)), stack);
+                        }
+                        break;
+                    case Code.Ldind_R4:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSingle)), stack);
+                        }
+                        break;
+                    case Code.Ldind_R8:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemDouble)), stack);
+                        }
+                        break;
+                    case Code.Ldind_U1:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemByte)), stack);
+                        }
+                        break;
+                    case Code.Ldind_U2:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt16)), stack);
+                        }
+                        break;
+                    case Code.Ldind_U4:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt32)), stack);
+                        }
+                        break;
+                    case Code.Ldind_Ref:
+                        {
+                            var ptr = Pop(ref stack);
+                            var ty = ptr.Item2.Type.GetElementType();
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ty)), stack);
+                        }
+                        break;
+                // New object/array instructions
+                    case Code.Newarr:
+                        {
+                            Pop(ref stack);
+                            var type = (Mono.Cecil.TypeReference)instruction.Operand;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(Mono.Cecil.Rocks.TypeReferenceRocks.MakeArrayType(type))), stack);
+
+                        }
+                        break;
+                    case Code.Newobj:
+                        {
+                            var ctor = instruction.Operand as MethodReference;
+                            for (int j = 0; j < ctor.Parameters.Count; ++j)
+                            {
+                                Pop(ref stack);
+                            }
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ctor.DeclaringType)), stack);
                             break;
                         }
-                    case Code.Ldstr:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        break;
+                // Pop1, Push1
+                    case Code.Castclass:
+                    case Code.Isinst:
+                    case Code.Ldobj:
+                        {
+                            var src = Pop(ref stack);
+                            var type = instruction.Operand as TypeReference;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(type)), stack);
+                        }
+                        break;
+                    case Code.Localloc:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);
+                        }
+                        break;
+                // Sizeof
+                    case Code.Sizeof:
+                        {
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt32)), stack);
+                        }
+                        break;
+                // Load metadata
+                    case Code.Ldvirtftn:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);                            
+                        }
+                        break;
+                    case Code.Ldftn:
+                        {
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);                            
+                        }
                         break;
                     case Code.Ldtoken:
                         {
@@ -496,115 +789,120 @@ namespace Silk.Loom
                             {
                                 stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemRuntimeFieldHandle)), stack);
                             }
-                            break;
                         }
-                    case Code.Ldvirtftn:
-                    case Code.Leave:
-                    case Code.Leave_S:
-                    case Code.Localloc:
+                        break;
+                // TypedReferences
                     case Code.Mkrefany:
-                    case Code.Mul:
-                    case Code.Mul_Ovf:
-                    case Code.Mul_Ovf_Un:
-                    case Code.Neg:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
-                        break;
-                    case Code.Newarr:
                         {
-                            var length = Pop(ref stack).Item2;
-                            var type = (Mono.Cecil.TypeReference)instruction.Operand;
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(Mono.Cecil.Rocks.TypeReferenceRocks.MakeArrayType(type))), stack);
-                            break;
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemTypedReference)), stack);
                         }
-                    case Code.Newobj:
-                        {
-                            var ctor = instruction.Operand as MethodReference;
-                            for (int j = 0; j < ctor.Parameters.Count; ++j)
-                            {
-                                Pop(ref stack);
-                            }
-                            stack = new TStack(Tuple.Create(instruction, new StackEntry(ctor.DeclaringType)), stack);
-                            break;
-                        }
-                    case Code.No:
                         break;
-                    case Code.Nop:
-                        break;
-                    case Code.Not:
-                    case Code.Or:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
-                        break;
-                    case Code.Pop:
-                        Pop(ref stack);
-                        break;
-                    case Code.Readonly:
                     case Code.Refanytype:
-                    case Code.Refanyval:
-                    case Code.Rem:
-                    case Code.Rem_Un:
-                    case Code.Ret:
-                    case Code.Rethrow:
-                    case Code.Shl:
-                    case Code.Shr:
-                    case Code.Shr_Un:
-                    case Code.Sizeof:
-                    case Code.Starg:
-                    case Code.Starg_S:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
-                        break;
-                    case Code.Stelem_Any:
-                    case Code.Stelem_I:
-                    case Code.Stelem_I1:
-                    case Code.Stelem_I2:
-                    case Code.Stelem_I4:
-                    case Code.Stelem_I8:
-                    case Code.Stelem_R4:
-                    case Code.Stelem_R8:
-                    case Code.Stelem_Ref:
                         {
                             Pop(ref stack);
-                            Pop(ref stack);
-                            Pop(ref stack);
-                            break;
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemRuntimeTypeHandle)), stack);
                         }
-                    case Code.Stfld:
-                    case Code.Stind_I:
-                    case Code.Stind_I1:
-                    case Code.Stind_I2:
-                    case Code.Stind_I4:
-                    case Code.Stind_I8:
-                    case Code.Stind_R4:
-                    case Code.Stind_R8:
-                    case Code.Stind_Ref:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
                         break;
-                    case Code.Stloc:
-                    case Code.Stloc_0:
-                    case Code.Stloc_1:
-                    case Code.Stloc_2:
-                    case Code.Stloc_3:
-                    case Code.Stloc_S:
-                        Pop(ref stack);
+                    case Code.Refanyval:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);
+                        }
                         break;
-                    case Code.Stobj:
-                        Pop(ref stack);
-                        Pop(ref stack);
+                // Casts and conversions                        
+                    case Code.Conv_I:
+                    case Code.Conv_Ovf_I:
+                    case Code.Conv_Ovf_I_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemIntPtr)), stack);
+                        }
                         break;
-                    case Code.Stsfld:
-                        Pop(ref stack);
+                    case Code.Conv_I1:
+                    case Code.Conv_Ovf_I1:
+                    case Code.Conv_Ovf_I1_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSByte)), stack);
+                        }
                         break;
-                    case Code.Sub:
-                    case Code.Sub_Ovf:
-                    case Code.Sub_Ovf_Un:
-                    case Code.Switch:
-                    case Code.Tail:
-                    case Code.Throw:
-                    case Code.Unaligned:
-                    case Code.Unbox:
-                    case Code.Unbox_Any:
-                    case Code.Volatile:
-                    case Code.Xor:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(null)), stack);
+                    case Code.Conv_I2:
+                    case Code.Conv_Ovf_I2:
+                    case Code.Conv_Ovf_I2_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt16)), stack);
+                        }
+                        break;
+                    case Code.Conv_I4:
+                    case Code.Conv_Ovf_I4:
+                    case Code.Conv_Ovf_I4_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt32)), stack);
+                        }
+                        break;
+                    case Code.Conv_I8:
+                    case Code.Conv_Ovf_I8:
+                    case Code.Conv_Ovf_I8_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemInt64)), stack);
+                        }
+                        break;
+                    case Code.Conv_U:
+                    case Code.Conv_Ovf_U:
+                    case Code.Conv_Ovf_U_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUIntPtr)), stack);
+                        }
+                        break;
+                    case Code.Conv_U1:
+                    case Code.Conv_Ovf_U1:
+                    case Code.Conv_Ovf_U1_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemByte)), stack);
+                        }
+                        break;
+                    case Code.Conv_U2:
+                    case Code.Conv_Ovf_U2:
+                    case Code.Conv_Ovf_U2_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt16)), stack);
+                        }
+                        break;
+                    case Code.Conv_U4:
+                    case Code.Conv_Ovf_U4:
+                    case Code.Conv_Ovf_U4_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt32)), stack);
+                        }
+                        break;
+                    case Code.Conv_U8:
+                    case Code.Conv_Ovf_U8:
+                    case Code.Conv_Ovf_U8_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemUInt64)), stack);
+                        }
+                        break;
+                    case Code.Conv_R4:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemSingle)), stack);
+                        }
+                        break;
+                    case Code.Conv_R8:
+                    case Code.Conv_R_Un:
+                        {
+                            Pop(ref stack);
+                            stack = new TStack(Tuple.Create(instruction, new StackEntry(_SystemDouble)), stack);
+                        }
                         break;
                     default:
                         throw new NotImplementedException();
