@@ -27,21 +27,27 @@ namespace Silk
         /// </summary>
         NullCheck = 0x04,
     }
-    
+
     public static unsafe class Cil
     {
-		/// <summary>
-		/// Declare a new local variable.
-		/// </summary>
-		/// <param name="type">The type of the new variable.</param>
-		/// <param name="name">The name of the new variable.</param>
-        public static unsafe void DeclareLocal(string type, string name) { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Declare a new local variable.
+        /// </summary>
+        /// <param name="type">The type of the new variable.</param>
+        /// <param name="name">The name of the new variable.</param>
+        public static unsafe void DeclareLocal(string type, string name)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Defines a new label in the instruction stream.
         /// </summary>
         /// <param name="label">The label name.</param>
-        public static unsafe void Label(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Label(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Keeps a value alive to this point.
@@ -52,53 +58,77 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="value">The value to keep alive.</param>
-        public static unsafe void KeepAlive<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void KeepAlive<T>(T value)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Loads a variable onto the top of the execution stack.
         /// </summary>
         /// <typeparam name="T">The type to load.</typeparam>
         /// <param name="value">The variable to load.</param>
-        public static unsafe void Load<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Load<T>(T value)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Loads a variable onto the top of the execution stack.
         /// </summary>
         /// <param name="variable">The variable to load.</param>
-        public static unsafe void LoadByName(string variableName) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void LoadByName(string variableName)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Loads the address of a variable onto the top of the execution stack.
         /// </summary>
         /// <typeparam name="T">The type to load.</typeparam>
         /// <param name="value">The variable address to load.</param>
-        public static unsafe void LoadAddress<T>(T value) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void LoadAddress<T>(T value)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Loads the address of a variable onto the top of the execution stack.
         /// </summary>
         /// <param name="variableName">The variable address to load.</param>
-        public static unsafe void LoadAddressByName(string variableName) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void LoadAddressByName(string variableName)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Stores the value at the top of the execution stack to a variable.
         /// </summary>
         /// <typeparam name="T">The type to store.</typeparam>
         /// <param name="value">The variable to store to.</param>
-        public static unsafe void Store<T>(out T value) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Store<T>(out T value)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Stores the value at the top of the execution stack to a variable.
         /// </summary>
         /// <param name="variable">The variable to store to.</param>
-        public static unsafe void StoreByName(string variableName) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void StoreByName(string variableName)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Returns the value on the top of the execution stack.
         /// </summary>
         /// <typeparam name="T">The type of the value to return.</typeparam>
         /// <returns>The value on the top of the execution stack.</returns>
-        public static unsafe T Peek<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe T Peek<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Add two values, returning a new value.
@@ -110,7 +140,10 @@ namespace Silk
         /// The add instruction adds value2 to value1 and pushes the result on the stack. Overflow is not 
         /// detected for integral operations (but see add.ovf); floating-point overflow returns +inf or -inf.
         /// </remarks>
-        public static unsafe void Add() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Add()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Add signed integer values with overflow check.
@@ -126,7 +159,10 @@ namespace Silk
         /// Exceptions:
         /// System.OverflowException is thrown if the result cannot be represented in the result type.
         /// </remarks>
-        public static unsafe void Add_Ovf() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Add_Ovf()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Add unsigned integer values with overflow check.
@@ -142,7 +178,10 @@ namespace Silk
         /// Exceptions:
         /// System.OverflowException is thrown if the result cannot be represented in the result type.
         /// </remarks>
-        public static unsafe void Add_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Add_Ovf_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Bitwise AND of two integral values, returns an integral value.
@@ -155,7 +194,10 @@ namespace Silk
         /// stack. The acceptable operand types and their corresponding result data type are encapsulated in 
         /// Table 5: Integer Operations.
         /// </remarks>
-        public static unsafe void And() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void And()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Return argument list handle for the current method.
@@ -173,7 +215,10 @@ namespace Silk
         /// procedures like ‘printf’. It is intended for use with the class library implementation of 
         /// System.ArgIterator. end rationale]
         /// </remarks>
-        public static unsafe void Arglist() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Arglist()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if equal.
@@ -195,7 +240,10 @@ namespace Silk
         /// Partition I for details). 
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Beq(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Beq(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if greater than or equal to.
@@ -220,7 +268,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Bge(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Bge(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if greater than or equal to (unsigned or unordered).
@@ -242,7 +293,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Bge_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Bge_Un(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if greater than.
@@ -264,7 +318,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Bgt(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Bgt(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if greater than (unsigned or unordered).
@@ -287,7 +344,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Bgt_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Bgt_Un(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if less than or equal to.
@@ -311,7 +371,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Ble(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ble(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if less than or equal to (unsigned or unordered).
@@ -336,7 +399,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Ble_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ble_Un(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if less than.
@@ -358,7 +424,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Blt(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Blt(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if less than (unsigned or unordered).
@@ -381,7 +450,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Blt_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Blt_Un(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if unequal or unordered, short form.
@@ -404,7 +476,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Bne_Un(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Bne_Un(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Convert a boxable value to its boxed form.
@@ -427,7 +502,10 @@ namespace Silk
         /// typeTok can represent a value type, a reference type, or a generic parameter.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Box<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Box<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target.
@@ -450,7 +528,10 @@ namespace Silk
         /// preference to a leave instruction when both are valid. end rationale]
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Br(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Br(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Inform a debugger that a breakpoint has been reached.
@@ -466,7 +547,10 @@ namespace Silk
         /// The break instruction might trap to a debugger, do nothing, or raise a security exception: the 
         /// exact behavior is implementation-defined. 
         /// </remarks>
-        public static unsafe void Break() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Break()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if value is zero (false).
@@ -487,7 +571,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Brfalse(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Brfalse(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Branch to target if value is non-zero (true).
@@ -509,7 +596,10 @@ namespace Silk
         /// Partition I for details).
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Brtrue(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Brtrue(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Call method described by method.
@@ -518,7 +608,10 @@ namespace Silk
         /// …, arg0, arg1 … argN -> …, retVal (not always returned)
         /// </summary>
         /// <param name="method">The method to call.</param>
-        public static unsafe void Call(string method) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Call(string method)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Call method indicated on the stack with arguments described by 
@@ -1192,7 +1285,10 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-        public static unsafe void Callvirt(string method) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Callvirt(string method)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Cast obj to typeTok.
@@ -1217,7 +1313,10 @@ namespace Silk
         /// where if obj is null, isinst fails and returns null.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Castclass<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Castclass<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push 1 (of type int32) if value1 equals value2, else push 0
@@ -1233,7 +1332,10 @@ namespace Silk
         /// The acceptable operand types are encapsulated in 
         /// Table 4: Binary Comparison or Branch Operations.
         /// </remarks>
-        public static unsafe void Ceq() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ceq()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push 1 (of type int32) if value1 > value2, else push 0.
@@ -1251,7 +1353,10 @@ namespace Silk
         /// The acceptable operand types are encapsulated in 
         /// Table 4: Binary Comparison or Branch Operations. 
         /// </remarks>
-        public static unsafe void Cgt() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Cgt()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push 1 (of type int32) if value1 > value2, unsigned or 
@@ -1273,7 +1378,10 @@ namespace Silk
         /// The acceptable operand types are encapsulated in 
         /// Table 4: Binary Comparison or Branch Operations.
         /// </remarks>
-        public static unsafe void Cgt_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Cgt_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Throw ArithmeticException if value is not a finite number.
@@ -1286,43 +1394,190 @@ namespace Silk
         /// either a “not a number” value (NaN) or +/- infinity value. ckfinite leaves the value on the stack if 
         /// no exception is thrown. Execution behavior is unspecified if value is not a floating-point number. 
         /// </remarks>
-        public static unsafe void Ckfinite() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Clt() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Clt_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Constrained() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_I() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_I1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_I2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_I4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_I8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I1_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I2_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I4_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_I8_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U1_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U2_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U4_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_Ovf_U8_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_R_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_R4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_R8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_U() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_U1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_U2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_U4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Conv_U8() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ckfinite()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Clt()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Clt_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Constrained()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I1_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I2_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I4_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_I8_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U1_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U2_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U4_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_Ovf_U8_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_R_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_R4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_R8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_U()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_U1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_U2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_U4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Conv_U8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Copy data from memory to memory.
@@ -1342,7 +1597,10 @@ namespace Silk
         /// no need for the compiler that generates cpblk instructions to be aware of whether the code will
         /// eventually execute on a 32-bit or 64-bit platform. end rationale]
         /// </remarks>
-        public static unsafe void Cpblk() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Cpblk()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Copy a value type from src to dest.
@@ -1360,14 +1618,26 @@ namespace Silk
         /// stind.ref.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Cpobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Cpobj<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
 
-        public static unsafe void Div() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Div()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Div_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Div_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Dup() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Dup()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// End an exception handling filter clause.
@@ -1396,7 +1666,10 @@ namespace Silk
         /// an exception is thrown inside the filter block, it is intercepted and a value of
         /// exception_continue_search is returned.
         /// </remarks>
-        public static unsafe void Endfilter() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Endfilter()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// End finally clause of an exception block.
@@ -1426,7 +1699,10 @@ namespace Silk
         /// opcode.
         /// endfinally empties the evaluation stack as a side-effect.
         /// </remarks>
-        public static unsafe void Endfinally() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Endfinally()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Set all bytes in a block of memory to a given byte value.
@@ -1445,7 +1721,10 @@ namespace Silk
         /// The operation of the initblk instructions can be altered by an immediately preceding volatile. or
         /// unaligned. prefix instruction.
         /// </remarks>
-        public static unsafe void Initblk() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Initblk()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Initialize the value at address dest.
@@ -1463,7 +1742,10 @@ namespace Silk
         /// Unlike newobj, the initobj instruction does not call any constructor method.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Initobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Initobj<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Test if obj is an instance of typeTok, returning null or an instance of
@@ -1485,10 +1767,16 @@ namespace Silk
         /// If obj is null, or obj is not verifier-assignable-to the type typeTok, isinst fails and returns null.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Isinst<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Isinst<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
 
-        public static unsafe void Jmp() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Jmp()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Load argument numbered num onto the stack.
@@ -1513,7 +1801,10 @@ namespace Silk
         /// are converted to 4 bytes by sign or zero-extension as appropriate. Floating-point values are 
         /// converted to their native size (type F). end note] 
         /// </remarks>
-        public static unsafe void Ldarg(int num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldarg(int num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Fetch the address of argument argNum.
@@ -1531,7 +1822,10 @@ namespace Silk
         /// [Rationale: ldarga is used for byref parameter passing (see Partition I). In other cases, ldarg and 
         /// starg should be used. end rationale]
         /// </remarks>
-        public static unsafe void Ldarga(int argNum) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldarga(int argNum)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push num of type int32 onto the stack as int32.
@@ -1555,7 +1849,10 @@ namespace Silk
         /// than a 64-bit IEC 60559:1989 number, since these representations are not portable across 
         /// architectures. 
         /// </remarks>
-        public static unsafe void Ldc_I4(int num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldc_I4(int num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push num of type int64 onto the stack as int64.
@@ -1579,7 +1876,10 @@ namespace Silk
         /// than a 64-bit IEC 60559:1989 number, since these representations are not portable across 
         /// architectures. 
         /// </remarks>
-        public static unsafe void Ldc_I8(long num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldc_I8(long num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push num of type float32 onto the stack as float32.
@@ -1603,7 +1903,10 @@ namespace Silk
         /// than a 64-bit IEC 60559:1989 number, since these representations are not portable across 
         /// architectures. 
         /// </remarks>
-        public static unsafe void Ldc_R4(float num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldc_R4(float num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push num of type float64 onto the stack as float64.
@@ -1627,7 +1930,10 @@ namespace Silk
         /// than a 64-bit IEC 60559:1989 number, since these representations are not portable across 
         /// architectures. 
         /// </remarks>
-        public static unsafe void Ldc_R8(double num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldc_R8(double num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Load the element at index onto the top of the stack.
@@ -1646,19 +1952,65 @@ namespace Silk
         /// size (type F). end note]
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Ldelem<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldelem<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Ldelem_I() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_I1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_I2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_I4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_I8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_R4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_R8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_Ref() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_U1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_U2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldelem_U4() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldelem_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_R4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_R8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_Ref()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_U1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_U2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldelem_U4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Load the address of element at index onto the top of the stack.
@@ -1677,7 +2029,10 @@ namespace Silk
         /// managed pointer (§III.1.8.1.2.2).
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Ldelema<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldelema<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Load the address of element at index onto the top of the stack.
@@ -1696,8 +2051,11 @@ namespace Silk
         /// managed pointer (§III.1.8.1.2.2).
         /// </remarks>
         /// <param name="type">Type in the array.</param>
-        public static unsafe void Ldelema(string type) { throw new Exception("CilTK Rewriter not run."); }
-  
+        public static unsafe void Ldelema(string type)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
         /// <summary>
         /// Push the value of field of object (or value type) obj, onto the stack.
         /// 
@@ -1720,7 +2078,10 @@ namespace Silk
         /// native size (type F). end note]
         /// </remarks>
         /// <param name="field">The field to load.</param>
-        public static unsafe void Ldfld(string field) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldfld(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push the address of field of object obj on the stack.
@@ -1739,7 +2100,10 @@ namespace Silk
         /// field.
         /// </remarks>
         /// <param name="field">The field to load.</param>
-        public static unsafe void Ldflda(string field) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldflda(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push a pointer to a method referenced by method, on the stack
@@ -1770,19 +2134,65 @@ namespace Silk
         /// technology of the VES (JIT, interpreter, threaded code, etc.). end note] 
         /// </remarks>
         /// <param name="method"></param>
-        public static unsafe void Ldftn(string method) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldftn(string method)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Ldind_I() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_I1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_I2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_I4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_I8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_R4() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_R8() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_Ref() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_U1() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_U2() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldind_U4() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldind_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_R4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_R8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_Ref()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_U1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_U2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldind_U4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push the length (of type native unsigned int) of array on the
@@ -1797,7 +2207,10 @@ namespace Silk
         /// Arrays are objects and hence represented by a value of type O. The return value is a native
         /// unsigned int.
         /// </remarks>
-        public static unsafe void Ldlen() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldlen()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Load local variable of index indx onto stack.
@@ -1820,9 +2233,15 @@ namespace Silk
         /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native 
         /// size (type F). end note] 
         /// </remarks>
-        public static unsafe void Ldloc(int indx) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldloc(int indx)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Ldloca(int indx) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldloca(int indx)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push a null reference on the stack.
@@ -1839,7 +2258,10 @@ namespace Silk
         /// verification algorithms to retain the ldnull instruction because it makes type tracking easier. end
         /// rationale]
         /// </remarks>
-        public static unsafe void Ldnull() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldnull()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Copy the value stored at address src to the stack.
@@ -1862,10 +2284,20 @@ namespace Silk
         /// unaligned. prefix instruction.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Ldobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldobj<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Ldsfld(string field) { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldsflda(string field) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldsfld(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldsflda(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push a string object for the literal str.
@@ -1884,9 +2316,20 @@ namespace Silk
         /// Partition IV).
         /// </remarks>
         /// <param name="str">The literal string to load.</param>
-        public static unsafe void Ldstr(string str) { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldtoken() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Ldvirtftn(string method) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ldstr(string str)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldtoken()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Ldvirtftn(string method)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Exit a protected region of code.
@@ -1910,7 +2353,10 @@ namespace Silk
         /// prefixes.
         /// </remarks>
         /// <param name="label">The label to branch to.</param>
-        public static unsafe void Leave(string label) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Leave(string label)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Allocate space from the local memory pool.
@@ -1932,13 +2378,35 @@ namespace Silk
         /// [Rationale: localloc is used to create local aggregates whose size shall be computed at runtime.
         /// It can be used for C’s intrinsic alloca method. end rationale]
         /// </remarks>
-        public static unsafe void Localloc() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Localloc()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Mkrefany() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Mul() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Mul_Ovf() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Mul_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Neg() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Mkrefany()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Mul()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Mul_Ovf()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Mul_Ovf_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Neg()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Create a new array with elements of type etype.
@@ -1960,9 +2428,15 @@ namespace Silk
         /// System.Array class in the Base Framework.
         /// </remarks>
         /// <typeparam name="T">etype</typeparam>
-        public static unsafe void Newarr<T>() { throw new Exception("CilTK Rewriter not run."); }
-        
-        public static unsafe void Newobj(string method) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Newarr<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Newobj(string method)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// The specified fault check(s) normally performed
@@ -1988,7 +2462,10 @@ namespace Silk
         /// can optionally be omitted.
         /// </remarks>
         /// <param name="faultCheck">The fault check(s) to skip.</param>
-        public static unsafe void No(FaultCheck faultCheck) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void No(FaultCheck faultCheck)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Do nothing.
@@ -1999,11 +2476,25 @@ namespace Silk
         /// <remarks>
         /// The nop instruction does nothing. It is intended to fill in space if bytecodes are patched.
         /// </remarks>
-        public static unsafe void Nop() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Nop()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Not() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Or() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Pop() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Not()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Or()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Pop()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Specify that the subsequent array address operation performs no
@@ -2018,12 +2509,30 @@ namespace Silk
         /// 2. The verifier treats the result of the address-of operation as a controlled-mutability managed
         /// pointer (§III.1.8.1.2.2).
         /// </remarks>
-        public static unsafe void Readonly() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Readonly()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Refanytype() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Refanyval() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Rem() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Rem_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Refanytype()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Refanyval()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Rem()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Rem_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Return from method, possibly with a value.
@@ -2044,7 +2553,10 @@ namespace Silk
         /// correctly generated CIL does not perform a method return from within a filter or finally. See 
         /// Partition I. 
         /// </remarks>
-        public static unsafe void Ret() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Ret()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Rethrow the current exception.
@@ -2057,11 +2569,25 @@ namespace Silk
         /// throws the same exception that was caught by this handler. A rethrow does not change the stack
         /// trace in the object.
         /// </remarks>
-        public static unsafe void Rethrow() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Rethrow()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Shl() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Shr() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Shr_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Shl()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Shr()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Shr_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Push the size, in bytes, of a type as an unsigned int32.
@@ -2083,9 +2609,15 @@ namespace Silk
         /// chooses to add. Specifically, array elements lie sizeof bytes apart. end rationale]
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Sizeof<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Sizeof<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Starg(int num) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Starg(int num)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the value on the stack
@@ -2106,7 +2638,10 @@ namespace Silk
         /// array class provides a StoreElement method. end note]
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Stelem<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the native int value on
@@ -2131,7 +2666,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_I() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the int8 value on the
@@ -2156,7 +2694,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_I1() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the int16 value on the
@@ -2181,7 +2722,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_I2() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the int32 value on the
@@ -2206,7 +2750,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_I4() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the int64 value on the
@@ -2231,7 +2778,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_I8() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the float32 value on the
@@ -2256,7 +2806,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_R4() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_R4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the float64 value on the
@@ -2281,7 +2834,10 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_R8() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_R8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Replace array element at index with the ref value on the
@@ -2306,73 +2862,103 @@ namespace Silk
         /// [Note: for one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
         /// array class provides a StoreElement method. end note]
         /// </remarks>
-        public static unsafe void Stelem_Ref() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stelem_Ref()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Stfld(string field) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stfld(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type native int into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-        public static unsafe void Stind_I() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type native int into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_I()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type int8 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-        public static unsafe void Stind_I1() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type int8 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_I1()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type int16 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-		public static unsafe void Stind_I2() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type int16 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_I2()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type int32 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-		public static unsafe void Stind_I4() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type int32 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_I4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type int64 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-		public static unsafe void Stind_I8() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type int64 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_I8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type float32 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-		public static unsafe void Stind_R4() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type float32 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_R4()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type float64 into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-		public static unsafe void Stind_R8() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type float64 into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_R8()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-		/// <summary>
-		/// Store value of type object ref (type O) into memory at address
-		/// 
-		/// Stack Transition:
-		/// …, addr, value, -> …,
-		/// </summary>
-        public static unsafe void Stind_Ref() { throw new Exception("CilTK Rewriter not run."); }
+        /// <summary>
+        /// Store value of type object ref (type O) into memory at address
+        /// 
+        /// Stack Transition:
+        /// …, addr, value, -> …,
+        /// </summary>
+        public static unsafe void Stind_Ref()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Pop a value from stack into local variable indx
@@ -2391,7 +2977,10 @@ namespace Silk
         /// from the stack to the local variable. Floating-point values are rounded from their native size 
         /// (type F) to the size associated with the argument. (See §III.1.1.1, Numeric data types.)
         /// </remarks>
-        public static unsafe void Stloc(int indx) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stloc(int indx)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Store a value of type typeTok at an address.
@@ -2410,12 +2999,30 @@ namespace Silk
         /// unaligned. prefix instruction.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Stobj<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stobj<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Stsfld(string field) { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Sub() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Sub_Ovf() { throw new Exception("CilTK Rewriter not run."); }
-        public static unsafe void Sub_Ovf_Un() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Stsfld(string field)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Sub()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Sub_Ovf()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        public static unsafe void Sub_Ovf_Un()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Jump to one of n values.
@@ -2441,7 +3048,10 @@ namespace Silk
         /// <param name="targets">
         /// List of jump targets, seperated by ';'.
         /// </param>
-        public static unsafe void Switch(string targets) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Switch(string targets)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Subsequent call terminates current method.
@@ -2479,7 +3089,10 @@ namespace Silk
         /// it isn’t always possible for a compiler from CIL to native code to optimally determine when a
         /// tail. can be automatically inserted. end rationale]
         /// </remarks>
-        public static unsafe void Tail() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Tail()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Throw an exception.
@@ -2493,7 +3106,10 @@ namespace Silk
         /// [Note: While the CLI permits any object to be thrown, the CLS describes a specific exception
         /// class that shall be used for language interoperability. end note]
         /// </remarks>
-        public static unsafe void Throw() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Throw()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Subsequent pointer instruction might be unaligned.
@@ -2516,7 +3132,10 @@ namespace Silk
         /// [Note: See Partition I, 12.7 for information about atomicity and data alignment. end note]
         /// </remarks>
         /// <param name="alignment">Alignment to use.</param>
-        public static unsafe void Unaligned(byte alignment) { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Unaligned(byte alignment)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Extract a value-type from obj, its boxed representation.
@@ -2543,7 +3162,10 @@ namespace Silk
         /// to the newly allocated object. end note]
         /// </remarks>
         /// <typeparam name="T">valuetype</typeparam>
-        public static unsafe void Unbox<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Unbox<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Extract a value-type from obj, its boxed representation
@@ -2559,7 +3181,10 @@ namespace Silk
         /// that parameter.
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
-        public static unsafe void Unbox_Any<T>() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Unbox_Any<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
         /// <summary>
         /// Subsequent pointer reference is volatile.
@@ -2575,8 +3200,14 @@ namespace Silk
         /// precede a ldind, stind, ldfld, stfld, ldobj, stobj, initblk, or cpblk instruction. Only the volatile.
         /// prefix is allowed with the ldsfld and stsfld instructions.
         /// </remarks>
-        public static unsafe void Volatile() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Volatile()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
-        public static unsafe void Xor() { throw new Exception("CilTK Rewriter not run."); }
+        public static unsafe void Xor()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
     }
 }

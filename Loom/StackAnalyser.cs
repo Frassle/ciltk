@@ -17,11 +17,26 @@ namespace Silk.Loom
 
             foreach (var handler in body.ExceptionHandlers)
             {
-                if (handler.TryStart == target) { handler.TryStart = instruction; }
-                if (handler.TryEnd == target) { handler.TryEnd = instruction; }
-                if (handler.HandlerStart == target) { handler.HandlerStart = instruction; }
-                if (handler.HandlerEnd == target) { handler.HandlerEnd = instruction; }
-                if (handler.FilterStart == target) { handler.FilterStart = instruction; }
+                if (handler.TryStart == target)
+                {
+                    handler.TryStart = instruction;
+                }
+                if (handler.TryEnd == target)
+                {
+                    handler.TryEnd = instruction;
+                }
+                if (handler.HandlerStart == target)
+                {
+                    handler.HandlerStart = instruction;
+                }
+                if (handler.HandlerEnd == target)
+                {
+                    handler.HandlerEnd = instruction;
+                }
+                if (handler.FilterStart == target)
+                {
+                    handler.FilterStart = instruction;
+                }
             }
 
             foreach (var jmp in body.Instructions)
@@ -48,6 +63,7 @@ namespace Silk.Loom
             private TypeReference _Type;
             private MethodBody _Method;
             private ModuleDefinition _Module;
+
             public TypeReference Type
             {
                 get
@@ -70,7 +86,7 @@ namespace Silk.Loom
 
             public dynamic Value { get; private set; }
 
-            internal StackEntry(TypeReference type) 
+            internal StackEntry(TypeReference type)
                 : this()
             {
                 _Type = type;
@@ -139,7 +155,8 @@ namespace Silk.Loom
                             {
                                 RemoveInstructionChain(method, item.Item1, analysis);
                             }
-                        } break;
+                        }
+                        break;
                     case StackBehaviour.Varpop:
                         {
                             if (instruction.OpCode.OperandType == OperandType.InlineMethod)
@@ -159,7 +176,8 @@ namespace Silk.Loom
                             {
                                 throw new NotImplementedException();
                             }
-                        } break;
+                        }
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -188,8 +206,8 @@ namespace Silk.Loom
             _SystemObject = References.FindType(module, null, "System.Boolean");
             _SystemIntPtr = References.FindType(module, null, "System.IntPtr");
             _SystemRuntimeMethodHandle = References.FindType(module, null, "System.RuntimeMethodHandle");
-            _SystemRuntimeTypeHandle = References.FindType(module, null , "System.RuntimeTypeHandle");
-            _SystemRuntimeFieldHandle = References.FindType(module, null , "System.RuntimeFieldHandle");
+            _SystemRuntimeTypeHandle = References.FindType(module, null, "System.RuntimeTypeHandle");
+            _SystemRuntimeFieldHandle = References.FindType(module, null, "System.RuntimeFieldHandle");
         }
 
         public Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
@@ -273,7 +291,7 @@ namespace Silk.Loom
                             Array.Reverse(args);
 
                             StackEntry self = default(StackEntry);
-                            if(m.HasThis)
+                            if (m.HasThis)
                             {
                                 self = Pop(ref stack).Item2;
                             }
@@ -409,8 +427,8 @@ namespace Silk.Loom
                     case Code.Ldftn:
                         {
                             stack = new TStack(Tuple.Create(
-                                instruction,
-                                new StackEntry(_SystemIntPtr)), stack);
+                                    instruction,
+                                    new StackEntry(_SystemIntPtr)), stack);
                             break;
                         }
                     case Code.Ldind_I:

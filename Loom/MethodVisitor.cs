@@ -11,6 +11,7 @@ namespace Silk.Loom
     public abstract class MethodVisitor
     {
         private bool definitionsOnly;
+
         protected StackAnalyser Analyser { get; private set; }
 
         public MethodVisitor(bool definitionsOnly)

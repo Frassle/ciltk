@@ -250,7 +250,7 @@ namespace Weave
                 var type = (TypeReference)addr_instruction.Operand;
                 StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Ldelema, type));
             }
-            else if(
+            else if (
                 addr_instruction.OpCode == OpCodes.Ldelem_I ||
                 addr_instruction.OpCode == OpCodes.Ldelem_I1 ||
                 addr_instruction.OpCode == OpCodes.Ldelem_I2 ||
@@ -559,17 +559,23 @@ namespace Weave
                 switch ((System.Runtime.InteropServices.CallingConvention)callingConvention.Value)
                 {
                     case System.Runtime.InteropServices.CallingConvention.Cdecl:
-                        methodCallingConvention = MethodCallingConvention.C; break;
+                        methodCallingConvention = MethodCallingConvention.C;
+                        break;
                     case System.Runtime.InteropServices.CallingConvention.FastCall:
-                        methodCallingConvention = MethodCallingConvention.FastCall; break;
+                        methodCallingConvention = MethodCallingConvention.FastCall;
+                        break;
                     case System.Runtime.InteropServices.CallingConvention.StdCall:
-                        methodCallingConvention = MethodCallingConvention.StdCall; break;
+                        methodCallingConvention = MethodCallingConvention.StdCall;
+                        break;
                     case System.Runtime.InteropServices.CallingConvention.ThisCall:
-                        methodCallingConvention = MethodCallingConvention.ThisCall; break;
+                        methodCallingConvention = MethodCallingConvention.ThisCall;
+                        break;
                     case System.Runtime.InteropServices.CallingConvention.Winapi:
-                        methodCallingConvention = MethodCallingConvention.StdCall; break;
+                        methodCallingConvention = MethodCallingConvention.StdCall;
+                        break;
                     default:
-                        methodCallingConvention = MethodCallingConvention.Default; break;
+                        methodCallingConvention = MethodCallingConvention.Default;
+                        break;
                 }
             }
             else
@@ -584,7 +590,7 @@ namespace Weave
                 Type retTy = returnType.Item2.Value;
                 returnTypeReference = module.Import(retTy);
             }
-            else if(returnType.Item1.OpCode == OpCodes.Call && returnType.Item1.Operand is MethodReference && (returnType.Item1.Operand as MethodReference).Name == "GetTypeFromHandle")
+            else if (returnType.Item1.OpCode == OpCodes.Call && returnType.Item1.Operand is MethodReference && (returnType.Item1.Operand as MethodReference).Name == "GetTypeFromHandle")
             {
                 var ldtoken_stack = Analysis[returnType.Item1.Previous];
                 var ldtoken = ldtoken_stack.Head;
@@ -592,14 +598,14 @@ namespace Weave
                 returnTypeReference = ldtoken.Item1.Operand as TypeReference;
             }
             
-            if(returnTypeReference == null)
+            if (returnTypeReference == null)
             {
                 Console.WriteLine("Return type passed to Calli is not a constant expression.");
                 return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
             }
 
             TypeReference[] parameterTypesArray = new TypeReference[args.Count];
-            for(int i = 0; i < args.Count; ++i)
+            for (int i = 0; i < args.Count; ++i)
             {
                 var arg = args[i];
 

@@ -63,8 +63,8 @@ namespace Weave
             var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body, name);
 
             var getMethodFromHandle = module.Import(
-                typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle",
-                new[] { typeof(RuntimeMethodHandle) }));
+                                          typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle",
+                                              new[] { typeof(RuntimeMethodHandle) }));
 
             var ldtoken = Instruction.Create(OpCodes.Ldtoken, methodReference);
             var call = Instruction.Create(OpCodes.Call, getMethodFromHandle);
@@ -87,8 +87,8 @@ namespace Weave
             var fieldReference = Silk.Loom.References.FindField(module, ilProcessor.Body, name);
 
             var getFieldFromHandle = module.Import(
-                typeof(System.Reflection.FieldInfo).GetMethod("GetFieldFromHandle",
-                new[] { typeof(RuntimeFieldHandle) }));
+                                         typeof(System.Reflection.FieldInfo).GetMethod("GetFieldFromHandle",
+                                             new[] { typeof(RuntimeFieldHandle) }));
 
             var ldtoken = Instruction.Create(OpCodes.Ldtoken, fieldReference);
             var call = Instruction.Create(OpCodes.Call, getFieldFromHandle);
