@@ -215,7 +215,7 @@ namespace Silk.Loom
         public StackAnalyser(ModuleDefinition module)
         {
             _SystemObject = References.FindType(module, null, "System.Object");
-            _SystemObject = References.FindType(module, null, "System.Boolean");
+            _SystemBoolean = References.FindType(module, null, "System.Boolean");
             _SystemSingle = References.FindType(module, null, "System.Single");
             _SystemDouble = References.FindType(module, null, "System.Double");
             _SystemSByte = References.FindType(module, null, "System.SByte");
@@ -736,7 +736,6 @@ namespace Silk.Loom
                                 Pop(ref stack);
                             }
                             stack = new TStack(Tuple.Create(instruction, new StackEntry(ctor.DeclaringType)), stack);
-                            break;
                         }
                         break;
                 // Pop1, Push1
