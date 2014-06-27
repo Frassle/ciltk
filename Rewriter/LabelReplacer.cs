@@ -53,7 +53,14 @@ namespace Weave
                 Environment.Exit(1);
             }
 
-            var jump_location = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+            var jump_location = instruction.Next;
+            if (jump_location == null)
+            {
+                jump_location = Instruction.Create(OpCodes.Nop);
+                ilProcessor.InsertAfter(instruction, jump_location);
+            }
+
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
 
             Labels.Add(Tuple.Create(ilProcessor.Body, label.Item2.Value), jump_location);
 

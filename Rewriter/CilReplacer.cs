@@ -53,7 +53,7 @@ namespace Weave
                  * remove the call instruction, that keeps the value on the
                  * stack instead of popping it for the call.
                  */
-                StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
+                StackAnalyser.RemoveInstruction(ilProcessor, instruction);
             }
             else if (calledMethod.Name == "LoadAddress")
             {
@@ -112,18 +112,18 @@ namespace Weave
             var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
             if (variable != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldloc = Instruction.Create(OpCodes.Ldloc, variable);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldloc);
+                ilProcessor.InsertAfter(instruction, ldloc);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return ldloc.Next;
             }
 
             var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
             if (parameter != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldarg = Instruction.Create(OpCodes.Ldarg, parameter);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldarg);
+                ilProcessor.InsertAfter(instruction, ldarg);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return ldarg.Next;
             }
 
@@ -144,18 +144,18 @@ namespace Weave
             var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
             if (variable != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var stloc = Instruction.Create(OpCodes.Stloc, variable);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, stloc);
+                ilProcessor.InsertAfter(instruction, stloc);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return stloc.Next;
             }
 
             var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
             if (parameter != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var starg = Instruction.Create(OpCodes.Starg, parameter);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, starg);
+                ilProcessor.InsertAfter(instruction, starg);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return starg.Next;
             }
 
@@ -175,18 +175,18 @@ namespace Weave
             var variable = ilProcessor.Body.Variables.FirstOrDefault(v => v.Name == variableName.Value);
             if (variable != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldloc = Instruction.Create(OpCodes.Ldloca, variable);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldloc);
+                ilProcessor.InsertAfter(instruction, ldloc);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return ldloc.Next;
             }
 
             var parameter = ilProcessor.Body.Method.Parameters.FirstOrDefault(p => p.Name == variableName.Value);
             if (parameter != null)
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var ldarg = Instruction.Create(OpCodes.Ldarga, parameter);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, ldarg);
+                ilProcessor.InsertAfter(instruction, ldarg);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return ldarg.Next;
             }
 
@@ -209,8 +209,10 @@ namespace Weave
             {
                 throw new Exception(string.Format("Expected constant values to be passed to DeclareLocal used in method {0}", ilProcessor.Body.Method.FullName));
             }
-            
-            return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+
+            Instruction next = instruction.Next;
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+            return next;
         }
 
         private Instruction ReplaceLoadAddress(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
@@ -316,7 +318,7 @@ namespace Weave
                 throw new Exception("ReplaceLoadAddress: How did we get here?!");
             }
 
-            StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
+            StackAnalyser.RemoveInstruction(ilProcessor, instruction);
 
             return next;
         }
@@ -376,8 +378,8 @@ namespace Weave
                 throw new Exception("ReplaceStore: How did we get here?!");
             }
 
-            StackAnalyser.ReplaceInstruction(ilProcessor, addr_instruction, Instruction.Create(OpCodes.Nop));
-            StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(OpCodes.Nop));
+            StackAnalyser.RemoveInstruction(ilProcessor, addr_instruction);
+            StackAnalyser.RemoveInstruction(ilProcessor, instruction);
 
             return next;
         }
@@ -581,7 +583,9 @@ namespace Weave
             else
             {
                 Console.WriteLine("Calling convention passed to Calli is not a constant expression.");
-                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var next = instruction.Next;
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                return next;
             }
 
             TypeReference returnTypeReference = null;
@@ -601,7 +605,9 @@ namespace Weave
             if (returnTypeReference == null)
             {
                 Console.WriteLine("Return type passed to Calli is not a constant expression.");
-                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var next = instruction.Next;
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                return next;
             }
 
             TypeReference[] parameterTypesArray = new TypeReference[args.Count];
@@ -625,7 +631,9 @@ namespace Weave
             if (parameterTypesArray.Any(ty => ty == null))
             {
                 Console.WriteLine("Type passed to Calli is not a constant expression.");
-                return StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                var next = instruction.Next;
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+                return next;
             }
 
             var callSite = new CallSite(returnTypeReference);
@@ -636,9 +644,9 @@ namespace Weave
             }
 
             {
-                var nop = StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 var calli = Instruction.Create(OpCodes.Calli, callSite);
-                StackAnalyser.ReplaceInstruction(ilProcessor, nop, calli);
+                ilProcessor.InsertAfter(instruction, calli);
+                StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
                 return calli.Next;
             }
         }

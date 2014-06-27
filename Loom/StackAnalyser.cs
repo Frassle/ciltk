@@ -11,7 +11,7 @@ namespace Silk.Loom
 {
     public class StackAnalyser
     {
-        public static Instruction ReplaceInstruction(ILProcessor ilProcessor, Instruction target, Instruction instruction)
+        private static void FixupReferences(ILProcessor ilProcessor, Instruction target, Instruction instruction)
         {
             var body = ilProcessor.Body;
 
@@ -50,10 +50,19 @@ namespace Silk.Loom
                     }
                 }
             }
+        }
 
+        public static Instruction ReplaceInstruction(ILProcessor ilProcessor, Instruction target, Instruction instruction)
+        {
+            FixupReferences(ilProcessor, target, instruction);
             ilProcessor.Replace(target, instruction);
-
             return instruction;
+        }
+
+        public static void RemoveInstruction(ILProcessor ilProcessor, Instruction instruction)
+        {
+            FixupReferences(ilProcessor, instruction, instruction.Next);
+            ilProcessor.Remove(instruction);
         }
 
         public struct StackEntry
@@ -107,19 +116,18 @@ namespace Silk.Loom
             }
         }
 
-        public static Instruction RemoveInstructionChain(MethodDefinition method, Instruction instruction, Dictionary<Instruction, TStack> analysis)
+        public static void RemoveInstructionChain(MethodDefinition method, Instruction instruction, Dictionary<Instruction, TStack> analysis)
         {
             var ilProcessor = method.Body.GetILProcessor();
-            var nop = Instruction.Create(OpCodes.Nop);
 
             if (instruction.OpCode.StackBehaviourPop == StackBehaviour.Pop0)
             {
-                ReplaceInstruction(ilProcessor, instruction, nop);
+                RemoveInstruction(ilProcessor, instruction);
             }
             else
             {
                 var stack = analysis[instruction.Previous];
-                ReplaceInstruction(ilProcessor, instruction, nop);
+                RemoveInstruction(ilProcessor, instruction);
 
                 switch (instruction.OpCode.StackBehaviourPop)
                 {
@@ -182,8 +190,6 @@ namespace Silk.Loom
                         throw new NotImplementedException();
                 }
             }
-
-            return nop;
         }
 
         private static Tuple<Instruction, StackEntry> Pop(ref TStack stack)
