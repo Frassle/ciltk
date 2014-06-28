@@ -76,7 +76,7 @@ namespace Silk
         /// <summary>
         /// Loads a variable onto the top of the execution stack.
         /// </summary>
-        /// <param name="variable">The variable to load.</param>
+        /// <param name="variableName">The variable to load.</param>
         public static unsafe void LoadByName(string variableName)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -114,7 +114,7 @@ namespace Silk
         /// <summary>
         /// Stores the value at the top of the execution stack to a variable.
         /// </summary>
-        /// <param name="variable">The variable to store to.</param>
+        /// <param name="variableName">The variable to store to.</param>
         public static unsafe void StoreByName(string variableName)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -1285,6 +1285,13 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Call a method associated with an object.
+        /// 
+        /// Stack Transition:
+        /// …, arg0, arg1 … argN -> …, retVal (not always returned)
+        /// </summary>
+        /// <param name="method">The method to call.</param>
         public static unsafe void Callvirt(string method)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -1399,181 +1406,416 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push 1 (of type int32) if value1 &lt; value2, else push 0.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The clt instruction compares value1 and value2. If value1 is strictly less than value2, 
+        /// then 1 (of type int32) is pushed on the stack. Otherwise, 0 (of type int32) is pushed on 
+        /// the stack. For floating-point numbers, clt will return 0 if the numbers are unordered 
+        /// (that is, one or both of the arguments are NaN). As per IEC 60559:1989, infinite values 
+        /// are ordered with respect to normal numbers (e.g., +infinity > 5.0 > -infinity).
+        /// </remarks>
         public static unsafe void Clt()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push 1 (of type int32) if value1 &lt; value2, unsigned or unordered, else push 0.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The clt.un instruction compares value1 and value2. A value of 1 (of type int32) is pushed on the stack if
+        /// - for floating-point numbers, either value1 is strictly less than value2, or value1 is not 
+        /// ordered with respect to value2.
+        /// - for integer values, value1 is strictly less than value2 when considered as unsigned numbers. 
+        /// Otherwise, 0 (of type int32) is pushed on the stack. As per IEC 60559:1989, infinite values  
+        /// </remarks>
         public static unsafe void Clt_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
-        public static unsafe void Constrained()
+        /// <summary>
+        /// Call a virtual method on a type constrained to be type T
+        /// </summary>
+        public static unsafe void Constrained<T>()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Call a virtual method on a type constrained to be type T
+        /// </summary>
+        public static unsafe void Constrained(string thisType)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Convert to native int, pushing native int on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_I()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to int8, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_I1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to int16, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_I2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to int32, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_I4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to int64, pushing int64 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_I8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to a native int (on the stack as native int) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to a native int (on the stack as native int) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an int8 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an int8 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I1_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an int16 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an int16 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I2_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an int32 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an int32 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I4_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an int64 (on the stack as int64) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an int64 (on the stack as int64) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_I8_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to a native unsigned int (on the stack as native int) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to a native unsigned int (on the stack as native int) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an unsigned int8 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an unsigned int8 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U1_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an unsigned int16 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an unsigned int16 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U2_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an unsigned int32 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an unsigned int32 (on the stack as int32) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U4_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to an unsigned int64 (on the stack as int64) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned to an unsigned int64 (on the stack as int64) and throw an exception on overflow.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_Ovf_U8_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert unsigned integer to floating-point, pushing F on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_R_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to float32, pushing F on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_R4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to float64, pushing F on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_R8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to native unsigned int, pushing native int on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_U()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to unsigned int8, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_U1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to unsigned int16, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_U2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to unsigned int32, pushing int32 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_U4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert to unsigned int64, pushing int64 on stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
         public static unsafe void Conv_U8()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -1623,17 +1865,37 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-
+        /// <summary>
+        /// Divide two values to return a quotient or floating-point result.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Div()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Divide two values, unsigned, returning a quotient.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Div_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Duplicate the value on the top of the stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, value, value,
+        /// </summary>
+        /// <remarks>
+        /// The dup instruction duplicates the top element of the stack.
+        /// </remarks>
         public static unsafe void Dup()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -1772,8 +2034,25 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-
-        public static unsafe void Jmp()
+        /// <summary>
+        /// Exit current method and jump to the specified method.
+        /// 
+        /// Stack Transition:
+        /// …, -> …,
+        /// </summary>
+        /// <remarks>
+        /// Transfer control to the method specified by method, which is a metadata token (either a 
+        /// methodref or methoddef (See Partition II). The current arguments are transferred to the 
+        /// destination method. 
+        /// 
+        /// The evaluation stack shall be empty when this instruction is executed. The calling convention, 
+        /// number and type of arguments at the destination address shall match that of the current method. 
+        /// 
+        /// The jmp instruction cannot be used to transferred control out of a try, filter, catch, fault or 
+        /// finally block; or out of a synchronized region. If this is done, results are undefined. See 
+        /// Partition I.
+        /// </remarks>
+        public static unsafe void Jmp(string method)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
@@ -1957,56 +2236,332 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element at index onto the top of the stack.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem instruction loads the value of the element with index index (of type native int or
+        /// int32) in the zero-based one-dimensional array array, and places it on the top of the stack. The
+        /// type of the return value is indicated by the type token typeTok in the instruction.
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
+        public static unsafe void Ldelem(string typeTok)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Load the element with type native int at index onto the top of the stack as a native int.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_I()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type int8 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_I1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type int16 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_I2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type int32 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_I4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type int64 at index onto the top of the stack as an int64.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_I8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type float32 at index onto the top of the stack as an F.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_R4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type float64 at index onto the top of the stack as an F.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_R8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element at index onto the top of the stack as an O.
+        /// The type of the O is the same as the element type of the array
+        /// pushed on the CIL stack.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_Ref()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type unsigned int8 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_U1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type unsigned int16 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_U2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load the element with type unsigned int32 at index onto the top of the stack as an int32.
+        /// 
+        /// Stack Transition:
+        /// …, array, index, -> …, value,
+        /// </summary>
+        /// <remarks>
+        /// The ldelem.&lt;type&gt; instruction loads the value of the element with index index (of type int32
+        /// or native int) in the zero-based one-dimensional array array and places it on the top of the
+        /// stack. For ldelem.ref the type of the return value is the element type of array, for the other
+        /// instruction variants it is the &lt;type&gt; indicated by the instruction.
+        /// All variants are equivalent to the ldelem instruction (§III.4.7) with an appropriate typeTok.
+        /// 
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a Get method. end note]
+        /// 
+        /// If required elements are converted to the representation of their intermediate type (§I.8.7) when
+        /// loaded onto the stack (§III.1.1.1).
+        /// 
+        /// [Note: that is elements that are smaller than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to their native
+        /// size (type F). end note]
+        /// </remarks>
         public static unsafe void Ldelem_U4()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2064,7 +2619,7 @@ namespace Silk
         /// </summary>
         /// <remarks>
         /// The ldfld instruction pushes onto the stack the value of a field of obj. obj shall be an object
-        /// (type O), a managed pointer (type &), an unmanaged pointer (type native int), or an instance of
+        /// (type O), a managed pointer (type &amp;), an unmanaged pointer (type native int), or an instance of
         /// a value type. The use of an unmanaged pointer is not permitted in verifiable code. field is a
         /// metadata token (a fieldref or fielddef see Partition II) that shall refer to a field member. The
         /// return type is that associated with field. ldfld pops the object reference off the stack and pushes
@@ -2091,9 +2646,9 @@ namespace Silk
         /// </summary>
         /// <remarks>
         /// The ldflda instruction pushes the address of a field of obj. obj is either an object, type O, a
-        /// managed pointer, type &, or an unmanaged pointer, type native int. The use of an unmanaged
+        /// managed pointer, type &amp;, or an unmanaged pointer, type native int. The use of an unmanaged
         /// pointer is not allowed in verifiable code. The value returned by ldflda is a managed pointer
-        /// (type &) unless obj is an unmanaged pointer, in which case it is an unmanaged pointer (type
+        /// (type &amp;) unless obj is an unmanaged pointer, in which case it is an unmanaged pointer (type
         /// native int).
         /// field is a metadata token (a fieldref or fielddef; see Partition II) that shall refer to a field
         /// member. The field can be either an instance field (in which case obj shall not be null) or a static
@@ -2139,56 +2694,122 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type native int as native int on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_I()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type int8 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_I1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type int16 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_I2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type int32 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_I4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type int64 as int64 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_I8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type float32 as F on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_R4()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type float64 as F on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_R8()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type object ref as O on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_Ref()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type unsigned int8 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_U1()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type unsigned int16 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_U2()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Indirect load value of type unsigned int32 as int32 on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, addr, -> …, value,
+        /// </summary>
         public static unsafe void Ldind_U4()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2238,6 +2859,20 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Load address of local variable with index indx.
+        /// 
+        /// Stack Transition:
+        /// …, -> …, address,
+        /// </summary>
+        /// <remarks>
+        /// The ldloca instruction pushes the address of the local variable number indx onto the stack, where
+        /// local variables are numbered 0 onwards. The value pushed on the stack is already aligned
+        /// correctly for use with instructions like ldind and stind. The result is a managed pointer (type &amp;).
+        /// The ldloca.s instruction provides an efficient encoding for use with the local variables 0–255.
+        /// (Local variables that are the subject of ldloca shall be aligned as described in the ldind
+        /// instruction, since the address obtained by ldloca can be used as an argument to ldind.)
+        /// </remarks>
         public static unsafe void Ldloca(int indx)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2289,11 +2924,23 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push the value of field on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, -> …, value,
+        /// </summary>
         public static unsafe void Ldsfld(string field)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push the address of the static field, field, on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, -> …, address,
+        /// </summary>
         public static unsafe void Ldsflda(string field)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2321,11 +2968,30 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Convert metadata token to its runtime representation.
+        /// 
+        /// Stack Transition:
+        /// …, -> …, RuntimeHandle,
+        /// </summary>
+        /// <remarks>
+        /// The ldtoken instruction pushes a RuntimeHandle for the specified metadata token. The token shall be one of:
+        /// A methoddef, methodref or methodspec: pushes a RuntimeMethodHandle
+        /// A typedef, typeref, or typespec : pushes a RuntimeTypeHandle
+        /// A fielddef or fieldref : pushes a RuntimeFieldHandle
+        /// The value pushed on the stack can be used in calls to reflection methods in the system class library
+        /// </remarks>
         public static unsafe void Ldtoken()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push address of virtual method method on the stack.
+        /// 
+        /// Stack Transition:
+        /// …, object, -> …, ftn,
+        /// </summary>
         public static unsafe void Ldvirtftn(string method)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2383,26 +3049,80 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-        public static unsafe void Mkrefany()
+        /// <summary>
+        /// Push a typed reference to ptr of type class onto the stack.
+        /// 
+        /// Stack Transition:
+        /// …, ptr, -> …, typedRef,
+        /// </summary>
+        public static unsafe void Mkrefany<T>()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push a typed reference to ptr of type class onto the stack.
+        /// 
+        /// Stack Transition:
+        /// …, ptr, -> …, typedRef,
+        /// </summary>
+        public static unsafe void Mkrefany(string @class)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Multiply values.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Mul()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Multiply signed integer values. Signed result shall fit in same size.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Mul_Ovf()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Multiply unsigned integer values. Unsigned result shall fit in same size.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Mul_Ovf_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Negate value.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The neg instruction negates value and pushes the result on top of the stack. The return type is the
+        /// same as the operand type.
+        /// 
+        /// Negation of integral values is standard twos-complement negation. In particular, negating the
+        /// most negative number (which does not have a positive counterpart) yields the most negative
+        /// number. To detect this overflow use the sub.ovf instruction instead (i.e., subtract from 0).
+        /// 
+        /// Negating a floating-point number cannot overflow; negating NaN returns NaN.
+        /// 
+        /// The acceptable operand types and their corresponding result data types are encapsulated in
+        /// Table 3: Unary Numeric Operations.
+        /// </remarks>
         public static unsafe void Neg()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2433,7 +3153,13 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
-        public static unsafe void Newobj(string method)
+        /// <summary>
+        /// Allocate an uninitialized object or value type and call ctor.
+        /// 
+        /// Stack Transition:
+        /// …, arg1 … argN -> …, obj,
+        /// </summary>
+        public static unsafe void Newobj(string ctor)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
@@ -2481,16 +3207,51 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Bitwise complement.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The not instruction computes the bitwise complement of the integer value on top of the stack and
+        /// leaves the result on top of the stack. The return type is the same as the operand type.
+        /// 
+        /// The acceptable operand types and their corresponding result data type are encapsulated in 
+        /// Table 5: Integer Operations.
+        /// </remarks>
         public static unsafe void Not()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Bitwise OR of two integer values, returns an integer.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The or instruction computes the bitwise OR of the top two values on the stack and leaves the
+        /// result on the stack.
+        /// 
+        /// The acceptable operand types and their corresponding result data type are encapsulated in
+        /// Table 5: Integer Operations.
+        /// </remarks>
         public static unsafe void Or()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Pop value from the stack.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …,
+        /// </summary>
+        /// <remarks>
+        /// The pop instruction removes the top element from the stack.
+        /// </remarks>
         public static unsafe void Pop()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2514,21 +3275,54 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Push the type token stored in a typed reference.
+        /// 
+        /// Stack Transition:
+        /// …, TypedRef, -> …, type,
+        /// </summary>
+        /// <remarks>
+        /// Retrieves the type token embedded in TypedRef. See the mkrefany instruction.
+        /// </remarks>
         public static unsafe void Refanytype()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+
+        /// <summary>
+        /// Push the address stored in a typed reference.
+        /// 
+        /// Stack Transition:
+        /// …, TypedRef, -> …, address,
+        /// </summary>
+        /// <remarks>
+        /// Retrieves the address (of type &amp;) embedded in TypedRef. The type of reference in TypedRef shall
+        /// match the type specified by type (a metadata token, either a typedef, typeref or a typespec; see
+        /// Partition II). See the mkrefany instruction.
+        /// </remarks>
         public static unsafe void Refanyval()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Remainder when dividing one value by another.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Rem()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Remainder when dividing one unsigned value by another.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
         public static unsafe void Rem_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2574,16 +3368,54 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Shift an integer left (shifting in zeros), return an integer.
+        /// 
+        /// Stack Transition:
+        /// …, value, shiftAmount, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The shl instruction shifts value (int32, int64 or native int) left by the number of bits
+        /// specified by shiftAmount. shiftAmount is of type int32 or native int. The return value is
+        /// unspecified if shiftAmount is greater than or equal to the width of value. See Table III.6: Shift
+        /// Operations for details of which operand types are allowed, and their corresponding result type.
+        /// </remarks>
         public static unsafe void Shl()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Shift an integer right (shift in sign), return an integer.
+        /// 
+        /// Stack Transition:
+        /// …, value, shiftAmount, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The shr instruction shifts value (int32, int64 or native int) right by the number of bits
+        /// specified by shiftAmount. shiftAmount is of type int32 or native int. The return value is
+        /// unspecified if shiftAmount is greater than or equal to the width of value. shr replicates the high
+        /// order bit on each shift, preserving the sign of the original value in result. See Table III.6: Shift
+        /// Operations for details of which operand types are allowed, and their corresponding result type.
+        /// </remarks>
         public static unsafe void Shr()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Shift an integer right (shift in zero), return an integer.
+        /// 
+        /// Stack Transition:
+        /// …, value, shiftAmount, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The shr.un instruction shifts value (int32, int 64 or native int) right by the number of bits
+        /// specified by shiftAmount. shiftAmount is of type int32 or native int. The return value is
+        /// unspecified if shiftAmount is greater than or equal to the width of value. shr.un inserts a zero bit
+        /// on each shift. See Table III.6: Shift Operations for details of which operand types are allowed,
+        /// and their corresponding result type.
+        /// </remarks>
         public static unsafe void Shr_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2613,7 +3445,37 @@ namespace Silk
         {
             throw new Exception("CilTK Rewriter not run.");
         }
+        
+        /// <summary>
+        /// Push the size, in bytes, of a type as an unsigned int32.
+        /// 
+        /// Stack Transition:
+        /// …, -> …, size (4 bytes, unsigned),
+        /// </summary>
+        /// <remarks>
+        /// Returns the size, in bytes, of a type. typeTok can be a generic parameter, a reference type or a
+        /// value type.
+        /// For a reference type, the size returned is the size of a reference value of the corresponding type,
+        /// not the size of the data stored in objects referred to by a reference value.
+        /// [Rationale: The definition of a value type can change between the time the CIL is generated and
+        /// the time that it is loaded for execution. Thus, the size of the type is not always known when the
+        /// CIL is generated. The sizeof instruction allows CIL code to determine the size at runtime
+        /// without the need to call into the Framework class library. The computation can occur entirely at
+        /// runtime or at CIL-to-native-code compilation time. sizeof returns the total size that would be
+        /// occupied by each element in an array of this type – including any padding the implementation
+        /// chooses to add. Specifically, array elements lie sizeof bytes apart. end rationale]
+        /// </remarks>
+        public static unsafe void Sizeof(string typeTok)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
 
+        /// <summary>
+        /// Store value to the argument numbered num.
+        /// 
+        /// Stack Transition:
+        /// …, value, -> …,
+        /// </summary>
         public static unsafe void Starg(int num)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -2639,6 +3501,29 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Stelem<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Replace array element at index with the value on the stack
+        /// 
+        /// Stack Transition:
+        /// …, array, index, value, -> …,
+        /// </summary>
+        /// <remarks>
+        /// The stelem instruction replaces the value of the element with zero-based index index (of type
+        /// native int or int32) in the one-dimensional array array, with value. Arrays are objects and
+        /// hence are represented by a value of type O. The type of value must be array-element-compatiblewith
+        /// typeTok in the instruction.
+        /// Storing into arrays that hold values smaller than 4 bytes whose intermediate type is int32
+        /// truncates the value as it moves from the stack to the array. Floating-point values are rounded
+        /// from their native size (type F) to the size associated with the array. (See §III.1.1.1, Numeric data
+        /// types.)
+        /// [Note: For one-dimensional arrays that aren’t zero-based and for multidimensional arrays, the
+        /// array class provides a StoreElement method. end note]
+        /// </remarks>
+        public static unsafe void Stelem(string typeTok)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
@@ -2867,6 +3752,12 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Replace the value of field of the object obj with value.
+        /// 
+        /// Stack Transition:
+        /// …, obj, value, -> …,
+        /// </summary>
         public static unsafe void Stfld(string field)
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -3004,21 +3895,69 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Replace the value of field with val.
+        /// 
+        /// Stack Transition:
+        /// …, val, -> …,
+        /// </summary>
         public static unsafe void Stsfld(string field)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Subtract value2 from value1, returning a new value.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The sub instruction subtracts value2 from value1 and pushes the result on the stack. Overflow is
+        /// not detected for the integral operations (see sub.ovf); for floating-point operands, sub returns
+        /// +inf on positive overflow, -inf on negative overflow, and zero on floating-point underflow.
+        /// 
+        /// The acceptable operand types and their corresponding result data type are encapsulated in Table
+        /// III.2: Binary Numeric Operations.
+        /// </remarks>
         public static unsafe void Sub()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Subtract native int from a native int. Signed result shall fit in same size.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The sub.ovf instruction subtracts value2 from value1 and pushes the result on the stack. The
+        /// type of the values and the return type are specified by the instruction. An exception is thrown if
+        /// the result does not fit in the result type.
+        /// 
+        /// The acceptable operand types and their corresponding result data type is encapsulated in
+        /// Table 7: Overflow Arithmetic Operations.
+        /// </remarks>
         public static unsafe void Sub_Ovf()
         {
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Subtract native unsigned int from a native unsigned int. Unsigned result shall fit in same size.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The sub.ovf instruction subtracts value2 from value1 and pushes the result on the stack. The
+        /// type of the values and the return type are specified by the instruction. An exception is thrown if
+        /// the result does not fit in the result type.
+        /// 
+        /// The acceptable operand types and their corresponding result data type is encapsulated in
+        /// Table 7: Overflow Arithmetic Operations.
+        /// </remarks>
         public static unsafe void Sub_Ovf_Un()
         {
             throw new Exception("CilTK Rewriter not run.");
@@ -3205,6 +4144,19 @@ namespace Silk
             throw new Exception("CilTK Rewriter not run.");
         }
 
+        /// <summary>
+        /// Bitwise XOR of integer values, returns an integer.
+        /// 
+        /// Stack Transition:
+        /// …, value1, value2, -> …, result,
+        /// </summary>
+        /// <remarks>
+        /// The xor instruction computes the bitwise XOR of value1 and value2and leaves the result on the
+        /// stack.
+        /// 
+        /// The acceptable operand types and their corresponding result data type is encapsulated in Table
+        /// III.5: Integer Operations.
+        /// </remarks>
         public static unsafe void Xor()
         {
             throw new Exception("CilTK Rewriter not run.");
