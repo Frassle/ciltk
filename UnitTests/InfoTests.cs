@@ -54,5 +54,18 @@ namespace UnitTests
             Assert.AreEqual(typeof(int), info.PropertyType);
             Assert.AreEqual(1, info.GetIndexParameters().Length);
         }
+
+        System.Reflection.ParameterInfo GetParameterInfo(int a)
+        {
+            return Silk.Info.Parameter("a");
+        }
+
+        [Test()]
+        public void TestParameter()
+        {
+            var info = GetParameterInfo(0);
+            Assert.AreEqual("a", info.Name);
+            Assert.AreEqual("System.Int32", info.ParameterType.FullName);
+        }
     }
 }

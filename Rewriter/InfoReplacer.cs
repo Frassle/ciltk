@@ -154,7 +154,41 @@ namespace Weave
 
         private void ReplaceParameter(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            throw new NotImplementedException();
+            var module = ilProcessor.Body.Method.Module;
+
+            var name = Analysis[instruction.Previous].Head.Item2.Value as string;
+
+            var callingMethod = ilProcessor.Body.Method;
+
+            var parameter = callingMethod.Parameters.FirstOrDefault(var => var.Name == name);
+
+            if (parameter == null)
+            {
+                throw new Exception(string.Format("Could not find parameter '{0}'.", name));
+            }
+            
+            var parameterInfo = Silk.Loom.References.FindType(module, null, "System.Reflection.ParameterInfo");
+
+            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, callingMethod.FullName);
+
+            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
+            
+            var getParameters = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.ParameterInfo[] System.Reflection.MethodBase::GetParameters()");
+
+            var insert_before = instruction.Next;
+            // Push calling method onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, methodReference));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getMethodFromHandle));
+            // Get parameter array
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Callvirt, getParameters));
+            // Push parameter index onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldc_I4, parameter.Index));
+            // Get local variable
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldelem_Any, parameterInfo));
+
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
     }
 }
