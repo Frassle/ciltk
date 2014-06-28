@@ -9,28 +9,6 @@ namespace Silk.Loom
 {
     public static class References
     {
-        public static FieldReference FindField(ModuleDefinition module, MethodBody method, string name)
-        {
-            var matches = System.Text.RegularExpressions.Regex.Match(name, "(.*?) (.*?)::(.*)");
-
-            if (!matches.Success)
-            {
-                throw new Exception(string.Format("Field \"{0}\" is not in the correct format (return_type declaring_type::field_name).", name));
-            }
-
-            var type = FindType(module, method, matches.Groups[2].Value).Resolve();
-
-            foreach (var field in type.Fields)
-            {
-                if (field.Name == matches.Groups[3].Value)
-                {
-                    return module.Import(field);
-                }
-            }
-
-            throw new Exception(string.Format("Field {0} not found.", name));
-        }
-
         static Dictionary<string, string> PrimativeTypeMap;
 
         static References()
@@ -55,8 +33,8 @@ namespace Silk.Loom
             PrimativeTypeMap.Add("unsigned int64", "System.UInt64");
             PrimativeTypeMap.Add("void", "System.Void");
         }
-        
-        public static TypeReference FindType(ModuleDefinition module, MethodBody method, string name)
+
+        public static TypeReference FindType(ModuleDefinition module, MethodReference current_method, string name)
         {
             if (name.EndsWith("]"))
             {
@@ -65,7 +43,7 @@ namespace Silk.Loom
                 // array type
                 if (matchArray.Success)
                 {
-                    var element_type = FindType(module, method, matchArray.Groups[1].Value);
+                    var element_type = FindType(module, current_method, matchArray.Groups[1].Value);
                     return new ArrayType(element_type, matchArray.Groups[2].Length + 1);
                 }
             }
@@ -73,34 +51,34 @@ namespace Silk.Loom
             // ref type
             if (name.EndsWith("&"))
             {
-                var element_type = FindType(module, method, name.Substring(0, name.Length - 1));
+                var element_type = FindType(module, current_method, name.Substring(0, name.Length - 1));
                 return new ByReferenceType(element_type);
             }
 
             // pointer type
             if (name.EndsWith("*"))
             {
-                var element_type = FindType(module, method, name.Substring(0, name.Length - 1));
+                var element_type = FindType(module, current_method, name.Substring(0, name.Length - 1));
                 return new PointerType(element_type);
             }
 
 			// pinned type
 			if (name.EndsWith(" pinned"))
 			{
-				var element_type = FindType(module, method, name.Substring(0, name.Length - " pinned".Length));
+                var element_type = FindType(module, current_method, name.Substring(0, name.Length - " pinned".Length));
 				return new PinnedType(element_type); 
 			}
 
             // generic type
-            if (method != null)
+            if (current_method != null)
             {
-                foreach (var generic in method.Method.GenericParameters)
+                foreach (var generic in current_method.GenericParameters)
                 {
                     if (String.Equals(generic.FullName, name, StringComparison.Ordinal))
                         return generic;
                 }
 
-                foreach (var generic in method.Method.DeclaringType.GenericParameters)
+                foreach (var generic in current_method.DeclaringType.GenericParameters)
                 {
                     if (String.Equals(generic.FullName, name, StringComparison.Ordinal))
                         return generic;
@@ -162,7 +140,29 @@ namespace Silk.Loom
             return null;
         }
 
-        public static MethodReference FindMethod(ModuleDefinition module, MethodBody method, string name)
+        public static FieldReference FindField(ModuleDefinition module, MethodReference current_method, string name)
+        {
+            var matches = System.Text.RegularExpressions.Regex.Match(name, "(.*?) (.*?)::(.*)");
+
+            if (!matches.Success)
+            {
+                throw new Exception(string.Format("Field \"{0}\" is not in the correct format (return_type declaring_type::field_name).", name));
+            }
+
+            var type = FindType(module, current_method, matches.Groups[2].Value).Resolve();
+
+            foreach (var field in type.Fields)
+            {
+                if (field.Name == matches.Groups[3].Value)
+                {
+                    return module.Import(field);
+                }
+            }
+
+            throw new Exception(string.Format("Field {0} not found.", name));
+        }
+
+        public static MethodReference FindMethod(ModuleDefinition module, MethodReference current_method, string name)
         {
             var matches = System.Text.RegularExpressions.Regex.Match(name, "(.*?) (.*?)::(.*?)\\((.*?)\\)");
 
@@ -171,19 +171,27 @@ namespace Silk.Loom
                 throw new Exception(string.Format("Method \"{0}\" is not in the correct format (return_type declaring_type::method_name(method_params).", name));
             }
 
-            var declaring_type = FindType(module, method, matches.Groups[2].Value);
+            var declaring_type = FindType(module, current_method, matches.Groups[2].Value).Resolve();
+            var parameters = matches.Groups[4].Value.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
 
-            var return_type = FindType(module, method, matches.Groups[1].Value);
-
-            var parameters = matches.Groups[4].Value.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(paramter_type => FindType(module, method, paramter_type));
-
-            var mref = new MethodReference(matches.Groups[3].Value, return_type, declaring_type);
-            foreach(var param in parameters)
+            foreach (var method in declaring_type.Methods)
             {
-                mref.Parameters.Add(new ParameterDefinition(param));
+                if (method.Name == matches.Groups[3].Value)
+                {
+                    var return_type_match = method.ReturnType.FullName == matches.Groups[1].Value;
+
+                    var parameters_match = Enumerable.Zip(
+                        method.Parameters, parameters, (param, param_name) => param.ParameterType.FullName == param_name)
+                        .All(b => b);
+
+                    if(return_type_match && parameters_match)
+                    {
+                        return module.Import(method);
+                    }
+                }
             }
 
-            return module.Import(mref);
+            throw new Exception(string.Format("Method {0} not found.", name));
         }
     }
 }

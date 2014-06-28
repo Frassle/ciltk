@@ -201,7 +201,7 @@ namespace Weave
 
             if (name.IsConstant && type.IsConstant)
             {
-                var variableType = References.FindType(ilProcessor.Body.Method.Module, ilProcessor.Body, type.Value);
+                var variableType = References.FindType(ilProcessor.Body.Method.Module, ilProcessor.Body.Method, type.Value);
 
                 ilProcessor.Body.Variables.Add(new VariableDefinition(name.Value, variableType));
             }
@@ -492,7 +492,7 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var field = (string)operand;
-                        var fieldref = Silk.Loom.References.FindField(module, ilProcessor.Body, field);
+                        var fieldref = Silk.Loom.References.FindField(module, ilProcessor.Body.Method, field);
 
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, fieldref));
                     }
@@ -500,7 +500,7 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var method = (string)operand;
-                        var methodref = Silk.Loom.References.FindMethod(module, ilProcessor.Body, method);
+                        var methodref = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, method);
 
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, methodref));
                     }
@@ -508,7 +508,7 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var type = (string)operand;
-                        var typeref = Silk.Loom.References.FindType(module, ilProcessor.Body, type);
+                        var typeref = Silk.Loom.References.FindType(module, ilProcessor.Body.Method, type);
 
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, typeref));
                     }

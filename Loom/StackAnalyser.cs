@@ -70,7 +70,7 @@ namespace Silk.Loom
             public bool IsConstant { get; private set; }
 
             private TypeReference _Type;
-            private MethodBody _Method;
+            private MethodReference _Method;
             private ModuleDefinition _Module;
 
             public TypeReference Type
@@ -110,7 +110,7 @@ namespace Silk.Loom
             {
                 _Type = null;
                 _Module = module;
-                _Method = method;
+                _Method = method.Method;
                 IsConstant = true;
                 Value = value;
             }
