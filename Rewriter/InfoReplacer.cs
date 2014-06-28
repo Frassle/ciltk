@@ -62,9 +62,8 @@ namespace Weave
 
             var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, name);
 
-            var getMethodFromHandle = module.Import(
-                                          typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle",
-                                              new[] { typeof(RuntimeMethodHandle) }));
+            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
 
             var ldtoken = Instruction.Create(OpCodes.Ldtoken, methodReference);
             var call = Instruction.Create(OpCodes.Call, getMethodFromHandle);
@@ -86,9 +85,8 @@ namespace Weave
 
             var fieldReference = Silk.Loom.References.FindField(module, ilProcessor.Body.Method, name);
 
-            var getFieldFromHandle = module.Import(
-                                         typeof(System.Reflection.FieldInfo).GetMethod("GetFieldFromHandle",
-                                             new[] { typeof(RuntimeFieldHandle) }));
+            var getFieldFromHandle = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.FieldInfo System.Reflection.FieldInfo::GetFieldFromHandle(System.RuntimeFieldHandle)");
 
             var ldtoken = Instruction.Create(OpCodes.Ldtoken, fieldReference);
             var call = Instruction.Create(OpCodes.Call, getFieldFromHandle);
@@ -99,7 +97,59 @@ namespace Weave
 
         private void ReplaceProperty(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            throw new NotImplementedException();
+            var module = ilProcessor.Body.Method.Module;
+
+            var name = Analysis[instruction.Previous].Head.Item2.Value as string;
+
+            var propertyReference = Silk.Loom.References.FindProperty(module, ilProcessor.Body.Method, name);
+
+            var systemType = Silk.Loom.References.FindType(module, null, "System.Type");
+
+            var getTypeFromHandle = Silk.Loom.References.FindMethod(module, null,
+                "System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)");
+
+            MethodReference getProperty;
+            if (propertyReference.Parameters.Count != 0)
+            {
+                getProperty = Silk.Loom.References.FindMethod(module, null,
+                    "System.Reflection.PropertyInfo System.Type::GetProperty(System.String,System.Type,System.Type[])");
+            }
+            else
+            {
+                getProperty = Silk.Loom.References.FindMethod(module, null,
+                    "System.Reflection.PropertyInfo System.Type::GetProperty(System.String,System.Type)");
+            }
+
+            var insert_before = instruction.Next;
+            // Push Declaring Type onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, propertyReference.DeclaringType));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getTypeFromHandle));
+            // Push name onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldstr, propertyReference.Name));
+            // Push return type onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, propertyReference.PropertyType));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getTypeFromHandle));
+            if (propertyReference.Parameters.Count != 0)
+            {
+                // Push property array onto stack
+                ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldc_I4, propertyReference.Parameters.Count));
+                ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Newarr, systemType));
+                // Assign property elems
+                for (int i = 0; i < propertyReference.Parameters.Count; ++i)
+                {
+                    var param_type = propertyReference.Parameters[i].ParameterType;
+                    // Duplicate the array value
+                    ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Dup));
+                    ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldc_I4, i));
+                    ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, param_type));
+                    ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getTypeFromHandle));
+                    ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Stelem_Any, systemType));
+                }
+            }
+            // Call GetProperty
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getProperty));
+            
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
 
         private void ReplaceParameter(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)

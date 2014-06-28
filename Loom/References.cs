@@ -176,7 +176,7 @@ namespace Silk.Loom
 
             foreach (var method in declaring_type.Methods)
             {
-                if (method.Name == matches.Groups[3].Value)
+                if (method.Name == matches.Groups[3].Value && method.Parameters.Count == parameters.Length)
                 {
                     var return_type_match = method.ReturnType.FullName == matches.Groups[1].Value;
 
@@ -192,6 +192,44 @@ namespace Silk.Loom
             }
 
             throw new Exception(string.Format("Method {0} not found.", name));
+        }
+
+        public static PropertyReference FindProperty(ModuleDefinition module, MethodReference current_method, string name)
+        {
+            var matches_indexer = System.Text.RegularExpressions.Regex.Match(name, "(.*?) (.*?)::(.*?)\\((.*?)\\)");
+            var matches_property = System.Text.RegularExpressions.Regex.Match(name, "(.*?) (.*?)::(.*)");
+
+            if (!matches_indexer.Success && !matches_property.Success)
+            {
+                throw new Exception(string.Format("Property \"{0}\" is not in the correct format (return_type declaring_type::property_name[(property_params)].", name));
+            }
+
+            var groupA = matches_indexer.Success ? matches_indexer.Groups[1].Value : matches_property.Groups[1].Value;
+            var groupB = matches_indexer.Success ? matches_indexer.Groups[2].Value : matches_property.Groups[2].Value;
+            var groupC = matches_indexer.Success ? matches_indexer.Groups[3].Value : matches_property.Groups[3].Value;
+            var groupD = matches_indexer.Success ? matches_indexer.Groups[4].Value : null;
+
+            var declaring_type = FindType(module, current_method, groupB).Resolve();
+            var parameters = groupD == null ? new string[] {} : groupD.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var property in declaring_type.Properties)
+            {
+                if (property.Name == groupC && property.Parameters.Count == parameters.Length)
+                {
+                    var return_type_match = property.PropertyType.FullName == groupA;
+
+                    var parameters_match = Enumerable.Zip(
+                        property.Parameters, parameters, (param, param_name) => param.ParameterType.FullName == param_name)
+                        .All(b => b);
+
+                    if (return_type_match && parameters_match)
+                    {
+                        return property;
+                    }
+                }
+            }
+
+            throw new Exception(string.Format("Property {0} not found.", name));
         }
     }
 }

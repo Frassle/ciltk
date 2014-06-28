@@ -49,10 +49,17 @@ namespace UnitTests
             }
         }
 
+
         public static int Static;
 
         public int A;
         public int B;
+        public int C { get; set; }
+        public int this[int index]
+        {
+            get { return A; }
+            set { A = value; }
+        }
 
         public TestClass()
         {

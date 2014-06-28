@@ -37,5 +37,22 @@ namespace UnitTests
             Assert.AreEqual("Write", info.Name);
             Assert.AreEqual("System.Void", info.ReturnType.FullName);
         }
+
+        [Test()]
+        public void TestProperty()
+        {
+            var info = Silk.Info.Property("System.Int32 UnitTests.TestClass::C");
+            Assert.AreEqual("C", info.Name);
+            Assert.AreEqual(typeof(int), info.PropertyType);
+        }
+
+        [Test()]
+        public void TestPropertyIndexer()
+        {
+            var info = Silk.Info.Property("System.Int32 UnitTests.TestClass::Item(System.Int32)");
+            Assert.AreEqual("Item", info.Name);
+            Assert.AreEqual(typeof(int), info.PropertyType);
+            Assert.AreEqual(1, info.GetIndexParameters().Length);
+        }
     }
 }
