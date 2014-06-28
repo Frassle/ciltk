@@ -113,7 +113,10 @@ namespace Weave
                     }
                 }
 
-                assembly.Write(output, writeParameters);
+                //write to a temp file then copy to output to assist with debugging
+                var temp = System.IO.Path.GetTempFileName();
+                assembly.Write(temp, writeParameters);
+                System.IO.File.Copy(temp, output, true);
             }
             catch (Mono.Options.OptionException)
             {
