@@ -2925,6 +2925,31 @@ namespace Silk
         }
 
         /// <summary>
+        /// Copy the value stored at address src to the stack.
+        /// 
+        /// Stack Transition:
+        /// …, src, -> …, val,
+        /// </summary>
+        /// <remarks>
+        /// The ldobj instruction copies a value to the evaluation stack. typeTok is a metadata token (a
+        /// typedef, typeref, or typespec). src is an unmanaged pointer (native int), or a managed
+        /// pointer (&amp;). If typeTok is not a generic parameter and either a reference type or a built-in value
+        /// class, then the ldind instruction provides a shorthand for the ldobj instruction..
+        /// [Rationale: The ldobj instruction can be used to pass a value type as an argument. end rationale]
+        /// If required values are converted to the representation of the intermediate type (§I.8.7) of typeTok
+        /// when loaded onto the stack (§III.1.1.1).
+        /// [Note: That is integer values of less than 4 bytes, a boolean or a character are converted to 4
+        /// bytes by sign or zero-extension as appropriate. Floating-point values are converted to F type. end
+        /// note]
+        /// The operation of the ldobj instruction can be altered by an immediately preceding volatile. or
+        /// unaligned. prefix instruction.
+        /// </remarks>
+        public static unsafe void Ldobj(string typeTok)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
         /// Push the value of field on the stack.
         /// 
         /// Stack Transition:
@@ -3149,6 +3174,30 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">etype</typeparam>
         public static unsafe void Newarr<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Create a new array with elements of type etype.
+        /// 
+        /// Stack Transition:
+        /// …, numElems, -> …, array,
+        /// </summary>
+        /// <remarks>
+        /// The newarr instruction pushes a reference to a new zero-based, one-dimensional array whose
+        /// elements are of type etype, a metadata token (a typeref, typedef or typespec; see Partition II).
+        /// numElems (of type native int or int32) specifies the number of elements in the array. Valid
+        /// array indexes are 0 ≤ index &lt; numElems. The elements of an array can be any type, including
+        /// value types.
+        /// Zero-based, one-dimensional arrays of numbers are created using a metadata token referencing
+        /// the appropriate value type (System.Int32, etc.). Elements of the array are initialized to 0 of the
+        /// appropriate type.
+        /// One-dimensional arrays that aren’t zero-based and multidimensional arrays are created using
+        /// newobj rather than newarr. More commonly, they are created using the methods of
+        /// System.Array class in the Base Framework.
+        /// </remarks>
+        public static unsafe void Newarr(string etype)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
@@ -3896,6 +3945,27 @@ namespace Silk
         }
 
         /// <summary>
+        /// Store a value of type typeTok at an address.
+        /// 
+        /// Stack Transition:
+        /// …, dest, src, -> …,
+        /// </summary>
+        /// <remarks>
+        /// The stobj instruction copies the value src to the address dest. If typeTok is not a generic
+        /// parameter and either a reference type or a built-in value class, then the stind instruction provides
+        /// a shorthand for the stobj instruction.
+        /// Storing values smaller than 4 bytes truncates the value as it moves from the stack to memory.
+        /// Floating-point values are rounded from their native size (type F) to the size associated with
+        /// typeTok. (See §III.1.1.1, Numeric data types.)
+        /// The operation of the stobj instruction can be altered by an immediately preceding volatile. or
+        /// unaligned. prefix instruction.
+        /// </remarks>
+        public static unsafe void Stobj(string typeTok)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
         /// Replace the value of field with val.
         /// 
         /// Stack Transition:
@@ -4107,6 +4177,35 @@ namespace Silk
         }
 
         /// <summary>
+        /// Extract a value-type from obj, its boxed representation.
+        /// 
+        /// Stack Transition:
+        /// …, obj, -> …, valueTypePtr,
+        /// </summary>
+        /// <remarks>
+        /// A value type has two separate representations (see Partition I) within the CLI:
+        /// - A ‘raw’ form used when a value type is embedded within another object.
+        /// - A ‘boxed’ form, where the data in the value type is wrapped (boxed) into an object,
+        /// so it can exist as an independent entity.
+        /// The unbox instruction converts obj (of type O), the boxed representation of a value type, to
+        /// valueTypePtr (a controlled-mutability managed pointer (§III.1.8.1.2.2), type &amp;), its unboxed
+        /// form. valuetype is a metadata token (a typeref, typedef or typespec). The type of valuetype
+        /// contained within obj must be verifier-assignable-to valuetype.
+        /// Unlike box, which is required to make a copy of a value type for use in the object, unbox is not
+        /// required to copy the value type from the object. Typically it simply computes the address of the
+        /// value type that is already present inside of the boxed object.
+        /// [Note: Typically, unbox simply computes the address of the value type that is already present
+        /// inside of the boxed object. This approach is not possible when unboxing nullable value types.
+        /// Because Nullable&lt;T&gt; values are converted to boxed Ts during the box operation, an
+        /// implementation often must manufacture a new Nullable&lt;T&gt; on the heap and compute the address
+        /// to the newly allocated object. end note]
+        /// </remarks>
+        public static unsafe void Unbox(string valuetype)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
         /// Extract a value-type from obj, its boxed representation
         /// 
         /// Stack Transition:
@@ -4121,6 +4220,24 @@ namespace Silk
         /// </remarks>
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Unbox_Any<T>()
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
+        /// <summary>
+        /// Extract a value-type from obj, its boxed representation
+        /// 
+        /// Stack Transition:
+        /// …, obj, -> …, value or obj,
+        /// </summary>
+        /// <remarks>
+        /// When applied to the boxed form of a value type, the unbox.any instruction extracts the value
+        /// contained within obj (of type O). (It is equivalent to unbox followed by ldobj.) When applied to
+        /// a reference type, the unbox.any instruction has the same effect as castclass typeTok.
+        /// If typeTok is a GenericParam, the runtime behavior is determined by the actual instantiation of
+        /// that parameter.
+        /// </remarks>
+        public static unsafe void Unbox_Any(string typeTok)
         {
             throw new Exception("CilTK Rewriter not run.");
         }
