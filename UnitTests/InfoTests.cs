@@ -31,6 +31,19 @@ namespace UnitTests
         }
 
         [Test()]
+        public void TestGenericMethod()
+        {
+            System.Reflection.MethodInfo info;
+
+            info = Silk.Info.Method("!!0 UnitTests.TestClass::GenericMethod(!!0)");
+            Assert.AreEqual("GenericMethod", info.Name);
+
+            info = Silk.Info.Method("!!0 UnitTests.TestClass::GenericMethod<System.Int32>(!!0)");
+            Assert.AreEqual("GenericMethod", info.Name);
+            Assert.AreEqual(typeof(int), info.ReturnType);
+        }
+
+        [Test()]
         public void TestExternalMethod()
         {
             var info = Silk.Info.Method("System.Void System.Console::Write(System.String)");
@@ -53,6 +66,14 @@ namespace UnitTests
             Assert.AreEqual("Item", info.Name);
             Assert.AreEqual(typeof(int), info.PropertyType);
             Assert.AreEqual(1, info.GetIndexParameters().Length);
+        }
+
+        [Test()]
+        public void TestVariable()
+        {
+            var info = Silk.Info.Variable("info");
+            Assert.AreEqual("System.Reflection.LocalVariableInfo", info.LocalType.FullName);
+            Assert.AreEqual(false, info.IsPinned);
         }
 
         System.Reflection.ParameterInfo GetParameterInfo(int a)

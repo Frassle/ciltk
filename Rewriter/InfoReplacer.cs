@@ -74,7 +74,48 @@ namespace Weave
 
         private void ReplaceVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            throw new NotImplementedException();
+            var module = ilProcessor.Body.Method.Module;
+
+            var name = Analysis[instruction.Previous].Head.Item2.Value as string;
+
+            var callingMethod = ilProcessor.Body;
+
+            var variable = callingMethod.Variables.FirstOrDefault(var => var.Name == name);
+
+            if (variable == null)
+            {
+                throw new Exception(string.Format("Could not find variable '{0}'.", name));
+            }
+            
+            var localVariableInfo = Silk.Loom.References.FindType(module, null, "System.Reflection.LocalVariableInfo");
+
+            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, callingMethod.Method.FullName);
+
+            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
+            
+            var getMethodBody = Silk.Loom.References.FindMethod(module, null,
+                "System.Reflection.MethodBody System.Reflection.MethodBase::GetMethodBody()");
+
+            var get_localVariables = Silk.Loom.References.FindMethod(module, null,
+                "System.Collections.Generic.IList`1<System.Reflection.LocalVariableInfo> System.Reflection.MethodBody::get_LocalVariables()");
+
+            var get_ilist_item = Silk.Loom.References.FindMethod(module, null, "!0 System.Collections.Generic.IList`1<System.Reflection.LocalVariableInfo>::get_Item(System.Int32)");
+
+            var insert_before = instruction.Next;
+            // Push calling method onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, methodReference));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getMethodFromHandle));
+            // Get method body
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Callvirt, getMethodBody));
+            // Get local variable array
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, get_localVariables));
+            // Push variable index onto stack
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldc_I4, variable.Index));
+            // Get local variable
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Callvirt, get_ilist_item));
+
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
 
         private void ReplaceField(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)

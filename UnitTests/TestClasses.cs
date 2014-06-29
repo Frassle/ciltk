@@ -71,6 +71,11 @@ namespace UnitTests
             B = b;
         }
 
+        public static T GenericMethod<T>(T t)
+        {
+            return t;
+        }
+
         public override bool Equals(object obj)
         {
             var other = obj as TestClass;
