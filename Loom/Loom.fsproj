@@ -4,36 +4,38 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60430B2C-945C-453A-8181-FE6BCC530AE2}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Weave</RootNamespace>
-    <AssemblyName>Weave</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <ProjectGuid>5F65BAF1-E8E0-434D-8547-6ECF7A6B28F2</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Silk.Loom</RootNamespace>
+    <AssemblyName>Loom</AssemblyName>
+    <Name>Loom</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Commandlineparameters>--input ../../../UnitTests/bin/Debug/UnitTests.dll</Commandlineparameters>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Debug\Loom.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Release\Loom.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core" />
+    <Reference Include="FParsec">
+      <HintPath>..\packages\FParsec.1.0.1\lib\net40-client\FParsec.dll</HintPath>
+    </Reference>
+    <Reference Include="FParsecCS">
+      <HintPath>..\packages\FParsec.1.0.1\lib\net40-client\FParsecCS.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -46,39 +48,25 @@
     <Reference Include="Mono.Cecil.Rocks">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="FSharp.Core">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CilReplacer.cs" />
-    <Compile Include="InfoReplacer.cs" />
-    <Compile Include="LabelReplacer.cs" />
-    <Compile Include="Mono.Options\Options.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="InstructionVisitor.cs" />
-    <Compile Include="MethodVisitor.cs" />
-    <Compile Include="StackAnalyser.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Parser.fs" />
+    <Compile Include="Reference.fs" />
+    <None Include="Script.fsx" />
     <None Include="packages.config" />
+    <Compile Include="Name.fs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CilTK\Silk.csproj">
-      <Project>{2BB73334-5E30-4A65-A8FB-6E07E2663870}</Project>
-      <Name>Silk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Loom\Loom.fsproj">
-      <Project>5F65BAF1-E8E0-434D-8547-6ECF7A6B28F2</Project>
-      <Name>Loom</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Loom\Loom.fsproj">
-      <Project>{5f65baf1-e8e0-434d-8547-6ecf7a6b28f2}</Project>
-      <Name>Loom</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

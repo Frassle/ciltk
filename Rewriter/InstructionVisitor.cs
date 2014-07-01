@@ -7,7 +7,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using Microsoft.FSharp.Collections;
 
-namespace Silk.Loom
+namespace Weave
 {
     public abstract class InstructionVisitor : MethodVisitor
     {

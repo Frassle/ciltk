@@ -6,10 +6,23 @@ namespace UnitTests
     [TestFixture()]
     public class InfoTests
     {
+        public Type GenericMethod<T>()
+        {
+            return Silk.Info.Type("T");
+        }
+
+        [Test()]
+        public void TestType()
+        {
+            Assert.AreEqual(Silk.Info.Type("System.Int32").FullName, "System.Int32");
+            Assert.AreEqual(Silk.Info.Type("UnitTests.TestClass/InnerClass").FullName, "UnitTests.TestClass+InnerClass");
+            Assert.AreEqual(GenericMethod<int>().FullName, "System.Int32");
+        }
+
         [Test()]
         public void TestField()
         {
-            var info = Silk.Info.Field("System.Int32 UnitTests.TestStruct::A");
+            var info = Silk.Info.Field("UnitTests.TestStruct::A");
             Assert.AreEqual("A", info.Name);
             Assert.AreEqual(typeof(int), info.FieldType);
         }
@@ -17,7 +30,7 @@ namespace UnitTests
         [Test()]
         public void TestExternalField()
         {
-            var info = Silk.Info.Field("System.String System.String::Empty");
+            var info = Silk.Info.Field("System.String::Empty");
             Assert.AreEqual("Empty", info.Name);
             Assert.AreEqual(typeof(string), info.FieldType);
         }
@@ -25,7 +38,7 @@ namespace UnitTests
         [Test()]
         public void TestMethod()
         {
-            var info = Silk.Info.Method("System.Int32 UnitTests.TestStruct::Add(System.Int32)");
+            var info = Silk.Info.Method("UnitTests.TestStruct::Add(System.Int32)");
             Assert.AreEqual("Add", info.Name);
             Assert.AreEqual(typeof(int), info.ReturnType);
         }
@@ -35,10 +48,10 @@ namespace UnitTests
         {
             System.Reflection.MethodInfo info;
 
-            info = Silk.Info.Method("!!0 UnitTests.TestClass::GenericMethod(!!0)");
+            info = Silk.Info.Method("UnitTests.TestClass::GenericMethod(T)");
             Assert.AreEqual("GenericMethod", info.Name);
 
-            info = Silk.Info.Method("!!0 UnitTests.TestClass::GenericMethod<System.Int32>(!!0)");
+            info = Silk.Info.Method("UnitTests.TestClass::GenericMethod<System.Int32>(T)");
             Assert.AreEqual("GenericMethod", info.Name);
             Assert.AreEqual(typeof(int), info.ReturnType);
         }
@@ -46,7 +59,7 @@ namespace UnitTests
         [Test()]
         public void TestExternalMethod()
         {
-            var info = Silk.Info.Method("System.Void System.Console::Write(System.String)");
+            var info = Silk.Info.Method("System.Console::Write(System.String)");
             Assert.AreEqual("Write", info.Name);
             Assert.AreEqual("System.Void", info.ReturnType.FullName);
         }
@@ -54,7 +67,7 @@ namespace UnitTests
         [Test()]
         public void TestProperty()
         {
-            var info = Silk.Info.Property("System.Int32 UnitTests.TestClass::C");
+            var info = Silk.Info.Property("UnitTests.TestClass::C");
             Assert.AreEqual("C", info.Name);
             Assert.AreEqual(typeof(int), info.PropertyType);
         }
@@ -62,7 +75,7 @@ namespace UnitTests
         [Test()]
         public void TestPropertyIndexer()
         {
-            var info = Silk.Info.Property("System.Int32 UnitTests.TestClass::Item(System.Int32)");
+            var info = Silk.Info.Property("UnitTests.TestClass::Item(System.Int32)");
             Assert.AreEqual("Item", info.Name);
             Assert.AreEqual(typeof(int), info.PropertyType);
             Assert.AreEqual(1, info.GetIndexParameters().Length);

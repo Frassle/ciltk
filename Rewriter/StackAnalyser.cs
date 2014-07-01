@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Silk.Loom;
 
-using TStack = Microsoft.FSharp.Collections.FSharpList<System.Tuple<Mono.Cecil.Cil.Instruction, Silk.Loom.StackAnalyser.StackEntry>>;
+using TStack = Microsoft.FSharp.Collections.FSharpList<System.Tuple<Mono.Cecil.Cil.Instruction, Weave.StackAnalyser.StackEntry>>;
 
-namespace Silk.Loom
+namespace Weave
 {
     public class StackAnalyser
     {
@@ -70,8 +71,7 @@ namespace Silk.Loom
             public bool IsConstant { get; private set; }
 
             private TypeReference _Type;
-            private MethodReference _Method;
-            private ModuleDefinition _Module;
+            private Reference.Scope _Scope;
 
             public TypeReference Type
             {
@@ -81,11 +81,11 @@ namespace Silk.Loom
                     {
                         if (Value == null)
                         {
-                            _Type = References.FindType(_Module, _Method, "System.Object");
+                            _Type = Reference.ParseTypeReference(_Scope, "System.Object");
                         }
                         else
                         {
-                            _Type = References.FindType(_Module, _Method, Value.GetType().FullName);
+                            _Type = Reference.ParseTypeReference(_Scope, Silk.Loom.ReflectionNames.TypeName(Value.GetType()));
                         }
                     }
 
@@ -99,18 +99,16 @@ namespace Silk.Loom
                 : this()
             {
                 _Type = type;
-                _Module = null;
-                _Method = null;
+                _Scope = null;
                 IsConstant = false;
                 Value = null;
             }
 
-            internal StackEntry(Mono.Cecil.ModuleDefinition module, MethodBody method, object value)
+            internal StackEntry(Reference.Scope scope, object value)
                 : this()
             {
                 _Type = null;
-                _Module = module;
-                _Method = method.Method;
+                _Scope = scope;
                 IsConstant = true;
                 Value = value;
             }
@@ -220,24 +218,24 @@ namespace Silk.Loom
 
         public StackAnalyser(ModuleDefinition module)
         {
-            _SystemObject = References.FindType(module, null, "System.Object");
-            _SystemBoolean = References.FindType(module, null, "System.Boolean");
-            _SystemSingle = References.FindType(module, null, "System.Single");
-            _SystemDouble = References.FindType(module, null, "System.Double");
-            _SystemSByte = References.FindType(module, null, "System.SByte");
-            _SystemByte = References.FindType(module, null, "System.Byte");
-            _SystemInt16 = References.FindType(module, null, "System.Int16");
-            _SystemUInt16 = References.FindType(module, null, "System.UInt16");
-            _SystemInt32 = References.FindType(module, null, "System.Int32");
-            _SystemUInt32 = References.FindType(module, null, "System.UInt32");
-            _SystemInt64 = References.FindType(module, null, "System.Int64");
-            _SystemUInt64 = References.FindType(module, null, "System.UInt64");
-            _SystemIntPtr = References.FindType(module, null, "System.IntPtr");
-            _SystemUIntPtr = References.FindType(module, null, "System.UIntPtr");
-            _SystemRuntimeMethodHandle = References.FindType(module, null, "System.RuntimeMethodHandle");
-            _SystemRuntimeTypeHandle = References.FindType(module, null, "System.RuntimeTypeHandle");
-            _SystemRuntimeFieldHandle = References.FindType(module, null, "System.RuntimeFieldHandle");
-            _SystemTypedReference = References.FindType(module, null, "System.TypedReference");
+            _SystemObject = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Object");
+            _SystemBoolean = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Boolean");
+            _SystemSingle = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Single");
+            _SystemDouble = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Double");
+            _SystemSByte = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.SByte");
+            _SystemByte = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Byte");
+            _SystemInt16 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Int16");
+            _SystemUInt16 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.UInt16");
+            _SystemInt32 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Int32");
+            _SystemUInt32 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.UInt32");
+            _SystemInt64 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.Int64");
+            _SystemUInt64 = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.UInt64");
+            _SystemIntPtr = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.IntPtr");
+            _SystemUIntPtr = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.UIntPtr");
+            _SystemRuntimeMethodHandle = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.RuntimeMethodHandle");
+            _SystemRuntimeTypeHandle = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.RuntimeTypeHandle");
+            _SystemRuntimeFieldHandle = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.RuntimeFieldHandle");
+            _SystemTypedReference = Reference.ParseTypeReference(Reference.Scope.NewModuleScope(module), "System.TypedReference");
         }
 
         public Dictionary<Instruction, TStack> Analyse(MethodDefinition method)
@@ -463,55 +461,55 @@ namespace Silk.Loom
                         break;
                 // Constant loading functions
                     case Code.Ldc_I4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I4_0:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 0)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 0)), stack);
                         break;
                     case Code.Ldc_I4_1:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 1)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 1)), stack);
                         break;
                     case Code.Ldc_I4_2:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 2)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 2)), stack);
                         break;
                     case Code.Ldc_I4_3:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 3)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 3)), stack);
                         break;
                     case Code.Ldc_I4_4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 4)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 4)), stack);
                         break;
                     case Code.Ldc_I4_5:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 5)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 5)), stack);
                         break;
                     case Code.Ldc_I4_6:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 6)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 6)), stack);
                         break;
                     case Code.Ldc_I4_7:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 7)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 7)), stack);
                         break;
                     case Code.Ldc_I4_8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, 8)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), 8)), stack);
                         break;
                     case Code.Ldc_I4_M1:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, -1)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), -1)), stack);
                         break;
                     case Code.Ldc_I4_S:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldc_I8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R4:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldc_R8:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldstr:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, instruction.Operand)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), instruction.Operand)), stack);
                         break;
                     case Code.Ldnull:
-                        stack = new TStack(Tuple.Create(instruction, new StackEntry(module, method.Body, null)), stack);
+                        stack = new TStack(Tuple.Create(instruction, new StackEntry(Reference.Scope.NewMethodScope(method), null)), stack);
                         break;
                 // Argument loading instructions
                     case Code.Ldarg:

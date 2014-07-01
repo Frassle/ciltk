@@ -30,7 +30,11 @@ namespace Weave
             var calledMethod = instruction.Operand as MethodReference;
             var next = instruction.Next;
 
-            if (calledMethod.Name == "Parameter")
+            if (calledMethod.Name == "Type")
+            {
+                ReplaceType(ilProcessor, instruction, calledMethod);
+            }
+            else if (calledMethod.Name == "Parameter")
             {
                 ReplaceParameter(ilProcessor, instruction, calledMethod);
             }
@@ -56,14 +60,17 @@ namespace Weave
 
         private void ReplaceMethod(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var module = ilProcessor.Body.Method.Module;
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
 
             var name = instruction.Previous.Operand as string;
 
-            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, name);
+            var methodReference = Reference.ParseMethodReference(
+                                      Reference.Scope.NewMethodScope(callingMethod), name);
 
-            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
+            var getMethodFromHandle = Reference.ParseMethodReference(
+                                          Reference.Scope.NewMethodScope(callingMethod),
+                                          "System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
 
             var ldtoken = Instruction.Create(OpCodes.Ldtoken, methodReference);
             var call = Instruction.Create(OpCodes.Call, getMethodFromHandle);
@@ -74,33 +81,42 @@ namespace Weave
 
         private void ReplaceVariable(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var module = ilProcessor.Body.Method.Module;
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
 
             var name = Analysis[instruction.Previous].Head.Item2.Value as string;
 
-            var callingMethod = ilProcessor.Body;
 
-            var variable = callingMethod.Variables.FirstOrDefault(var => var.Name == name);
+            var variable = callingMethod.Body.Variables.FirstOrDefault(var => var.Name == name);
 
             if (variable == null)
             {
                 throw new Exception(string.Format("Could not find variable '{0}'.", name));
             }
             
-            var localVariableInfo = Silk.Loom.References.FindType(module, null, "System.Reflection.LocalVariableInfo");
+            var localVariableInfo = Reference.ParseTypeReference(
+                                        Reference.Scope.NewMethodScope(callingMethod), 
+                                        "System.Reflection.LocalVariableInfo");
 
-            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, callingMethod.Method.FullName);
+            var methodReference = Reference.ParseMethodReference(
+                                      Reference.Scope.NewMethodScope(callingMethod),
+                                      Silk.Loom.CecilNames.MethodName(callingMethod));
 
-            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
+            var getMethodFromHandle = Reference.ParseMethodReference(
+                                          Reference.Scope.NewMethodScope(callingMethod),
+                                          "System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
             
-            var getMethodBody = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.MethodBody System.Reflection.MethodBase::GetMethodBody()");
+            var getMethodBody = Reference.ParseMethodReference(
+                                    Reference.Scope.NewMethodScope(callingMethod),
+                                    "System.Reflection.MethodBase::GetMethodBody()");
 
-            var get_localVariables = Silk.Loom.References.FindMethod(module, null,
-                "System.Collections.Generic.IList`1<System.Reflection.LocalVariableInfo> System.Reflection.MethodBody::get_LocalVariables()");
+            var get_localVariables = Reference.ParseMethodReference(
+                                         Reference.Scope.NewMethodScope(callingMethod),
+                                         "System.Reflection.MethodBody::get_LocalVariables()");
 
-            var get_ilist_item = Silk.Loom.References.FindMethod(module, null, "!0 System.Collections.Generic.IList`1<System.Reflection.LocalVariableInfo>::get_Item(System.Int32)");
+            var get_ilist_item = Reference.ParseMethodReference(
+                                     Reference.Scope.NewMethodScope(callingMethod), 
+                                     "System.Collections.Generic.IList`1<System.Reflection.LocalVariableInfo>::get_Item(System.Int32)");
 
             var insert_before = instruction.Next;
             // Push calling method onto stack
@@ -120,45 +136,52 @@ namespace Weave
 
         private void ReplaceField(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var module = ilProcessor.Body.Method.Module;
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
 
-            var name = instruction.Previous.Operand as string;
+            var name = Analysis[instruction.Previous].Head.Item2.Value as string;
 
-            var fieldReference = Silk.Loom.References.FindField(module, ilProcessor.Body.Method, name);
+            var fieldReference = Reference.ParseFieldReference(
+                                     Reference.Scope.NewMethodScope(callingMethod), name);
 
-            var getFieldFromHandle = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.FieldInfo System.Reflection.FieldInfo::GetFieldFromHandle(System.RuntimeFieldHandle)");
+            var getFieldFromHandle = Reference.ParseMethodReference(
+                                         Reference.Scope.NewMethodScope(callingMethod),
+                                         "System.Reflection.FieldInfo::GetFieldFromHandle(System.RuntimeFieldHandle)");
 
-            var ldtoken = Instruction.Create(OpCodes.Ldtoken, fieldReference);
-            var call = Instruction.Create(OpCodes.Call, getFieldFromHandle);
+            var insert_before = instruction.Next;
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, fieldReference));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getFieldFromHandle));
 
-            ilProcessor.Replace(instruction.Previous, ldtoken);
-            ilProcessor.Replace(instruction, call);
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
 
         private void ReplaceProperty(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var module = ilProcessor.Body.Method.Module;
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
 
             var name = Analysis[instruction.Previous].Head.Item2.Value as string;
 
-            var propertyReference = Silk.Loom.References.FindProperty(module, ilProcessor.Body.Method, name);
+            var propertyReference = Silk.Loom.Reference.ParsePropertyReference(Reference.Scope.NewMethodScope(callingMethod), name);
 
-            var systemType = Silk.Loom.References.FindType(module, null, "System.Type");
+            var systemType = Silk.Loom.Reference.ParseTypeReference(Reference.Scope.NewMethodScope(callingMethod), "System.Type");
 
-            var getTypeFromHandle = Silk.Loom.References.FindMethod(module, null,
-                "System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)");
+            var getTypeFromHandle = Silk.Loom.Reference.ParseMethodReference(
+                Reference.Scope.NewMethodScope(callingMethod),
+                "System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)");
 
             MethodReference getProperty;
             if (propertyReference.Parameters.Count != 0)
             {
-                getProperty = Silk.Loom.References.FindMethod(module, null,
-                    "System.Reflection.PropertyInfo System.Type::GetProperty(System.String,System.Type,System.Type[])");
+                getProperty = Silk.Loom.Reference.ParseMethodReference(
+                    Reference.Scope.NewMethodScope(callingMethod),
+                    "System.Type::GetProperty(System.String,System.Type,System.Type[])");
             }
             else
             {
-                getProperty = Silk.Loom.References.FindMethod(module, null,
-                    "System.Reflection.PropertyInfo System.Type::GetProperty(System.String,System.Type)");
+                getProperty = Silk.Loom.Reference.ParseMethodReference(
+                    Reference.Scope.NewMethodScope(callingMethod),
+                    "System.Type::GetProperty(System.String,System.Type)");
             }
 
             var insert_before = instruction.Next;
@@ -189,17 +212,16 @@ namespace Weave
             }
             // Call GetProperty
             ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getProperty));
-            
+
             StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
 
         private void ReplaceParameter(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
         {
-            var module = ilProcessor.Body.Method.Module;
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
 
             var name = Analysis[instruction.Previous].Head.Item2.Value as string;
-
-            var callingMethod = ilProcessor.Body.Method;
 
             var parameter = callingMethod.Parameters.FirstOrDefault(var => var.Name == name);
 
@@ -208,15 +230,21 @@ namespace Weave
                 throw new Exception(string.Format("Could not find parameter '{0}'.", name));
             }
             
-            var parameterInfo = Silk.Loom.References.FindType(module, null, "System.Reflection.ParameterInfo");
+            var parameterInfo = Reference.ParseTypeReference(
+                                    Reference.Scope.NewMethodScope(callingMethod), 
+                                    "System.Reflection.ParameterInfo");
 
-            var methodReference = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, callingMethod.FullName);
+            var methodReference = Reference.ParseMethodReference(
+                                      Reference.Scope.NewMethodScope(callingMethod),
+                                      Silk.Loom.CecilNames.MethodName(callingMethod));
 
-            var getMethodFromHandle = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.MethodBase System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
+            var getMethodFromHandle = Reference.ParseMethodReference(
+                                          Reference.Scope.NewMethodScope(callingMethod), 
+                                          "System.Reflection.MethodBase::GetMethodFromHandle(System.RuntimeMethodHandle)");
             
-            var getParameters = Silk.Loom.References.FindMethod(module, null,
-                "System.Reflection.ParameterInfo[] System.Reflection.MethodBase::GetParameters()");
+            var getParameters = Reference.ParseMethodReference(
+                                    Reference.Scope.NewMethodScope(callingMethod), 
+                                    "System.Reflection.MethodBase::GetParameters()");
 
             var insert_before = instruction.Next;
             // Push calling method onto stack
@@ -229,6 +257,26 @@ namespace Weave
             // Get local variable
             ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldelem_Any, parameterInfo));
 
+            StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
+        }
+
+        private void ReplaceType(ILProcessor ilProcessor, Instruction instruction, MethodReference calledMethod)
+        {
+            var callingMethod = ilProcessor.Body.Method;
+            var module = callingMethod.Module;
+
+            var name = Analysis[instruction.Previous].Head.Item2.Value as string;
+
+            var typeReference = Reference.ParseTypeReference(
+                                    Reference.Scope.NewMethodScope(callingMethod), name);
+
+            var getTypeFromHandle = Reference.ParseMethodReference(
+                                        Reference.Scope.NewMethodScope(callingMethod), 
+                                        "System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)");
+
+            var insert_before = instruction.Next;
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Ldtoken, typeReference));
+            ilProcessor.InsertBefore(insert_before, Instruction.Create(OpCodes.Call, getTypeFromHandle));
             StackAnalyser.RemoveInstructionChain(ilProcessor.Body.Method, instruction, Analysis);
         }
     }

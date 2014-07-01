@@ -201,7 +201,8 @@ namespace Weave
 
             if (name.IsConstant && type.IsConstant)
             {
-                var variableType = References.FindType(ilProcessor.Body.Method.Module, ilProcessor.Body.Method, type.Value);
+                var variableType = Reference.ParseTypeReference(
+                                       Reference.Scope.NewMethodScope(ilProcessor.Body.Method), type.Value);
 
                 ilProcessor.Body.Variables.Add(new VariableDefinition(name.Value, variableType));
             }
@@ -492,15 +493,16 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var field = (string)operand;
-                        var fieldref = Silk.Loom.References.FindField(module, ilProcessor.Body.Method, field);
-
+                        var fieldref = Reference.ParseFieldReference(
+                                           Reference.Scope.NewMethodScope(ilProcessor.Body.Method), field);
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, fieldref));
                     }
                     else if (opcode.OperandType == OperandType.InlineMethod)
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var method = (string)operand;
-                        var methodref = Silk.Loom.References.FindMethod(module, ilProcessor.Body.Method, method);
+                        var methodref = Reference.ParseMethodReference(
+                                                        Reference.Scope.NewMethodScope(ilProcessor.Body.Method), method);
 
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, methodref));
                     }
@@ -508,7 +510,8 @@ namespace Weave
                     {
                         var module = ilProcessor.Body.Method.Module;
                         var type = (string)operand;
-                        var typeref = Silk.Loom.References.FindType(module, ilProcessor.Body.Method, type);
+                        var typeref = Reference.ParseTypeReference(
+                                                      Reference.Scope.NewMethodScope(ilProcessor.Body.Method), type);
 
                         StackAnalyser.ReplaceInstruction(ilProcessor, instruction, Instruction.Create(opcode, typeref));
                     }

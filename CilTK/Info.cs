@@ -6,6 +6,11 @@ namespace Silk
 {
     public static class Info
     {
+        public static System.Type Type(string type)
+        {
+            throw new Exception("CilTK Rewriter not run.");
+        }
+
         public static System.Reflection.ParameterInfo Parameter(string parameter)
         {
             throw new Exception("CilTK Rewriter not run.");
