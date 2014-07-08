@@ -74,8 +74,6 @@ namespace Weave
                 InputAssembly = input;
                 var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(input, readParameters);
 
-                var mscorlib = assembly.MainModule.AssemblyReferences.First(reference => reference.Name == "mscorlib");
-
                 var labelReplace = new LabelReplacer();
                 labelReplace.Visit(assembly);
 
@@ -101,15 +99,6 @@ namespace Weave
                     if (index != -1)
                     {
                         module.AssemblyReferences.RemoveAt(index);
-                    }
-                }
-
-                for (int i = 0; i < assembly.MainModule.AssemblyReferences.Count; ++i)
-                {
-                    if (assembly.MainModule.AssemblyReferences[i].Name == mscorlib.Name && assembly.MainModule.AssemblyReferences[i].Version != mscorlib.Version)
-                    {
-                        assembly.MainModule.AssemblyReferences.RemoveAt(i);
-                        i = 0;
                     }
                 }
 
