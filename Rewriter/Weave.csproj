@@ -56,18 +56,18 @@
     <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="InstructionVisitor.cs" />
+    <Compile Include="MethodVisitor.cs" />
+    <Compile Include="References.cs" />
+    <Compile Include="StackAnalyser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CilTK\Silk.csproj">
-      <Project>{2bb73334-5e30-4a65-a8fb-6e07e2663870}</Project>
+      <Project>{2BB73334-5E30-4A65-A8FB-6E07E2663870}</Project>
       <Name>Silk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Loom\Loom.csproj">
-      <Project>{daf5d6f1-3734-4cd4-ad7f-15b1b674faa6}</Project>
-      <Name>Loom</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
