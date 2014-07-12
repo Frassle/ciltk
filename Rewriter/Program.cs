@@ -112,12 +112,6 @@ namespace Weave
                 options.WriteOptionDescriptions(Console.Out);
                 System.Environment.Exit(1);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Weave encounted an exception: {0}", ex.GetType());
-                Console.WriteLine(ex.ToString());
-                System.Environment.Exit(1);
-            }
         }
     }
 }
