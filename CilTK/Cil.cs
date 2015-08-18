@@ -37,7 +37,7 @@ namespace Silk
         /// <param name="name">The name of the new variable.</param>
         public static unsafe void DeclareLocal(string type, string name)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Silk
         /// <param name="label">The label name.</param>
         public static unsafe void Label(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Silk
         /// <param name="value">The value to keep alive.</param>
         public static unsafe void KeepAlive<T>(T value)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Silk
         /// <param name="value">The variable to load.</param>
         public static unsafe void Load<T>(T value)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Silk
         /// <param name="variableName">The variable to load.</param>
         public static unsafe void LoadByName(string variableName)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Silk
         /// <param name="value">The variable address to load.</param>
         public static unsafe void LoadAddress<T>(T value)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Silk
         /// <param name="variableName">The variable address to load.</param>
         public static unsafe void LoadAddressByName(string variableName)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Silk
         /// <param name="value">The variable to store to.</param>
         public static unsafe void Store<T>(out T value)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Silk
         /// <param name="variableName">The variable to store to.</param>
         public static unsafe void StoreByName(string variableName)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Silk
         /// <returns>The value on the top of the execution stack.</returns>
         public static unsafe T Peek<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Add()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Add_Ovf()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Add_Ovf_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void And()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Arglist()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Beq(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Bge(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Bge_Un(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Bgt(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Bgt_Un(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Ble(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Ble_Un(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Blt(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Blt_Un(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Bne_Un(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -504,7 +504,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Box<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -530,7 +530,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Br(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -549,7 +549,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Break()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -573,7 +573,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Brfalse(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Brtrue(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -610,7 +610,7 @@ namespace Silk
         /// <param name="method">The method to call.</param>
         public static unsafe void Call(string method)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -736,7 +736,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -778,7 +778,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -820,7 +820,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -862,7 +862,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -904,7 +904,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -946,7 +946,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -988,7 +988,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1030,7 +1030,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1072,7 +1072,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1114,7 +1114,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9, Type arg10)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1156,7 +1156,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9, Type arg10, Type arg11)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1198,7 +1198,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9, Type arg10, Type arg11, Type arg12)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1240,7 +1240,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9, Type arg10, Type arg11, Type arg12, Type arg13)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1282,7 +1282,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Calli(System.Runtime.InteropServices.CallingConvention callingConvention, Type returnType, Type arg0, Type arg1, Type arg2, Type arg3, Type arg4, Type arg5, Type arg6, Type arg7, Type arg8, Type arg9, Type arg10, Type arg11, Type arg12, Type arg13, Type arg14)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1294,7 +1294,7 @@ namespace Silk
         /// <param name="method">The method to call.</param>
         public static unsafe void Callvirt(string method)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1322,7 +1322,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Castclass<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1341,7 +1341,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ceq()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1362,7 +1362,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Cgt()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1387,7 +1387,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Cgt_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1403,7 +1403,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ckfinite()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1421,7 +1421,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Clt()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1439,7 +1439,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Clt_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1447,7 +1447,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Constrained<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1455,7 +1455,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Constrained(string thisType)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1466,7 +1466,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1477,7 +1477,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1488,7 +1488,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1499,7 +1499,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1510,7 +1510,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1521,7 +1521,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1532,7 +1532,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1543,7 +1543,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1554,7 +1554,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I1_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1565,7 +1565,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1576,7 +1576,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I2_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1587,7 +1587,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1598,7 +1598,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I4_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1609,7 +1609,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1620,7 +1620,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_I8_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1631,7 +1631,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1642,7 +1642,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1653,7 +1653,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1664,7 +1664,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U1_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1675,7 +1675,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1686,7 +1686,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U2_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1697,7 +1697,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1708,7 +1708,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U4_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1719,7 +1719,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1730,7 +1730,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_Ovf_U8_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1741,7 +1741,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_R_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1752,7 +1752,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_R4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1763,7 +1763,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_R8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1774,7 +1774,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_U()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1785,7 +1785,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_U1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1796,7 +1796,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_U2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1807,7 +1807,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_U4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1818,7 +1818,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Conv_U8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1841,7 +1841,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Cpblk()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1862,7 +1862,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Cpobj<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1873,7 +1873,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Div()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1884,7 +1884,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Div_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1898,7 +1898,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Dup()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1930,7 +1930,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Endfilter()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1963,7 +1963,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Endfinally()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -1985,7 +1985,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Initblk()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2006,7 +2006,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Initobj<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2031,7 +2031,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Isinst<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2054,7 +2054,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Jmp(string method)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2082,7 +2082,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldarg(int num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2103,7 +2103,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldarga(int argNum)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2130,7 +2130,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldc_I4(int num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2157,7 +2157,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldc_I8(long num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2184,7 +2184,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldc_R4(float num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2211,7 +2211,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldc_R8(double num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2233,7 +2233,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldelem<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2254,7 +2254,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2282,7 +2282,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2310,7 +2310,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2338,7 +2338,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2366,7 +2366,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2394,7 +2394,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2422,7 +2422,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_R4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2450,7 +2450,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_R8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2480,7 +2480,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_Ref()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2508,7 +2508,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_U1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2536,7 +2536,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_U2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2564,7 +2564,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldelem_U4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2586,7 +2586,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldelema<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2608,7 +2608,7 @@ namespace Silk
         /// <param name="type">Type in the array.</param>
         public static unsafe void Ldelema(string type)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2635,7 +2635,7 @@ namespace Silk
         /// <param name="field">The field to load.</param>
         public static unsafe void Ldfld(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2657,7 +2657,7 @@ namespace Silk
         /// <param name="field">The field to load.</param>
         public static unsafe void Ldflda(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2691,7 +2691,7 @@ namespace Silk
         /// <param name="method"></param>
         public static unsafe void Ldftn(string method)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2702,7 +2702,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2713,7 +2713,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2724,7 +2724,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2735,7 +2735,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2746,7 +2746,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2757,7 +2757,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_R4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2768,7 +2768,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_R8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2779,7 +2779,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_Ref()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2790,7 +2790,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_U1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2801,7 +2801,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_U2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2812,7 +2812,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldind_U4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2830,7 +2830,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldlen()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2856,7 +2856,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldloc(int indx)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2875,7 +2875,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldloca(int indx)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2895,7 +2895,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldnull()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2921,7 +2921,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Ldobj<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2946,7 +2946,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldobj(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2957,7 +2957,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldsfld(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2968,7 +2968,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldsflda(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -2990,7 +2990,7 @@ namespace Silk
         /// <param name="str">The literal string to load.</param>
         public static unsafe void Ldstr(string str)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3008,7 +3008,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ldtoken()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3019,7 +3019,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Ldvirtftn(string method)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3046,7 +3046,7 @@ namespace Silk
         /// <param name="label">The label to branch to.</param>
         public static unsafe void Leave(string label)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3071,7 +3071,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Localloc()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3082,7 +3082,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Mkrefany<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3093,7 +3093,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Mkrefany(string @class)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3104,7 +3104,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Mul()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3115,7 +3115,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Mul_Ovf()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3126,7 +3126,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Mul_Ovf_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3150,7 +3150,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Neg()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3175,7 +3175,7 @@ namespace Silk
         /// <typeparam name="T">etype</typeparam>
         public static unsafe void Newarr<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3199,7 +3199,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Newarr(string etype)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3210,7 +3210,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Newobj(string ctor)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3239,7 +3239,7 @@ namespace Silk
         /// <param name="faultCheck">The fault check(s) to skip.</param>
         public static unsafe void No(FaultCheck faultCheck)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3253,7 +3253,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Nop()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3271,7 +3271,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Not()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3289,7 +3289,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Or()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3303,7 +3303,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Pop()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3321,7 +3321,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Readonly()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3335,7 +3335,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Refanytype()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
 
@@ -3352,7 +3352,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Refanyval()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3363,7 +3363,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Rem()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3374,7 +3374,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Rem_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3398,7 +3398,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Ret()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3414,7 +3414,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Rethrow()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3431,7 +3431,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Shl()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3449,7 +3449,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Shr()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3467,7 +3467,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Shr_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3492,7 +3492,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Sizeof<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
         
         /// <summary>
@@ -3516,7 +3516,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Sizeof(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3527,7 +3527,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Starg(int num)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3551,7 +3551,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Stelem<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3574,7 +3574,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3602,7 +3602,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3630,7 +3630,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3658,7 +3658,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3686,7 +3686,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3714,7 +3714,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3742,7 +3742,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_R4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3770,7 +3770,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_R8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3798,7 +3798,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stelem_Ref()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3809,7 +3809,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stfld(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3820,7 +3820,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_I()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3831,7 +3831,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_I1()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3842,7 +3842,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_I2()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3853,7 +3853,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_I4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3864,7 +3864,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_I8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3875,7 +3875,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_R4()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3886,7 +3886,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_R8()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3897,7 +3897,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stind_Ref()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3919,7 +3919,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stloc(int indx)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3941,7 +3941,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Stobj<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3962,7 +3962,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Stobj(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3973,7 +3973,7 @@ namespace Silk
         /// </summary>
         public static unsafe void Stsfld(string field)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -3992,7 +3992,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Sub()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4011,7 +4011,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Sub_Ovf()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4030,7 +4030,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Sub_Ovf_Un()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4059,7 +4059,7 @@ namespace Silk
         /// </param>
         public static unsafe void Switch(string targets)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4100,7 +4100,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Tail()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4117,7 +4117,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Throw()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4143,7 +4143,7 @@ namespace Silk
         /// <param name="alignment">Alignment to use.</param>
         public static unsafe void Unaligned(byte alignment)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4173,7 +4173,7 @@ namespace Silk
         /// <typeparam name="T">valuetype</typeparam>
         public static unsafe void Unbox<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4202,7 +4202,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Unbox(string valuetype)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4221,7 +4221,7 @@ namespace Silk
         /// <typeparam name="T">typeTok</typeparam>
         public static unsafe void Unbox_Any<T>()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4239,7 +4239,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Unbox_Any(string typeTok)
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4258,7 +4258,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Volatile()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
 
         /// <summary>
@@ -4276,7 +4276,7 @@ namespace Silk
         /// </remarks>
         public static unsafe void Xor()
         {
-            throw new Exception("CilTK Rewriter not run.");
+            throw new Exception("Silk Weave not run.");
         }
     }
 }
