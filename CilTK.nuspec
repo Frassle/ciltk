@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>CilTK</id>
+    <version>$version$</version>
+    <title>CIL ToolKit</title>
+    <authors>Fraser Waters</authors>
+    <owners>Fraser Waters</owners>
+    <licenseUrl>https://github.com/frassle/ciltk/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/frassle/ciltk</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Silk is a library and application (Weave) to expose features of CIL that aren't available in all CIL high level languages.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright &#x00A9; Fraser Waters.  All rights reserved.</copyright>
+  </metadata>
+  <files>
+	<file src="CilTK\bin\$configuration$\Silk.dll" target="lib\net40\" />
+	<file src="Rewriter\bin\$configuration$\Weave.exe" target="bin\net40\" />
+  </files>
+</package>
